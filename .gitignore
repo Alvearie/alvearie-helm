@@ -1,0 +1,15 @@
+# Eclipse
+.project
+.settings/
+.classpath
+
+# IntelliJ IDEA
+*.iml
+.idea/
+
+# Mac OS X
+.DS_Store
+
+# Helm
+requirements.lock
+/*/charts/
