@@ -1,3 +1,5 @@
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![AppVersion: 4.8.3](https://img.shields.io/badge/AppVersion-4.8.3-informational?style=flat-square)
+
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
 with a focus on performance and configurability.
@@ -43,8 +45,6 @@ To connect to your database run the following command:
 
     kubectl run postgres-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.12.0-debian-10-r23 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgres -U postgres -d postgres -p 5432
 
-
-
 To connect to your database from outside the cluster execute the following commands:
 
     kubectl port-forward --namespace default svc/postgres 5432:5432 &
@@ -52,9 +52,6 @@ To connect to your database from outside the cluster execute the following comma
 ```
 
 # Chart info
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![AppVersion: 4.8.3](https://img.shields.io/badge/AppVersion-4.8.3-informational?style=flat-square)
-
-Helm chart for the IBM FHIR Server
 
 ## Values
 
@@ -70,25 +67,36 @@ Helm chart for the IBM FHIR Server
 | audit.topic | string | `"FHIR_AUDIT_DEV"` | The target Kafka topic for audit events |
 | audit.type | string | `"auditevent"` | `cadf` or `auditevent` |
 | db.enableTls | bool | `false` |  |
-| db.host | string | `"postgres-postgresql"` |  |
+| db.host | string | `"postgres"` |  |
 | db.name | string | `"postgres"` |  |
-| db.passwordSecret | string | `"postgres-postgresql"` |  |
+| db.passwordSecret | string | `"postgres"` |  |
 | db.port | int | `5432` |  |
 | db.schema | string | `"fhirdata"` |  |
 | db.type | string | `"postgresql"` |  |
 | db.username | string | `"postgres"` |  |
 | fhirAdminPassword | string | `"change-password"` |  |
 | fhirUserPassword | string | `"change-password"` |  |
+| fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
 | image.pullPolicy | string | `"Always"` |  |
 | image.pullSecret | string | `"all-icr-io"` |  |
 | image.repository | string | `"ibmcom/ibm-fhir-server"` |  |
 | image.tag | string | `"4.8.3"` |  |
-| ingestionReplicas | int | `3` |  |
+| ingestionReplicas | int | `2` | The number of replicas for the internal-access FHIR server pods |
+| ingress.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTPS"` |  |
+| ingress.annotations."nginx.ingress.kubernetes.io/configuration-snippet" | string | `"proxy_set_header X-FHIR-FORWARDED-URL \"https://$host$request_uri\";\n"` |  |
+| ingress.annotations."nginx.ingress.kubernetes.io/proxy-ssl-name" | string | `"{{- range $host := $.Values.ingress.hosts }} {{ $host }}; {{ end }}\n"` |  |
+| ingress.annotations."nginx.ingress.kubernetes.io/proxy-ssl-protocols" | string | `"TLSv1.2 TLSv1.3"` |  |
+| ingress.annotations."nginx.ingress.kubernetes.io/proxy-ssl-verify" | string | `"true"` |  |
+| ingress.annotations."nginx.ingress.kubernetes.io/server-snippet" | string | `"add_header Strict-Transport-Security \"max-age=86400; includeSubDomains\";\n"` |  |
+| ingress.annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
 | ingress.enabled | bool | `true` |  |
-| ingress.hostname | string | `"cluster1-blue-250babbbe4c3000e15508cd07c1d282b-0000.us-east.containers.appdomain.cloud"` |  |
-| ingress.hosts[0] | string | `"cluster1-blue-250babbbe4c3000e15508cd07c1d282b-0000.us-east.containers.appdomain.cloud"` |  |
-| ingress.tls[0].hosts[0] | string | `"cluster1-blue-250babbbe4c3000e15508cd07c1d282b-0000.us-east.containers.appdomain.cloud"` |  |
-| ingress.tls[0].secretName | string | `nil` |  |
+| ingress.hostname | string | `"fhir.example.com"` | The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts. If you have more than one, you'll need to set overrides for the rules and tls separately. |
+| ingress.rules[0].host | string | `"{{ .Release.Name }}.{{ $.Values.ingress.hostname }}"` |  |
+| ingress.rules[0].paths[0] | string | `"/"` |  |
+| ingress.servicePort | string | `"https"` |  |
+| ingress.tls[0].hosts[0] | string | `"{{ $.Values.ingress.hostname }}"` |  |
+| ingress.tls[0].secretName | string | `""` |  |
+| nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | objectStorage.accessKey | string | `nil` |  |
 | objectStorage.batchIdEncryptionKey | string | `nil` |  |
 | objectStorage.bulkdataBucketName | string | `nil` | Bucket names must be globally unique |
@@ -96,7 +104,7 @@ Helm chart for the IBM FHIR Server
 | objectStorage.endpointUrl | string | `nil` |  |
 | objectStorage.location | string | `nil` |  |
 | objectStorage.secretKey | string | `nil` |  |
-| replicaCount | int | `2` |  |
+| replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
@@ -106,7 +114,6 @@ Helm chart for the IBM FHIR Server
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
 | schemaMigration.image.tag | string | `"4.8.3"` |  |
-| service.internalPort | int | `9443` |  |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

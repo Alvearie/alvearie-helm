@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: https
-              containerPort: 8443
+              containerPort: 9443
               protocol: TCP
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -131,7 +131,7 @@ spec:
             httpGet:
               scheme: HTTPS
               path: /fhir-server/api/v4/$healthcheck
-              port: {{ .Values.service.internalPort }}
+              port: 9443
               httpHeaders:
                 - name: Authorization
                   value: Basic {{ print "fhiruser:" .Values.fhirUserPassword | b64enc }}
