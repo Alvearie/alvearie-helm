@@ -1,35 +1,52 @@
-{{- if .Values.ingress.enabled -}}
-apiVersion: networking.k8s.io/v1
+{{- $ingress := .Values.ingress -}}
+{{- if $ingress.enabled -}}
+apiVersion: {{ template "fhir.ingressAPIVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ template "name" . }}
+  name: {{ template "fhir.fullname" . }}
+  labels:
+    app: {{ template "fhir.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- with $ingress.annotations }}
   annotations:
-    nginx.ingress.kubernetes.io/server-snippet: |
-      add_header Strict-Transport-Security "max-age=86400; includeSubDomains";
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header X-FHIR-FORWARDED-URL "https://$host$request_uri";
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-ssl-name: {{- range $host := $.Values.ingress.hosts }} {{ $host }}; {{ end }}
-    nginx.ingress.kubernetes.io/proxy-ssl-protocols: TLSv1.2 TLSv1.3
-    nginx.ingress.kubernetes.io/proxy-ssl-verify: "true"
+    {{- range $key, $value := . }}
+      {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- end }}
+  {{- end }}
 spec:
   rules:
-    {{- $root := . }}
-    {{- range $host := .Values.ingress.hosts }}
-    - host: {{ $host }}
+    {{- range .Values.ingress.rules }}
+    - host: {{ tpl .host $ | quote }}
       http:
         paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: {{ template "name" $root }}
-              port:
-                number: 9443
-    {{- end -}}
-  {{- if .Values.ingress.tls }}
+          {{- range .paths }}
+          - path: {{ . }}
+            {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "fhir.fullname" $ }}
+                port:
+                  name: {{ $ingress.servicePort }}
+            {{- else }}
+            backend:
+              serviceName: {{ template "fhir.fullname" $ }}
+              servicePort: {{ $ingress.servicePort }}
+            {{- end }}
+          {{- end }}
+    {{- end }}
+  {{- if $ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-  {{- end -}}
+    {{- range $ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+      {{- end }}
+      {{- with .secretName }}
+      secretName: {{ tpl . $ }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end -}}

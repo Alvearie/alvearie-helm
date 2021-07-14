@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-internal
+  name: {{ template "fhir.fullname" . }}-internal
   labels:
-    app: {{ template "name" . }}-internal
+    app: {{ template "fhir.name" . }}-internal
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,24 +11,25 @@ spec:
   replicas: {{ .Values.ingestionReplicas }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}-internal
+      app: {{ template "fhir.name" . }}-internal
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}-internal
+        app: {{ template "fhir.name" . }}-internal
         release: {{ .Release.Name }}
     spec:
       volumes:
         - name: fhir-server-config
           configMap:
-            name: fhir-server-config-internal
+            name: {{ template "fhir.fullname" . }}-config-internal
       containers:
-        - name: {{ template "name" . }}-internal
+        - name: {{ template "fhir.name" . }}-internal
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: https
-              containerPort: {{ .Values.service.internalPort }}
+              containerPort: 9443
               protocol: TCP
             - name: http
               containerPort: 9080
@@ -83,6 +84,7 @@ spec:
               value: "100"
             - name: DS_AGED_TIMEOUT
               value: "-1"
+            {{- if .Values.objectStorage.enabled }}
             - name: BATCH_DB_HOSTNAME
               value: "{{ .Values.db.host }}"
             - name: BATCH_DB_PORT
@@ -123,6 +125,7 @@ spec:
                   key: cos.secret.key
             - name: COS_BUCKET
               value: {{ .Values.objectStorage.bulkDataBucketName }}
+            {{- end }}
             - name: FHIR_USER_PASSWORD
               value: {{ .Values.fhirUserPassword }}
             - name: FHIR_ADMIN_PASSWORD

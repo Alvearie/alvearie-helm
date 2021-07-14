@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ template "fhir.fullname" . }}
   labels:
-    app: {{ template "name" . }}
+    app: {{ template "fhir.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,23 +11,25 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "name" . }}
+      app: {{ template "fhir.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}
+        app: {{ template "fhir.name" . }}
         release: {{ .Release.Name }}
     spec:
       volumes:
         - name: fhir-server-config
           configMap:
-            name: fhir-server-config
+            name: {{ template "fhir.fullname" . }}-config
       containers:
-        - name: {{ template "name" . }}
+        - name: {{ template "fhir.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.service.internalPort }}
+            - name: https
+              containerPort: 8443
               protocol: TCP
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -79,6 +81,7 @@ spec:
               value: "100"
             - name: DS_AGED_TIMEOUT
               value: "-1"
+            {{- if .Values.objectStorage.enabled }}
             - name: BATCH_DB_HOSTNAME
               value: "{{ .Values.db.host }}"
             - name: BATCH_DB_PORT
@@ -119,6 +122,7 @@ spec:
                   key: cos.secret.key
             - name: COS_BUCKET
               value: {{ .Values.objectStorage.bulkDataBucketName }}
+            {{- end }}
             - name: FHIR_USER_PASSWORD
               value: {{ .Values.fhirUserPassword }}
             - name: FHIR_ADMIN_PASSWORD

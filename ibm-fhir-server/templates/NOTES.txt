@@ -1,0 +1,23 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+{{ if .Values.ingress.enabled -}}
+To use the release, try the following URLs:
+{{- range .Values.ingress.rules }}
+* https:{{ .host }}/fhir-server/api/v4/metadata
+* https:{{ .host }}/openapi/ui
+{{- end }}
+
+Or check the health of the server via curl:
+{{- range .Values.ingress.rules }}
+```
+curl -i -u 'fhiruser:<YOUR_FHIR_USER_PASSWORD>' 'https:{{ .host }}/fhir-server/api/v4/$healthcheck'
+```
+{{- end }}
+{{ end }}

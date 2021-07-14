@@ -1,7 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: fhir-server-config-internal
+  name: {{ template "fhir.fullname" . }}-config-internal
+  labels:
+    app: {{ template "fhir.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 data:
   datasources.xml: >
     {{- if eq .Values.db.type "db2" }}

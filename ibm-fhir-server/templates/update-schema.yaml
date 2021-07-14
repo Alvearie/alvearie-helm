@@ -2,8 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}-update-schema"
+  name: {{ template "fhir.fullname" . }}-update-schema
   labels:
+    app: {{ template "fhir.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

@@ -2,8 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}-create-schemas"
+  name: "{{ template "fhir.fullname" . }}-create-schemas"
   labels:
+    app: {{ template "fhir.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
