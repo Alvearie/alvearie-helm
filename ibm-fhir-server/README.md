@@ -61,7 +61,13 @@ To connect to your database from outside the cluster execute the following comma
 | audit.geoCity | string | `nil` | The city where the server is running |
 | audit.geoCountry | string | `nil` | The country where the server is running |
 | audit.geoState | string | `nil` | The state where the server is running |
-| audit.kafka | object | `{"bootstrapServers":null,"saslJaasConfig":null,"saslMechanism":"PLAIN","securityProtocol":"SASL_SSL","sslEnabledProtocols":"TLSv1.2","sslEndpointIdentificationAlgorithm":"HTTPS","sslProtocol":"TLSv1.2"}` | Kafka connection properties |
+| audit.kafka.bootstrapServers | string | `nil` |  |
+| audit.kafka.saslJaasConfig | string | `nil` |  |
+| audit.kafka.saslMechanism | string | `"PLAIN"` |  |
+| audit.kafka.securityProtocol | string | `"SASL_SSL"` |  |
+| audit.kafka.sslEnabledProtocols | string | `"TLSv1.2"` |  |
+| audit.kafka.sslEndpointIdentificationAlgorithm | string | `"HTTPS"` |  |
+| audit.kafka.sslProtocol | string | `"TLSv1.2"` |  |
 | audit.kafkaApiKey | string | `nil` |  |
 | audit.kafkaServers | string | `nil` |  |
 | audit.topic | string | `"FHIR_AUDIT_DEV"` | The target Kafka topic for audit events |
@@ -82,13 +88,7 @@ To connect to your database from outside the cluster execute the following comma
 | image.repository | string | `"ibmcom/ibm-fhir-server"` |  |
 | image.tag | string | `"4.8.3"` |  |
 | ingestionReplicas | int | `2` | The number of replicas for the internal-access FHIR server pods |
-| ingress.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTPS"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/configuration-snippet" | string | `"proxy_set_header X-FHIR-FORWARDED-URL \"https://$host$request_uri\";\n"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/proxy-ssl-name" | string | `"{{- range $host := $.Values.ingress.hosts }} {{ $host }}; {{ end }}\n"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/proxy-ssl-protocols" | string | `"TLSv1.2 TLSv1.3"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/proxy-ssl-verify" | string | `"true"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/server-snippet" | string | `"add_header Strict-Transport-Security \"max-age=86400; includeSubDomains\";\n"` |  |
-| ingress.annotations."nginx.ingress.kubernetes.io/use-regex" | string | `"true"` |  |
+| ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.hostname | string | `"fhir.example.com"` | The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts. If you have more than one, you'll need to set overrides for the rules and tls separately. |
 | ingress.rules[0].host | string | `"{{ .Release.Name }}.{{ $.Values.ingress.hostname }}"` |  |
