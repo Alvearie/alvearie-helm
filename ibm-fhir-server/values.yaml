@@ -1,0 +1,100 @@
+# Default values for chart.
+
+# -- Optional override for the fully qualified name of the created kube resources
+fullnameOverride:
+# -- Optional override for chart name portion of the created kube resources
+nameOverride:
+
+# -- The number of replicas for the externally-facing FHIR server pods
+replicaCount: 2
+# -- The number of replicas for the internal-access FHIR server pods
+ingestionReplicas: 2
+image:
+  repository: ibmcom/ibm-fhir-server
+  tag: "4.8.3"
+  pullPolicy: Always
+  # for local development against Minikube registry
+  #pullPolicy: Never
+  pullSecret: all-icr-io
+db:
+  type: postgresql
+  host: postgres
+  port: 5432
+  enableTls: false
+  name: postgres
+  username: postgres
+  passwordSecret: postgres
+  schema: fhirdata
+schemaMigration:
+  enabled: true
+  image:
+    repository: ibmcom/ibm-fhir-schematool
+    tag: "4.8.3"
+    pullPolicy: Always
+    pullSecret: all-icr-io
+fhirUserPassword: change-password
+fhirAdminPassword: change-password
+audit:
+  enabled: false
+  kafkaServers:
+  kafkaApiKey:
+  # -- Kafka connection properties
+  kafka:
+    bootstrapServers:
+    saslMechanism: PLAIN
+    saslJaasConfig:
+    securityProtocol: SASL_SSL
+    sslEnabledProtocols: TLSv1.2
+    sslProtocol: TLSv1.2
+    sslEndpointIdentificationAlgorithm: HTTPS
+  # -- The target Kafka topic for audit events
+  topic: FHIR_AUDIT_DEV
+  # -- `cadf` or `auditevent`
+  type: auditevent
+  # -- The city where the server is running
+  geoCity:
+  # -- The state where the server is running
+  geoState:
+  # -- The country where the server is running
+  geoCountry:
+objectStorage:
+  enabled: false
+  location:
+  endpointUrl:
+  accessKey:
+  secretKey:
+  # -- Bucket names must be globally unique
+  bulkdataBucketName:
+  batchIdEncryptionKey:
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: >
+      add_header Strict-Transport-Security "max-age=86400; includeSubDomains";
+    nginx.ingress.kubernetes.io/configuration-snippet: >
+      proxy_set_header X-FHIR-FORWARDED-URL "https://$host$request_uri";
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-ssl-name: >
+      {{- range $host := $.Values.ingress.hosts }} {{ $host }}; {{ end }}
+    nginx.ingress.kubernetes.io/proxy-ssl-protocols: TLSv1.2 TLSv1.3
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "true"
+  # -- The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts.
+  # If you have more than one, you'll need to set overrides for the rules and tls separately.
+  hostname: fhir.example.com
+  rules:
+    - host: "{{ .Release.Name }}.{{ $.Values.ingress.hostname }}"
+      paths:
+        - "/"
+  servicePort: https
+  tls:
+    - secretName: ""
+      hosts:
+        - "{{ $.Values.ingress.hostname }}"
+resources:
+  requests:
+    memory: "4Gi"
+    ephemeral-storage: "1Gi"
+  limits:
+    memory: "5Gi"
+    ephemeral-storage: "1Gi"

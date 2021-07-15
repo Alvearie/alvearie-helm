@@ -1,0 +1,52 @@
+{{- $ingress := .Values.ingress -}}
+{{- if $ingress.enabled -}}
+apiVersion: {{ template "fhir.ingressAPIVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ template "fhir.fullname" . }}
+  labels:
+    app: {{ template "fhir.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  {{- with $ingress.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+      {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  rules:
+    {{- range .Values.ingress.rules }}
+    - host: {{ tpl .host $ | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ . }}
+            {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "fhir.fullname" $ }}
+                port:
+                  name: {{ $ingress.servicePort }}
+            {{- else }}
+            backend:
+              serviceName: {{ template "fhir.fullname" $ }}
+              servicePort: {{ $ingress.servicePort }}
+            {{- end }}
+          {{- end }}
+    {{- end }}
+  {{- if $ingress.tls }}
+  tls:
+    {{- range $ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ tpl . $ | quote }}
+      {{- end }}
+      {{- with .secretName }}
+      secretName: {{ tpl . $ }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end -}}
