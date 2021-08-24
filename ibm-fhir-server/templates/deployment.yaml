@@ -66,8 +66,8 @@ spec:
               value: "{{ .Values.db.port }}"
             - name: FHIR_DB_NAME
               value: "{{ .Values.db.name }}"
-            - name: FHIR_DB_USERNAME
-              value: "{{ .Values.db.username }}"
+            - name: FHIR_DB_USER
+              value: "{{ .Values.db.user }}"
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -88,8 +88,8 @@ spec:
               value: "{{ .Values.db.port }}"
             - name: BATCH_DB_NAME
               value: "{{ .Values.db.name }}"
-            - name: BATCH_DB_USERNAME
-              value: "{{ .Values.db.username }}"
+            - name: BATCH_DB_USER
+              value: "{{ .Values.db.user }}"
             - name: BATCH_DB_PASSWORD
               valueFrom:
                 secretKeyRef:

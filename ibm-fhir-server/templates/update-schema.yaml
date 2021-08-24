@@ -38,8 +38,8 @@ spec:
               value: "{{ .Values.db.port }}"
             - name: FHIR_DB_NAME
               value: "{{ .Values.db.name }}"
-            - name: FHIR_DB_USERNAME
-              value: "{{ .Values.db.username }}"
+            - name: FHIR_DB_USER
+              value: "{{ .Values.db.user }}"
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -55,7 +55,7 @@ spec:
               --prop db.host={{ .Values.db.host }}
               --prop db.port={{ .Values.db.port }}
               --prop db.database={{ .Values.db.name }}
-              --prop user={{ .Values.db.username }}
+              --prop user={{ .Values.db.user }}
               --prop password=${FHIR_DB_PASSWORD}
               {{- if .Values.db.enableTls }}
               {{- if eq .Values.db.type "db2" }}

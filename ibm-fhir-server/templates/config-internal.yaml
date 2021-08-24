@@ -27,7 +27,7 @@ data:
             sslrootcert="/opt/ol/wlp/usr/servers/defaultServer/resources/security/postgres.cert"
             {{- end }}
             databaseName="${env.FHIR_DB_NAME}"
-            user="${env.FHIR_DB_USERNAME}"
+            user="${env.FHIR_DB_USER}"
             password="${env.FHIR_DB_PASSWORD}"
             currentSchema="${env.FHIR_DB_SCHEMA}"
         />
@@ -57,7 +57,7 @@ data:
               sslrootcert="/opt/ol/wlp/usr/servers/defaultServer/resources/security/postgres.cert"
               {{- end }}
               databaseName="${env.BATCH_DB_NAME}"
-              user="${env.BATCH_DB_USERNAME}"
+              user="${env.BATCH_DB_USER}"
               password="${env.BATCH_DB_PASSWORD}"
           />
       </dataSource>

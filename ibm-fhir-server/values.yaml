@@ -22,7 +22,7 @@ db:
   port: 5432
   enableTls: false
   name: postgres
-  username: postgres
+  user: postgres
   passwordSecret: postgres
   schema: fhirdata
 schemaMigration:
