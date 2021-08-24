@@ -39,6 +39,29 @@ data:
             maxIdleTime="2m"
         />
       </dataSource>
+
+      {{- if .Values.objectStorage.enabled }}
+      <featureManager>
+          <feature>batch-1.0</feature>
+          <feature>batchManagement-1.0</feature>
+      </featureManager>
+
+      <dataSource id="fhirbatchDS" jndiName="jdbc/fhirbatchDB" type="javax.sql.XADataSource" statementCacheSize="200" syncQueryTimeoutWithTransactionTimeout="true">
+          <jdbcDriver javax.sql.XADataSource="org.postgresql.xa.PGXADataSource" libraryRef="sharedLibPostgres"/>
+          <properties.postgresql
+              serverName="${env.BATCH_DB_HOSTNAME}"
+              portNumber="${env.BATCH_DB_PORT}"
+              {{- if .Values.db.enableTls }}
+              ssl="true"
+              sslmode="verify-full"
+              sslrootcert="/opt/ol/wlp/usr/servers/defaultServer/resources/security/postgres.cert"
+              {{- end }}
+              databaseName="${env.BATCH_DB_NAME}"
+              user="${env.BATCH_DB_USERNAME}"
+              password="${env.BATCH_DB_PASSWORD}"
+          />
+      </dataSource>
+      {{- end }}
     </server>
     {{- end }}
   extension-search-parameters.json: >
@@ -172,7 +195,7 @@ data:
           {{- if not .Values.objectStorage.enabled }}
           "enabled": false
           {{- else }}
-          "enabled": true
+          "enabled": true,
           "core": {
             "api": {
               "url": "https://localhost:9443/ibm/api/batch",
@@ -189,14 +212,15 @@ data:
               "useServerTruststore": true
             },
             "pageSize": 100,
+            {{- if .Values.objectStorage.batchIdEncryptionKey }}
             "batchIdEncryptionKey": {{ .Values.objectStorage.batchIdEncryptionKey }},
+            {{- end }}
             "maxPartitions": 3,
             "maxInputs": 5
           },
           "storageProviders": {
             "default" : {
               "type": "ibm-cos",
-              "bucketName": "${COS_BUCKET}",
               "location": "${COS_LOCATION}",
               "endpointInternal": "${COS_ENDPOINT_INTERNAL}",
               "endpointExternal": "${COS_ENDPOINT_EXTERNAL}",
@@ -205,6 +229,7 @@ data:
                 "accessKeyId": "${COS_ACCESS_KEY}",
                 "secretAccessKey": "${COS_SECRET_KEY}"
               },
+              "bucketName": "{{ .Values.objectStorage.bulkDataBucketName }}",
               "presigned": true
             }
           }

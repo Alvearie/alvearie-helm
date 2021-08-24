@@ -91,7 +91,7 @@ spec:
               value: "{{ .Values.db.port }}"
             - name: BATCH_DB_NAME
               value: "{{ .Values.db.name }}"
-            - name: BATCH_DB_USER
+            - name: BATCH_DB_USERNAME
               value: "{{ .Values.db.username }}"
             - name: BATCH_DB_PASSWORD
               valueFrom:
@@ -123,8 +123,6 @@ spec:
                 secretKeyRef:
                   name: object-storage-secret
                   key: cos.secret.key
-            - name: COS_BUCKET
-              value: {{ .Values.objectStorage.bulkDataBucketName }}
             {{- end }}
             - name: FHIR_USER_PASSWORD
               value: {{ .Values.fhirUserPassword }}

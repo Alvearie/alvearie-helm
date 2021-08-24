@@ -11,7 +11,7 @@ replicaCount: 2
 ingestionReplicas: 2
 image:
   repository: ibmcom/ibm-fhir-server
-  tag: "4.8.3"
+  tag: "4.9.0"
   pullPolicy: Always
   # for local development against Minikube registry
   #pullPolicy: Never
@@ -29,7 +29,7 @@ schemaMigration:
   enabled: true
   image:
     repository: ibmcom/ibm-fhir-schematool
-    tag: "4.8.3"
+    tag: "4.9.0"
     pullPolicy: Always
     pullSecret: all-icr-io
 fhirUserPassword: change-password
@@ -63,7 +63,7 @@ objectStorage:
   accessKey:
   secretKey:
   # -- Bucket names must be globally unique
-  bulkdataBucketName:
+  bulkDataBucketName:
   batchIdEncryptionKey:
 ingress:
   enabled: true
