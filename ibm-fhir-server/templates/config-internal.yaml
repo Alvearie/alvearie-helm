@@ -84,10 +84,36 @@ data:
           "checkReferenceTypes": true,
           "conditionalDeleteMaxNumber": 1,
           "defaultPrettyPrint": true,
-          "serverRegistryResourceProviderEnabled": false
+          "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }}
         },
         "resources": {
-          "open": true
+          "open": {{ .Values.restrictEndpoints }}
+          {{- range $i, $endpoint := .Values.endpoints -}},
+          "{{ $endpoint.resourceType }}": {
+            {{- if $endpoint.searchIncludes }}
+            "searchIncludes": {{ toJson $endpoint.searchIncludes }}
+            {{- end}}
+            {{- if $endpoint.searchRevIncludes }},
+            "searchRevIncludes": {{ toJson $endpoint.searchRevIncludes }}
+            {{- end}}
+            {{- if $endpoint.profiles }},
+            "profiles": {
+              "atLeastOne": {{ toJson $endpoint.profiles }}
+            }
+            {{- end}}
+            {{- if $endpoint.searchParameters }},
+            "searchParameters": {
+              {{- $lastIndex := sub (len $endpoint.searchParameters) 1 }}
+              {{- range $j, $param := $endpoint.searchParameters }}
+              "{{ $param.code }}": "{{ $param.url }}"{{ if not (eq $j $lastIndex) }},{{ end }}
+              {{- end }}
+            }
+            {{- end}}
+            {{- if $endpoint.interactions }},
+            "interactions": {{ toJson $endpoint.interactions }}
+            {{- end}}
+          }
+          {{- end }}
         },
         "security": {
           "cors": true,

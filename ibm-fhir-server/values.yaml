@@ -16,6 +16,36 @@ image:
   # for local development against Minikube registry
   #pullPolicy: Never
   pullSecret: all-icr-io
+# -- Set to true to restrict the API to a particular set of resource type endpoints
+restrictEndpoints: false
+# -- Control which interactions are supported for which resource type endpoints
+# @default -- A single entry for resourceType "Resource" that applies to all resource types
+endpoints:
+  -
+    # -- A valid FHIR resource type; use "Resource" for whole-system behavior
+    resourceType: Resource
+    # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
+    searchIncludes:
+    # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions
+    searchRevIncludes:
+    # -- (list) Instances of this type must must claim conformance to at least one of the listed profiles
+    profiles:
+    # -- A mapping from enabled search parameter codes to search parameter definitions
+    searchParameters:
+      - code: "*"
+        url: "*"
+    # -- The set of enabled interactions for this resource type:
+    # create | read | vread | history | search | update | patch | delete
+    # @default -- All interactions.
+    interactions:
+      - create
+      - read
+      - vread
+      - history
+      - search
+      - update
+      - patch
+      - delete
 db:
   type: postgresql
   host: postgres
@@ -34,6 +64,7 @@ schemaMigration:
     pullSecret: all-icr-io
 fhirUserPassword: change-password
 fhirAdminPassword: change-password
+serverRegistryResourceProviderEnabled: true
 audit:
   enabled: false
   kafkaServers:
