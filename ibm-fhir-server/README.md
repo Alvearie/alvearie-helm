@@ -1,4 +1,4 @@
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square)
+![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -79,7 +79,7 @@ To connect to your database from outside the cluster execute the following comma
 | db.port | int | `5432` |  |
 | db.schema | string | `"fhirdata"` |  |
 | db.type | string | `"postgresql"` |  |
-| db.username | string | `"postgres"` |  |
+| db.user | string | `"postgres"` |  |
 | fhirAdminPassword | string | `"change-password"` |  |
 | fhirUserPassword | string | `"change-password"` |  |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
@@ -97,6 +97,25 @@ To connect to your database from outside the cluster execute the following comma
 | ingress.tls[0].hosts[0] | string | `"{{ $.Values.ingress.hostname }}"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
+| notifications.kafka.bootstrapServers | string | `nil` |  |
+| notifications.kafka.enabled | bool | `false` |  |
+| notifications.kafka.saslJaasConfig | string | `nil` |  |
+| notifications.kafka.saslMechanism | string | `"PLAIN"` |  |
+| notifications.kafka.securityProtocol | string | `"SASL_SSL"` |  |
+| notifications.kafka.sslEnabledProtocols | string | `"TLSv1.2"` |  |
+| notifications.kafka.sslEndpointIdentificationAlgorithm | string | `"HTTPS"` |  |
+| notifications.kafka.sslProtocol | string | `"TLSv1.2"` |  |
+| notifications.kafka.topicName | string | `nil` |  |
+| notifications.nats.channel | string | `nil` |  |
+| notifications.nats.clientId | string | `nil` |  |
+| notifications.nats.cluster | string | `nil` |  |
+| notifications.nats.enabled | bool | `false` |  |
+| notifications.nats.keystoreLocation | string | `nil` |  |
+| notifications.nats.keystorePassword | string | `nil` |  |
+| notifications.nats.servers | string | `nil` |  |
+| notifications.nats.truststoreLocation | string | `nil` |  |
+| notifications.nats.truststorePassword | string | `nil` |  |
+| notifications.nats.useTLS | bool | `true` |  |
 | objectStorage.accessKey | string | `nil` |  |
 | objectStorage.batchIdEncryptionKey | string | `nil` |  |
 | objectStorage.bulkDataBucketName | string | `nil` | Bucket names must be globally unique |
