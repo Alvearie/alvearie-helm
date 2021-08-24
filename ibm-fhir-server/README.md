@@ -17,13 +17,14 @@ To install the IBM FHIR Server via helm, you must first have a database.
 
 To install a PostgreSQL database to the same cluster using helm, you can run the following command:
 ```
-$ helm install my-release bitnami/postgresql --set fullnameOverride=postgres
+$ helm install my-release bitnami/postgresql --set fullnameOverride=postgres --set postgresqlExtendedConf.maxPreparedTransactions=100
 ```
 
 For example if you target the default namespace and name the release "postgres",
 then that would produce something like this:
 ```
-$ helm install postgres bitnami/postgresql --set fullnameOverride=postgres
+$ helm install postgres bitnami/postgresql --set fullnameOverride=postgres --set postgresqlExtendedConf.maxPreparedTransactions=100
+
 NAME: postgres
 LAST DEPLOYED: Wed Jun 23 12:01:11 2021
 NAMESPACE: default
@@ -79,7 +80,7 @@ To connect to your database from outside the cluster execute the following comma
 | db.port | int | `5432` |  |
 | db.schema | string | `"fhirdata"` |  |
 | db.type | string | `"postgresql"` |  |
-| db.username | string | `"postgres"` |  |
+| db.user | string | `"postgres"` |  |
 | fhirAdminPassword | string | `"change-password"` |  |
 | fhirUserPassword | string | `"change-password"` |  |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
