@@ -10,14 +10,14 @@ To learn more about the release, try:
 {{ if .Values.ingress.enabled -}}
 To use the release, try the following URLs:
 {{- range .Values.ingress.rules }}
-* https:{{ .host }}/fhir-server/api/v4/metadata
-* https:{{ .host }}/openapi/ui
+* https://{{ tpl .host $ }}/fhir-server/api/v4/metadata
+* https://{{ tpl .host $ }}/openapi/ui
 {{- end }}
 
 Or check the health of the server via curl:
 {{- range .Values.ingress.rules }}
 ```
-curl -i -u 'fhiruser:<YOUR_FHIR_USER_PASSWORD>' 'https:{{ .host }}/fhir-server/api/v4/$healthcheck'
+curl -i -u 'fhiruser:<YOUR_FHIR_USER_PASSWORD>' 'https://{{ tpl .host $ }}/fhir-server/api/v4/$healthcheck'
 ```
 {{- end }}
 {{ end }}
