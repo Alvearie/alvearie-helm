@@ -40,9 +40,9 @@ audit:
   kafkaApiKey:
   kafka:
     bootstrapServers:
+    securityProtocol: SASL_SSL
     saslMechanism: PLAIN
     saslJaasConfig:
-    securityProtocol: SASL_SSL
     sslEnabledProtocols: TLSv1.2
     sslProtocol: TLSv1.2
     sslEndpointIdentificationAlgorithm: HTTPS
@@ -56,6 +56,28 @@ audit:
   geoState:
   # -- The country where the server is running
   geoCountry:
+notifications:
+  kafka:
+    enabled: false
+    topicName:
+    bootstrapServers:
+    securityProtocol: SASL_SSL
+    saslMechanism: PLAIN
+    saslJaasConfig:
+    sslEnabledProtocols: TLSv1.2
+    sslProtocol: TLSv1.2
+    sslEndpointIdentificationAlgorithm: HTTPS
+  nats:
+    enabled: false
+    cluster:
+    channel:
+    clientId:
+    servers:
+    useTLS: true
+    truststoreLocation:
+    truststorePassword:
+    keystoreLocation:
+    keystorePassword:
 objectStorage:
   enabled: false
   location:

@@ -145,34 +145,65 @@ data:
             }
           }
         },
+        "audit": {
         {{- if not .Values.audit.enabled }}
-        "audit": {
           "serviceClassName": "com.ibm.fhir.audit.logging.impl.DisabledAuditLogService"
-        },
         {{- else }}
-        "audit": {
           "serviceClassName" : "com.ibm.fhir.audit.impl.KafkaService",
           "serviceProperties" : {
-              "load": "config",
-              "mapper": "{{ .Values.audit.type }}",
-              "auditTopic": "{{ .Values.audit.topic }}",
-              "geoCity": "{{ .Values.audit.geoCity }}",
-              "geoState": "{{ .Values.audit.geoState }}",
-              "geoCounty": "{{ .Values.audit.geoCountry }}",
-              "kafka" : {
-                  "bootstrap.servers": "{{ .Values.audit.kafka.bootstrapServers }}",
-                  "sasl.jaas.config": "{{ .Values.audit.kafka.saslJaasConfig }}",
-                  "sasl.mechanism": "{{ .Values.audit.kafka.saslMechanism }}",
-                  "security.protocol": "{{ .Values.audit.kafka.securityProtocol }}",
-                  "ssl.protocol": "{{ .Values.audit.kafka.sslProtocol }}",
-                  "ssl.enabled.protocols": "{{ .Values.audit.kafka.sslEnabledProtocols }}",
-                  "ssl.endpoint.identification.algorithm": "{{ .Values.audit.kafka.sslEndpointIdentificationAlgorithm }}"
-              },
-              "kafkaServers": "{{ .Values.audit.kafkaServers }}",
-              "kafkaApiKey": "{{ .Values.audit.kafkaApiKey }}"
+            "load": "config",
+            "mapper": "{{ .Values.audit.type }}",
+            "auditTopic": "{{ .Values.audit.topic }}",
+            "geoCity": "{{ .Values.audit.geoCity }}",
+            "geoState": "{{ .Values.audit.geoState }}",
+            "geoCounty": "{{ .Values.audit.geoCountry }}",
+            "kafka" : {
+              "bootstrap.servers": "{{ .Values.audit.kafka.bootstrapServers }}",
+              "sasl.jaas.config": "{{ .Values.audit.kafka.saslJaasConfig }}",
+              "sasl.mechanism": "{{ .Values.audit.kafka.saslMechanism }}",
+              "security.protocol": "{{ .Values.audit.kafka.securityProtocol }}",
+              "ssl.protocol": "{{ .Values.audit.kafka.sslProtocol }}",
+              "ssl.enabled.protocols": "{{ .Values.audit.kafka.sslEnabledProtocols }}",
+              "ssl.endpoint.identification.algorithm": "{{ .Values.audit.kafka.sslEndpointIdentificationAlgorithm }}"
+            },
+            "kafkaServers": "{{ .Values.audit.kafkaServers }}",
+            "kafkaApiKey": "{{ .Values.audit.kafkaApiKey }}"
           }
-        },
         {{- end }}
+        },
+        "notifications": {
+        {{- if .Values.notifications.kafka.enabled }}
+          "kafka": {
+            "enabled": true,
+            "topicName": "{{ .Values.notifications.kafka.topicName }}",
+            "connectionProperties": {
+              "bootstrap.servers": "{{ .Values.notifications.kafka.bootstrapServers }}",
+              "sasl.jaas.config": "{{ .Values.notifications.kafka.saslJaasConfig }}",
+              "sasl.mechanism": "{{ .Values.notifications.kafka.saslMechanism }}",
+              "security.protocol": "{{ .Values.notifications.kafka.securityProtocol }}",
+              "ssl.protocol": "{{ .Values.notifications.kafka.sslProtocol }}",
+              "ssl.enabled.protocols": "{{ .Values.notifications.kafka.sslEnabledProtocols }}",
+              "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdentificationAlgorithm }}"
+            }
+          }
+        {{- end }}
+        {{- if .Values.notifications.nats.enabled }}
+          "nats": {
+            "enabled": true,
+            "cluster": "{{ .Values.notifications.nats.cluster }}",
+            "channel": "{{ .Values.notifications.nats.channel }}",
+            "clientId": "{{ .Values.notifications.nats.clientId }}",
+            "servers": "{{ .Values.notifications.nats.servers }}",
+            {{- if .Values.notifications.nats.useTLS }}
+              "useTLS": true,
+              "truststoreLocation": "resources/security/nats.client.truststore.jks",
+              "truststorePassword": "change-password",
+              "keystoreLocation": "resources/security/nats.client.keystore.jks",
+              "keystorePassword": "change-password"
+            {{- end }}
+          }
+        {{- end }}
+        },
         "persistence": {
           "factoryClassname": "com.ibm.fhir.persistence.jdbc.FHIRPersistenceJDBCFactory",
           "common": {
