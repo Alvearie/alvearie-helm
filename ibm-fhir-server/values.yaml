@@ -7,8 +7,6 @@ nameOverride:
 
 # -- The number of replicas for the externally-facing FHIR server pods
 replicaCount: 2
-# -- The number of replicas for the internal-access FHIR server pods
-ingestionReplicas: 2
 image:
   repository: ibmcom/ibm-fhir-server
   tag: "4.9.0"
@@ -16,6 +14,35 @@ image:
   # for local development against Minikube registry
   #pullPolicy: Never
   pullSecret: all-icr-io
+# -- Set to true to restrict the API to a particular set of resource type endpoints
+restrictEndpoints: false
+# -- Control which interactions are supported for which resource type endpoints
+# @default -- A single entry for resourceType "Resource" that applies to all resource types
+endpoints:
+    # -- A valid FHIR resource type; use "Resource" for whole-system behavior
+  - resourceType: Resource
+    # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
+    searchIncludes:
+    # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions
+    searchRevIncludes:
+    # -- (list) Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required
+    profiles:
+    # -- A mapping from enabled search parameter codes to search parameter definitions
+    searchParameters:
+      - code: "*"
+        url: "*"
+    # -- The set of enabled interactions for this resource type:
+    # []create, read, vread, history, search, update, patch, delete]
+    # @default -- All interactions.
+    interactions:
+      - create
+      - read
+      - vread
+      - history
+      - search
+      - update
+      - patch
+      - delete
 db:
   type: postgresql
   host: postgres
@@ -25,6 +52,7 @@ db:
   user: postgres
   passwordSecret: postgres
   schema: fhirdata
+  tenantKey:
 schemaMigration:
   enabled: true
   image:
@@ -34,6 +62,8 @@ schemaMigration:
     pullSecret: all-icr-io
 fhirUserPassword: change-password
 fhirAdminPassword: change-password
+# -- Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer
+serverRegistryResourceProviderEnabled: true
 audit:
   enabled: false
   kafkaServers:
@@ -109,3 +139,12 @@ resources:
   limits:
     memory: "5Gi"
     ephemeral-storage: "1Gi"
+
+# -- Template containing the fhir-server-config.json content
+fhirServerConfigTemplate: "fhirServerConfigJsonDefault"
+
+# -- Template containing the datasources.xml content
+datasourcesTemplate: "datasourcesXmlPostgres"
+
+# -- Template containing the extension-search-parameters.json content
+extensionSearchParametersTemplate: "extensionSearchParametersJsonDefault"

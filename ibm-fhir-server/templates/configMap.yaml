@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fhir.fullname" . }}-config
+  labels:
+    app: {{ template "fhir.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  datasources.xml: >
+    {{- include .Values.datasourcesTemplate . }}
+  extension-search-parameters.json: >
+    {{- include .Values.extensionSearchParametersTemplate . }}
+  fhir-server-config.json: >
+    {{- include .Values.fhirServerConfigTemplate . }}
