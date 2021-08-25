@@ -28,14 +28,14 @@ endpoints:
     searchIncludes:
     # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions
     searchRevIncludes:
-    # -- (list) Instances of this type must must claim conformance to at least one of the listed profiles
+    # -- (list) Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required
     profiles:
     # -- A mapping from enabled search parameter codes to search parameter definitions
     searchParameters:
       - code: "*"
         url: "*"
     # -- The set of enabled interactions for this resource type:
-    # create | read | vread | history | search | update | patch | delete
+    # [create, read, vread, history, search, update, patch, delete]
     # @default -- All interactions.
     interactions:
       - create
@@ -64,6 +64,7 @@ schemaMigration:
     pullSecret: all-icr-io
 fhirUserPassword: change-password
 fhirAdminPassword: change-password
+# -- Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer
 serverRegistryResourceProviderEnabled: true
 audit:
   enabled: false
