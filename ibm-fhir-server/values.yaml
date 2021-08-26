@@ -32,7 +32,7 @@ endpoints:
       - code: "*"
         url: "*"
     # -- The set of enabled interactions for this resource type:
-    # []create, read, vread, history, search, update, patch, delete]
+    # [create, read, vread, history, search, update, patch, delete]
     # @default -- All interactions.
     interactions:
       - create

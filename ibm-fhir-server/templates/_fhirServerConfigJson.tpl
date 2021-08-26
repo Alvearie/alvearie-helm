@@ -113,7 +113,7 @@ The default fhir-server-config.json.
                         "security.protocol": "{{ .Values.notifications.kafka.securityProtocol }}",
                         "ssl.protocol": "{{ .Values.notifications.kafka.sslProtocol }}",
                         "ssl.enabled.protocols": "{{ .Values.notifications.kafka.sslEnabledProtocols }}",
-                        "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdentificationAlgorithm }}"
+                        "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdentificationAlgorithm }}",
                         "ssl.truststore.location": "resources/security/kafka.client.truststore.p12",
                         "ssl.truststore.password": "change-password",
                         "ssl.keystore.location": "resources/security/kafka.client.keystore.p12",
@@ -192,9 +192,9 @@ The default fhir-server-config.json.
                 "datasources": {
                     "default": {
                         "type": "{{ .Values.db.type }}",
-                        "currentSchema": "{{ .Values.db.schema }}"
+                        "currentSchema": "{{ .Values.db.schema }}",
                         {{- if eq .Values.db.type "derby" }}
-                        "jndiName": "jdbc/bootstrap_default_default",
+                        "jndiName": "jdbc/bootstrap_default_default"
                         {{- else if eq .Values.db.type "postgresql" }}
                         "searchOptimizerOptions": {
                             "from_collapse_limit": 12,
@@ -261,8 +261,8 @@ The default fhir-server-config.json.
                         {{- end }}
                         "auth" : {
                             "type": "hmac",
-                            "accessKeyId": "key",
-                            "secretAccessKey": "secret"
+                            "accessKeyId": "${COS_ACCESS_KEY}",
+                            "secretAccessKey": "${COS_SECRET_KEY}"
                         },
                         "enableParquet": false,
                         "disableBaseUrlValidation": true,
