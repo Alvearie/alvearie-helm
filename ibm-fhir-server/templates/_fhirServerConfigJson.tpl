@@ -200,28 +200,12 @@ The default fhir-server-config.json.
                             "from_collapse_limit": 12,
                             "join_collapse_limit": 12
                         }
-                        {{- else  if eq .Values.db.type "db2" }}
+                        {{- else if eq .Values.db.type "db2" }}
                         "tenantKey": "{{ .Values.db.tenantKey }}",
                         "hints" : {
                           "search.reopt": "ONCE"
                         }
                         {{- end }}
-                    },
-                    "_db2sample": {
-                        "type": "db2",
-                        "tenantKey": "<the-tenant-key>",
-                        "currentSchema": "fhirdata",
-                        "hints" : {
-                          "search.reopt": "ONCE"
-                        }
-                    },
-                    "_pgsample": {
-                        "type": "postgresql",
-                        "currentSchema": "fhirdata",
-                        "searchOptimizerOptions": {
-                            "from_collapse_limit": 12,
-                            "join_collapse_limit": 12
-                        }
                     }
                 }
             },
@@ -274,20 +258,11 @@ The default fhir-server-config.json.
                         "_type": "ibm-cos|aws-s3|file|https|azure-blob",
                         "validBaseUrls": [],
                         "fileBase": "/output/bulkdata",
-                        "bucketName": "fhir-performance",
-                        "location": "us",
-                        "endpointInternal": "https://s3.us-east.cloud-object-storage.appdomain.cloud",
-                        "endpointExternal": "https://s3.us-east.cloud-object-storage.appdomain.cloud",
                         {{- end }}
                         "auth" : {
                             "type": "hmac",
                             "accessKeyId": "key",
                             "secretAccessKey": "secret"
-                        },
-                        "_iam_auth" : {
-                            "type": "iam",
-                            "iamApiKey": "apiKey",
-                            "iamResourceInstanceId": "resourceId"
                         },
                         "enableParquet": false,
                         "disableBaseUrlValidation": true,

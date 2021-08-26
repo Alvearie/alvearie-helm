@@ -75,7 +75,13 @@ The datasources.xml file for a DB2 DB.
                 currentSchema="${env.FHIR_DB_SCHEMA}"
                 driverType="4"
             />
-            <connectionManager maxPoolSize="200" minPoolSize="40"/>
+            <connectionManager
+                minPoolSize="${env.DS_MIN_POOL_SIZE}"
+                maxPoolSize="${env.DS_MAX_POOL_SIZE}"
+                agedTimeout="${env.DS_AGED_TIMEOUT}"
+                connectionTimeout="60s"
+                maxIdleTime="2m"
+            />
         </dataSource>
         
         {{- if .Values.objectStorage.enabled }}
