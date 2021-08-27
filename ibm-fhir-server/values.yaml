@@ -11,8 +11,6 @@ image:
   repository: ibmcom/ibm-fhir-server
   tag: "4.9.0"
   pullPolicy: Always
-  # for local development against Minikube registry
-  #pullPolicy: Never
   pullSecret: all-icr-io
 # -- Set to true to restrict the API to a particular set of resource type endpoints
 restrictEndpoints: false
