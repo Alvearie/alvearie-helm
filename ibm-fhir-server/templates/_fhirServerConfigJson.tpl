@@ -13,7 +13,8 @@ The default fhir-server-config.json.
                 "checkReferenceTypes": true,
                 "conditionalDeleteMaxNumber": 10,
                 "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
-                "disabledOperations": ""
+                "disabledOperations": "",
+                "defaultPrettyPrint": true
             },
             "search": {
                 "useStoredCompartmentParam": true
@@ -59,7 +60,10 @@ The default fhir-server-config.json.
                     "enabled": true
                 },
                 "certificates": {
-                    "enabled": true
+                    "enabled": true,
+                    "authFilter": {
+                        "enabled": false
+                    }
                 },
                 "oauth": {
                     "enabled": false,
@@ -68,7 +72,31 @@ The default fhir-server-config.json.
                     "tokenUrl": "https://<host>:9443/oauth2/endpoint/oauth2-provider/token",
                     "smart": {
                         "enabled": false,
-                        "scopes": ["openid", "profile", "fhirUser", "launch/patient", "patient/*.*", "offline_access"],
+                        "scopes": ["openid", "profile", "fhirUser", "launch/patient", "offline_access",
+                            "patient/*.read",
+                            "patient/AllergyIntolerance.read",
+                            "patient/CarePlan.read",
+                            "patient/CareTeam.read",
+                            "patient/Condition.read",
+                            "patient/Device.read",
+                            "patient/DiagnosticReport.read",
+                            "patient/DocumentReference.read",
+                            "patient/Encounter.read",
+                            "patient/ExplanationOfBenefit.read",
+                            "patient/Goal.read",
+                            "patient/Immunization.read",
+                            "patient/Location.read",
+                            "patient/Medication.read",
+                            "patient/MedicationRequest.read",
+                            "patient/Observation.read",
+                            "patient/Organization.read",
+                            "patient/Patient.read",
+                            "patient/Practitioner.read",
+                            "patient/PractitionerRole.read",
+                            "patient/Procedure.read",
+                            "patient/Provenance.read",
+                            "patient/RelatedPerson.read"
+                        ],
                         "capabilities": [
                             "sso-openid-connect",
                             "launch-standalone",
@@ -82,72 +110,41 @@ The default fhir-server-config.json.
                 }
             },
             "notifications": {
-                "common": {
-                    "__comment_includeResourceTypes": [
-                        "QuestionnaireResponse",
-                        "CarePlan",
-                        "MedicationAdministration",
-                        "Device",
-                        "DeviceComponent",
-                        "DeviceMetric",
-                        "MedicationOrder",
-                        "Observation"
-                    ]
-                },
-                "websocket": {
-                    "__comment": "only enable this for single-tenant, single-server deployments",
-                    "enabled": false
-                },
                 "kafka": {
-                    {{- if .Values.notifications.kafka.enabled }}
-                    "enabled": true,
+                    {{- if not .Values.notifications.kafka.enabled }}
+                    "enabled": false
                     {{- else }}
-                    "enabled": false,
-                    {{- end }}
+                    "enabled": true,
                     "topicName": "{{ .Values.notifications.kafka.topicName }}",
                     "connectionProperties": {
-                        "group.id": "securing-kafka-group",
                         "bootstrap.servers": "{{ .Values.notifications.kafka.bootstrapServers }}",
                         "sasl.jaas.config": "{{ .Values.notifications.kafka.saslJaasConfig }}",
                         "sasl.mechanism": "{{ .Values.notifications.kafka.saslMechanism }}",
                         "security.protocol": "{{ .Values.notifications.kafka.securityProtocol }}",
                         "ssl.protocol": "{{ .Values.notifications.kafka.sslProtocol }}",
                         "ssl.enabled.protocols": "{{ .Values.notifications.kafka.sslEnabledProtocols }}",
-                        "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdentificationAlgorithm }}",
-                        "ssl.truststore.location": "resources/security/kafka.client.truststore.p12",
-                        "ssl.truststore.password": "change-password",
-                        "ssl.keystore.location": "resources/security/kafka.client.keystore.p12",
-                        "ssl.keystore.password": "change-password",
-                        "ssl.key.password": "change-password",
-                        "ssl.truststore.type": "PKCS12",
-                        "ssl.keystore.type": "PKCS12",
-                        "acks": "all",
-                        "retries": "60",
-                        "request.timeout.ms": "10000",
-                        "max.block.ms": "60000",
-                        "max.in.flight.requests.per.connection": "5"
+                        "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdentificationAlgorithm }}"
                     }
+                    {{- end }}
                 },
                 "nats": {
-                    {{- if .Values.notifications.nats.enabled }}
-                    "enabled": true,
+                    {{- if not .Values.notifications.nats.enabled }}
+                    "enabled": false
                     {{- else }}
-                    "enabled": false,
-                    {{- end }}
+                    "enabled": true,
                     "cluster": "{{ .Values.notifications.nats.cluster }}",
                     "channel": "{{ .Values.notifications.nats.channel }}",
                     "clientId": "{{ .Values.notifications.nats.clientId }}",
-                    "servers": "{{ .Values.notifications.nats.servers }}",
-                    {{- if .Values.notifications.nats.useTLS }}
+                    "servers": "{{ .Values.notifications.nats.servers }}"
+                    {{- if .Values.notifications.nats.useTLS }},
                     "useTLS": false,
-                    {{- else }}
-                    "enabled": false,
-                    {{- end }}
                     "truststoreLocation": "resources/security/nats.client.truststore.jks",
                     "truststorePassword": "change-password",
                     "keystoreLocation": "resources/security/nats.client.keystore.jks",
                     "keystorePassword": "change-password"
+                    {{- end }}
                 }
+                {{- end }}
             },
             "audit": {
                 {{- if .Values.audit.enabled }}
@@ -210,6 +207,9 @@ The default fhir-server-config.json.
                 }
             },
             "bulkdata": {
+                {{- if not .Values.objectStorage.enabled }}
+                "enabled": false
+                {{- else }}
                 "enabled": true,
                 "core": {
                     "api": {
@@ -227,11 +227,6 @@ The default fhir-server-config.json.
                         "useServerTruststore": true,
                         "presignedExpiry": 86400
                     },
-                    "file" : { 
-                        "writeTriggerSizeMB": 1,
-                        "sizeThresholdMB": 200,
-                        "resourceCountThreshold": 200000
-                    },
                     "pageSize": 100,
                     {{- if .Values.objectStorage.batchIdEncryptionKey }}
                     "batchIdEncryptionKey": {{ .Values.objectStorage.batchIdEncryptionKey }},
@@ -239,40 +234,24 @@ The default fhir-server-config.json.
                     "batchIdEncryptionKey": "change-password",
                     {{- end }}
                     "maxPartitions": 3, 
-                    "maxInputs": 5,
-                    "maxChunkReadTime": "90000",
-                    "systemExportImpl": "fast",
-                    "defaultExportProvider": "default",
-                    "defaultImportProvider": "default"
+                    "maxInputs": 5
                 },
                 "storageProviders": {
                     "default" : {
-                        {{- if .Values.objectStorage.enabled }}
                         "type": "ibm-cos",
-                        "bucketName": "{{ .Values.objectStorage.bulkDataBucketName }}",
                         "location": "${COS_LOCATION}",
                         "endpointInternal": "${COS_ENDPOINT_INTERNAL}",
                         "endpointExternal": "${COS_ENDPOINT_EXTERNAL}",
-                        {{- else }}
-                        "type": "file",
-                        "_type": "ibm-cos|aws-s3|file|https|azure-blob",
-                        "validBaseUrls": [],
-                        "fileBase": "/output/bulkdata",
-                        {{- end }}
                         "auth" : {
                             "type": "hmac",
                             "accessKeyId": "${COS_ACCESS_KEY}",
                             "secretAccessKey": "${COS_SECRET_KEY}"
                         },
-                        "enableParquet": false,
-                        "disableBaseUrlValidation": true,
-                        "disableOperationOutcomes": true,
-                        "duplicationCheck": false, 
-                        "validateResources": false, 
-                        "create": false,
+                        "bucketName": "{{ .Values.objectStorage.bulkDataBucketName }}",
                         "presigned": true
                     }
                 }
+                {{- end }}
             },
             "operations": {
                 "erase": {
