@@ -1,4 +1,4 @@
-![Version: 0.0.3](https://img.shields.io/badge/Version-0.0.3-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square)
+![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -73,22 +73,42 @@ To connect to your database from outside the cluster execute the following comma
 | audit.kafkaServers | string | `nil` |  |
 | audit.topic | string | `"FHIR_AUDIT_DEV"` | The target Kafka topic for audit events |
 | audit.type | string | `"auditevent"` | `cadf` or `auditevent` |
+| datasourcesTemplate | string | `"datasourcesXmlPostgres"` | Template containing the datasources.xml content |
+| db.apiKey | string | `nil` | The database apiKey. If apiKeySecret is set, the apiKey will be set from its contents. |
+| db.apiKeySecretKey | string | `nil` | For the Secret specified in dbSecret, the key of the key/value pair containing the apiKey. This value will be ignored if the dbSecret value is not set. |
+| db.dbSecret | string | `"postgres"` | The name of a Secret from which to retrieve database information. If this value is set, it is expected that passwordSecretKey and/or apiKeySecretKey will also be set. |
 | db.enableTls | bool | `false` |  |
 | db.host | string | `"postgres"` |  |
 | db.name | string | `"postgres"` |  |
-| db.passwordSecret | string | `"postgres"` |  |
+| db.password | string | `nil` | The database password. If dbSecret is set, the password will be set from its contents. |
+| db.passwordSecretKey | string | `"postgresql-password"` | For the Secret specified in dbSecret, the key of the key/value pair containing the password. This value will be ignored if the dbSecret value is not set. |
+| db.pluginName | string | `nil` |  |
 | db.port | int | `5432` |  |
 | db.schema | string | `"fhirdata"` |  |
+| db.securityMechanism | string | `nil` |  |
+| db.sslConnection | bool | `true` |  |
+| db.tenantKey | string | `nil` |  |
 | db.type | string | `"postgresql"` |  |
 | db.user | string | `"postgres"` |  |
-| fhirAdminPassword | string | `"change-password"` |  |
-| fhirUserPassword | string | `"change-password"` |  |
+| endpoints | list | A single entry for resourceType "Resource" that applies to all resource types | Control which interactions are supported for which resource type endpoints |
+| endpoints[0] | object | `{"interactions":["create","read","vread","history","search","update","patch","delete"],"profiles":null,"resourceType":"Resource","searchIncludes":null,"searchParameters":[{"code":"*","url":"*"}],"searchRevIncludes":null}` | A valid FHIR resource type; use "Resource" for whole-system behavior |
+| endpoints[0].interactions | list | All interactions. | The set of enabled interactions for this resource type: [create, read, vread, history, search, update, patch, delete] |
+| endpoints[0].profiles | list | `nil` | Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required |
+| endpoints[0].searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
+| endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
+| endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
+| extensionSearchParametersTemplate | string | `"extensionSearchParametersJsonDefault"` | Template containing the extension-search-parameters.json content |
+| fhirAdminPassword | string | `"change-password"` | The fhirAdminPassword. If fhirPasswordSecret is set, the fhirAdminPassword will be set from its contents. |
+| fhirAdminPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirAdminPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
+| fhirPasswordSecret | string | `nil` | The name of a Secret from which to retrieve fhirUserPassword and fhirAdminPassword. If this value is set, it is expected that fhirUserPasswordSecretKey and fhirAdminPasswordSecretKey will also be set. |
+| fhirServerConfigTemplate | string | `"fhirServerConfigJsonDefault"` | Template containing the fhir-server-config.json content |
+| fhirUserPassword | string | `"change-password"` | The fhirUserPassword. If fhirPasswordSecret is set, the fhirUserPassword will be set from its contents. |
+| fhirUserPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
 | image.pullPolicy | string | `"Always"` |  |
-| image.pullSecret | string | `"all-icr-io"` |  |
 | image.repository | string | `"ibmcom/ibm-fhir-server"` |  |
 | image.tag | string | `"4.9.0"` |  |
-| ingestionReplicas | int | `2` | The number of replicas for the internal-access FHIR server pods |
+| imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.hostname | string | `"fhir.example.com"` | The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts. If you have more than one, you'll need to set overrides for the rules and tls separately. |
@@ -117,24 +137,30 @@ To connect to your database from outside the cluster execute the following comma
 | notifications.nats.truststoreLocation | string | `nil` |  |
 | notifications.nats.truststorePassword | string | `nil` |  |
 | notifications.nats.useTLS | bool | `true` |  |
-| objectStorage.accessKey | string | `nil` |  |
+| objectStorage.accessKey | string | `nil` | The object storage access key. If objectStorageSecret is set, the access key will be set from its contents. |
+| objectStorage.accessKeySecretKey | string | `nil` | For the Secret specified in objectStorageSecret, the key of the key/value pair containing the access key. This value will be ignored if the objectStorageSecret value is not set. |
 | objectStorage.batchIdEncryptionKey | string | `nil` |  |
 | objectStorage.bulkDataBucketName | string | `nil` | Bucket names must be globally unique |
 | objectStorage.enabled | bool | `false` |  |
-| objectStorage.endpointUrl | string | `nil` |  |
-| objectStorage.location | string | `nil` |  |
-| objectStorage.secretKey | string | `nil` |  |
+| objectStorage.endpointUrl | string | `nil` | The object storage endpoint URL. If objectStorageSecret is set, the endpoint URL will be set from its contents. |
+| objectStorage.endpointUrlSecretKey | string | `nil` | For the Secret specified in objectStorageSecret, the key of the key/value pair containing the endpoint URL. This value will be ignored if the objectStorageSecret value is not set. |
+| objectStorage.location | string | `nil` | The object storage location. If objectStorageSecret is set, the location will be set from its contents. |
+| objectStorage.locationSecretKey | string | `nil` | For the Secret specified in objectStorageSecret, the key of the key/value pair containing the location. This value will be ignored if the objectStorageSecret value is not set. |
+| objectStorage.objectStorageSecret | string | `nil` | The name of a Secret from which to retrieve object storage information. If this value is set, it is expected that locationSecretKey, endpointSecretKey, accessKeySecretKey, and secretKeySecretKey will also be set. |
+| objectStorage.secretKey | string | `nil` | The object storage secret key. If objectStorageSecret is set, the secret key will be set from its contents. |
+| objectStorage.secretKeySecretKey | string | `nil` | For the Secret specified in objectStorageSecret, the key of the key/value pair containing the secret key. This value will be ignored if the objectStorageSecret value is not set. |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | resources.requests.memory | string | `"4Gi"` |  |
+| restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
 | schemaMigration.enabled | bool | `true` |  |
 | schemaMigration.image.pullPolicy | string | `"Always"` |  |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
 | schemaMigration.image.tag | string | `"4.9.0"` |  |
-| serverRegistryResourceProviderEnabled | bool | `false` |  |
+| serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

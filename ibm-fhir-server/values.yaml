@@ -11,7 +11,7 @@ image:
   repository: ibmcom/ibm-fhir-server
   tag: "4.9.0"
   pullPolicy: Always
-  pullSecret: all-icr-io
+imagePullSecrets: []
 # -- Set to true to restrict the API to a particular set of resource type endpoints
 restrictEndpoints: false
 # -- Control which interactions are supported for which resource type endpoints
