@@ -7,13 +7,40 @@ nameOverride:
 
 # -- The number of replicas for the externally-facing FHIR server pods
 replicaCount: 2
-# -- The number of replicas for the internal-access FHIR server pods
-ingestionReplicas: 2
 image:
   repository: ibmcom/ibm-fhir-server
   tag: "4.9.0"
   pullPolicy: Always
   pullSecret: all-icr-io
+# -- Set to true to restrict the API to a particular set of resource type endpoints
+restrictEndpoints: false
+# -- Control which interactions are supported for which resource type endpoints
+# @default -- A single entry for resourceType "Resource" that applies to all resource types
+endpoints:
+    # -- A valid FHIR resource type; use "Resource" for whole-system behavior
+  - resourceType: Resource
+    # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
+    searchIncludes:
+    # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions
+    searchRevIncludes:
+    # -- (list) Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required
+    profiles:
+    # -- A mapping from enabled search parameter codes to search parameter definitions
+    searchParameters:
+      - code: "*"
+        url: "*"
+    # -- The set of enabled interactions for this resource type:
+    # [create, read, vread, history, search, update, patch, delete]
+    # @default -- All interactions.
+    interactions:
+      - create
+      - read
+      - vread
+      - history
+      - search
+      - update
+      - patch
+      - delete
 db:
   type: postgresql
   host: postgres
@@ -21,8 +48,24 @@ db:
   enableTls: false
   name: postgres
   user: postgres
-  passwordSecret: postgres
+  # -- The name of a Secret from which to retrieve database information.
+  # If this value is set, it is expected that passwordSecretKey and/or apiKeySecretKey will also be set.
+  dbSecret: postgres
+  # -- For the Secret specified in dbSecret, the key of the key/value pair containing the password.
+  # This value will be ignored if the dbSecret value is not set.
+  passwordSecretKey: postgresql-password
+  # -- For the Secret specified in dbSecret, the key of the key/value pair containing the apiKey.
+  # This value will be ignored if the dbSecret value is not set.
+  apiKeySecretKey:
+  # -- The database password. If dbSecret is set, the password will be set from its contents.
+  password:
+  # -- The database apiKey. If apiKeySecret is set, the apiKey will be set from its contents.
+  apiKey:
   schema: fhirdata
+  tenantKey:
+  sslConnection: true
+  pluginName:
+  securityMechanism:
 schemaMigration:
   enabled: true
   image:
@@ -30,8 +73,20 @@ schemaMigration:
     tag: "4.9.0"
     pullPolicy: Always
     pullSecret: all-icr-io
+# -- The name of a Secret from which to retrieve fhirUserPassword and fhirAdminPassword.
+# If this value is set, it is expected that fhirUserPasswordSecretKey and fhirAdminPasswordSecretKey will also be set.
+fhirPasswordSecret:
+# -- For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword.
+# This value will be ignored if the fhirPasswordSecret value is not set.
+fhirUserPasswordSecretKey:
+# -- For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirAdminPassword.
+# This value will be ignored if the fhirPasswordSecret value is not set.
+fhirAdminPasswordSecretKey:
+# -- The fhirUserPassword. If fhirPasswordSecret is set, the fhirUserPassword will be set from its contents.
 fhirUserPassword: change-password
+# -- The fhirAdminPassword. If fhirPasswordSecret is set, the fhirAdminPassword will be set from its contents.
 fhirAdminPassword: change-password
+# -- Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer
 serverRegistryResourceProviderEnabled: false
 audit:
   enabled: false
@@ -79,9 +134,28 @@ notifications:
     keystorePassword:
 objectStorage:
   enabled: false
+  # -- The name of a Secret from which to retrieve object storage information.
+  # If this value is set, it is expected that locationSecretKey, endpointSecretKey, accessKeySecretKey, and secretKeySecretKey will also be set.
+  objectStorageSecret:
+  # -- For the Secret specified in objectStorageSecret, the key of the key/value pair containing the location.
+  # This value will be ignored if the objectStorageSecret value is not set.
+  locationSecretKey:
+  # -- For the Secret specified in objectStorageSecret, the key of the key/value pair containing the endpoint URL.
+  # This value will be ignored if the objectStorageSecret value is not set.
+  endpointUrlSecretKey:
+  # -- For the Secret specified in objectStorageSecret, the key of the key/value pair containing the access key.
+  # This value will be ignored if the objectStorageSecret value is not set.
+  accessKeySecretKey:
+  # -- For the Secret specified in objectStorageSecret, the key of the key/value pair containing the secret key.
+  # This value will be ignored if the objectStorageSecret value is not set.
+  secretKeySecretKey:
+  # -- The object storage location. If objectStorageSecret is set, the location will be set from its contents.
   location:
+  # -- The object storage endpoint URL. If objectStorageSecret is set, the endpoint URL will be set from its contents.
   endpointUrl:
+  # -- The object storage access key. If objectStorageSecret is set, the access key will be set from its contents.
   accessKey:
+  # -- The object storage secret key. If objectStorageSecret is set, the secret key will be set from its contents.
   secretKey:
   # -- Bucket names must be globally unique
   bulkDataBucketName:
@@ -108,3 +182,12 @@ resources:
   limits:
     memory: "5Gi"
     ephemeral-storage: "1Gi"
+
+# -- Template containing the fhir-server-config.json content
+fhirServerConfigTemplate: "fhirServerConfigJsonDefault"
+
+# -- Template containing the datasources.xml content
+datasourcesTemplate: "datasourcesXmlPostgres"
+
+# -- Template containing the extension-search-parameters.json content
+extensionSearchParametersTemplate: "extensionSearchParametersJsonDefault"
