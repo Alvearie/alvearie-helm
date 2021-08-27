@@ -57,9 +57,9 @@ The datasource.xml file for a Postgres DB.
 {{- end }}
 
 {{/*
-The datasource.xml file for a DB2 DB.
+The datasource.xml file for a Db2 DB.
 */}}
-{{- define "datasourcesXmlDB2" }}
+{{- define "datasourcesXmlDb2" }}
     <server>
         <!-- ============================================================== -->
         <!-- TENANT: default; DSID: default; TYPE: read-write               -->
@@ -108,9 +108,9 @@ The datasource.xml file for a DB2 DB.
 {{- end }}
 
 {{/*
-The datasource.xml file for a DB2 DB on Cloud.
+The datasource.xml file for a Db2 DB on Cloud.
 */}}
-{{- define "datasourcesXmlDB2Cloud" }}
+{{- define "datasourcesXmlDb2Cloud" }}
     <server>
         <!-- ============================================================== -->
         <!-- TENANT: default; DSID: default; TYPE: read-write               -->
