@@ -23,6 +23,10 @@ spec:
         - name: fhir-server-config
           configMap:
             name: {{ template "fhir.fullname" . }}-config
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ template "fhir.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
