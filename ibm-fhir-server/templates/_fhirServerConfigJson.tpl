@@ -143,8 +143,8 @@ The default fhir-server-config.json.
                     "keystoreLocation": "resources/security/nats.client.keystore.jks",
                     "keystorePassword": "change-password"
                     {{- end }}
+                    {{- end }}
                 }
-                {{- end }}
             },
             "audit": {
                 {{- if .Values.audit.enabled }}
