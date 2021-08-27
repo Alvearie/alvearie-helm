@@ -137,7 +137,7 @@ The default fhir-server-config.json.
                     "clientId": "{{ .Values.notifications.nats.clientId }}",
                     "servers": "{{ .Values.notifications.nats.servers }}"
                     {{- if .Values.notifications.nats.useTLS }},
-                    "useTLS": false,
+                    "useTLS": true,
                     "truststoreLocation": "resources/security/nats.client.truststore.jks",
                     "truststorePassword": "change-password",
                     "keystoreLocation": "resources/security/nats.client.keystore.jks",
@@ -230,8 +230,6 @@ The default fhir-server-config.json.
                     "pageSize": 100,
                     {{- if .Values.objectStorage.batchIdEncryptionKey }}
                     "batchIdEncryptionKey": {{ .Values.objectStorage.batchIdEncryptionKey }},
-                    {{- else }}
-                    "batchIdEncryptionKey": "change-password",
                     {{- end }}
                     "maxPartitions": 3, 
                     "maxInputs": 5

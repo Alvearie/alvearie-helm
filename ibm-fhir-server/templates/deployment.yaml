@@ -75,6 +75,14 @@ spec:
                   key: postgresql-password
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
+            - name: FHIR_DB_SSL
+              value: {{ .Values.db.sslConnection }}
+            - name: FHIR_DB_APIKEY
+              value: {{ .Values.db.apiKey }}
+            - name: FHIR_DB_PLUGIN
+              value: {{ .Values.db.pluginName }}
+            - name: FHIR_DB_SECURITY
+              value: {{ .Values.db.securityMechanism }}
             - name: DS_MIN_POOL_SIZE
               value: "20"
             - name: DS_MAX_POOL_SIZE
@@ -95,6 +103,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.db.passwordSecret }}
                   key: postgresql-password
+            - name: BATCH_DB_SSL
+              value: {{ .Values.db.sslConnection }}
+            - name: BATCH_DB_APIKEY
+              value: {{ .Values.db.apiKey }}
+            - name: BATCH_DB_PLUGIN
+              value: {{ .Values.db.pluginName }}
+            - name: BATCH_DB_SECURITY
+              value: {{ .Values.db.securityMechanism }}
             - name: COS_LOCATION
               valueFrom:
                 secretKeyRef:

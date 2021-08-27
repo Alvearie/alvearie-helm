@@ -53,6 +53,10 @@ db:
   passwordSecret: postgres
   schema: fhirdata
   tenantKey:
+  sslConnection: true
+  apiKey:
+  pluginName:
+  securityMechanism:
 schemaMigration:
   enabled: true
   image:

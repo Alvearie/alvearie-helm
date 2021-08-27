@@ -29,7 +29,7 @@ spec:
         - name: fhir-schematool
           image: {{ .Values.schemaMigration.image.repository }}:{{ .Values.schemaMigration.image.tag }}
           env:
-            - name: FHIR_DB_HOSTNAME
+            - name: FHIR_DB_TYPE
               value: "{{ .Values.db.type }}"
             - name: FHIR_DB_HOSTNAME
               value: "{{ .Values.db.host }}"
