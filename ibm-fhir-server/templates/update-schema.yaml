@@ -40,11 +40,19 @@ spec:
               value: "{{ .Values.db.name }}"
             - name: FHIR_DB_USER
               value: "{{ .Values.db.user }}"
+            {{- if .Values.db.dbSecret }}
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.passwordSecret }}
-                  key: postgresql-password
+                  name: {{ .Values.db.dbSecret }}
+                  key: {{ .Values.db.passwordSecretKey }}
+            {{- else }}
+            - name: FHIR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-db-secret
+                  key: password
+            {{- end }}
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
           command:

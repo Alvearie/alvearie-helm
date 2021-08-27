@@ -68,19 +68,41 @@ spec:
               value: "{{ .Values.db.name }}"
             - name: FHIR_DB_USER
               value: "{{ .Values.db.user }}"
+            {{- if .Values.db.dbSecret }}
+            {{- if .Values.db.passwordSecretKey }}
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.passwordSecret }}
-                  key: postgresql-password
+                  name: {{ .Values.db.dbSecret }}
+                  key: {{ .Values.db.passwordSecretKey }}
+            {{- end }}
+            {{- if .Values.db.apiKeySecretKey }}
+            - name: FHIR_DB_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.dbSecret }}
+                  key: {{ .Values.db.apiKeySecretKey }}
+            {{- end }}
+            {{- else }}
+            {{- if .Values.db.password }}
+            - name: FHIR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-db-secret
+                  key: password
+            {{- end }}
+            {{- if .Values.db.apiKey }}
+            - name: FHIR_DB_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-db-secret
+                  key: apiKey
+            {{- end }}
+            {{- end }}
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
             - name: FHIR_DB_SSL
               value: {{ .Values.db.sslConnection }}
-            {{- if .Values.db.apiKey }}
-            - name: FHIR_DB_APIKEY
-              value: {{ .Values.db.apiKey }}
-            {{- end }}
             {{- if .Values.db.pluginName }}
             - name: FHIR_DB_PLUGIN
               value: {{ .Values.db.pluginName }}
@@ -104,17 +126,39 @@ spec:
               value: "{{ .Values.db.name }}"
             - name: BATCH_DB_USER
               value: "{{ .Values.db.user }}"
+            {{- if .Values.db.dbSecret }}
+            {{- if .Values.db.passwordSecretKey }}
             - name: BATCH_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.passwordSecret }}
-                  key: postgresql-password
-            - name: BATCH_DB_SSL
-              value: {{ .Values.db.sslConnection }}
+                  name: {{ .Values.db.dbSecret }}
+                  key: {{ .Values.db.passwordSecretKey }}
+            {{- end }}
+            {{- if .Values.db.apiKeySecretKey }}
+            - name: BATCH_DB_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.dbSecret }}
+                  key: {{ .Values.db.apiKeySecretKey }}
+            {{- end }}
+            {{- else }}
+            {{- if .Values.db.password }}
+            - name: BATCH_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-db-secret
+                  key: password
+            {{- end }}
             {{- if .Values.db.apiKey }}
             - name: BATCH_DB_APIKEY
-              value: {{ .Values.db.apiKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-db-secret
+                  key: apiKey
             {{- end }}
+            {{- end }}
+            - name: BATCH_DB_SSL
+              value: {{ .Values.db.sslConnection }}
             {{- if .Values.db.pluginName }}
             - name: BATCH_DB_PLUGIN
               value: {{ .Values.db.pluginName }}
@@ -123,6 +167,33 @@ spec:
             - name: BATCH_DB_SECURITY
               value: {{ .Values.db.securityMechanism }}
             {{- end }}
+            {{- if .Values.objectStorage.objectStorageSecret }}
+            - name: COS_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.objectStorageSecret }}
+                  key: {{ .Values.objectStorage.locationSecretKey }}
+            - name: COS_ENDPOINT_INTERNAL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.objectStorageSecret }}
+                  key: {{ .Values.objectStorage.endpointUrlSecretKey }}
+            - name: COS_ENDPOINT_EXTERNAL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.objectStorageSecret }}
+                  key: {{ .Values.objectStorage.endpointUrlSecretKey }}
+            - name: COS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.objectStorageSecret }}
+                  key: {{ .Values.objectStorage.accessKeySecretKey }}
+            - name: COS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.objectStorage.objectStorageSecret }}
+                  key: {{ .Values.objectStorage.secretKeySecretKey }}
+            {{- else }}
             - name: COS_LOCATION
               valueFrom:
                 secretKeyRef:
@@ -149,21 +220,30 @@ spec:
                   name: object-storage-secret
                   key: cos.secret.key
             {{- end }}
+            {{- end }}
+            {{- if .Values.fhirPasswordSecret }}
             - name: FHIR_USER_PASSWORD
-              value: {{ .Values.fhirUserPassword }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.fhirPasswordSecret }}
+                  key: {{ .Values.fhirUserPasswordSecretKey }}
             - name: FHIR_ADMIN_PASSWORD
-              value: {{ .Values.fhirAdminPassword }}
-          readinessProbe:
-            httpGet:
-              scheme: HTTPS
-              path: /fhir-server/api/v4/$healthcheck
-              port: 9443
-              httpHeaders:
-                - name: Authorization
-                  value: Basic {{ print "fhiruser:" .Values.fhirUserPassword | b64enc }}
-            initialDelaySeconds: 36
-            periodSeconds: 10
-            timeoutSeconds: 4
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.fhirPasswordSecret }}
+                  key: {{ .Values.fhirAdminPasswordSecretKey }}
+            {{- else }}
+            - name: FHIR_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-user-secret
+                  key: fhir.user.password
+            - name: FHIR_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fhir-user-secret
+                  key: fhir.admin.password
+            {{- end }}
           livenessProbe:
             exec:
               command:
