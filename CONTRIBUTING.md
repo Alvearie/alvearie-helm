@@ -6,7 +6,7 @@ to look for and tackle low-hanging fruit in the [issue tracker](https://github.c
 Before embarking on a more ambitious contribution, please get in touch.
 
 ## Communication
-Connect with us through https://alvearie.slack.com or open an [issue](https://github.com/IBM/FHIR/issues).
+Connect with us through https://alvearie.slack.com or open an [issue](https://github.com/alvearie/alvearie-helm/issues).
 Access to the Alvearie Slack can be requested at https://alvearie.io/contributions/requestSlackAccess.
 
 ## Reviews
