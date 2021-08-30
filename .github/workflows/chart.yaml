@@ -27,7 +27,6 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
         with:
-          charts_dir: ibm-fhir-server
           charts_repo_url: https://alvearie.io/alvearie-helm
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
