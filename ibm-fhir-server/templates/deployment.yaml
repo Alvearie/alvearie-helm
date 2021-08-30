@@ -248,14 +248,23 @@ spec:
                   name: fhir-user-secret
                   key: fhir.admin.password
             {{- end }}
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - -c
+              - curl --fail -k -sS -u "fhiruser:${FHIR_USER_PASSWORD}" https://localhost:9443/fhir-server/api/v4/$$healthcheck
+            initialDelaySeconds: 40
+            periodSeconds: 10
+            timeoutSeconds: 2
           livenessProbe:
             exec:
               command:
               - bash
               - -c
-              - "/opt/ol/wlp/bin/server status"
-            initialDelaySeconds: 32
-            periodSeconds: 10
+              - /opt/ol/wlp/bin/server status
+            initialDelaySeconds: 36
+            periodSeconds: 60
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 32
