@@ -17,8 +17,8 @@ restrictEndpoints: false
 # -- Control which interactions are supported for which resource type endpoints
 # @default -- A single entry for resourceType "Resource" that applies to all resource types
 endpoints:
-    # -- A valid FHIR resource type; use "Resource" for whole-system behavior
-  - resourceType: Resource
+  - # -- A valid FHIR resource type; use "Resource" for whole-system behavior
+    resourceType: Resource
     # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
     searchIncludes:
     # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions

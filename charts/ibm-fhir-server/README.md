@@ -91,9 +91,9 @@ To connect to your database from outside the cluster execute the following comma
 | db.type | string | `"postgresql"` |  |
 | db.user | string | `"postgres"` |  |
 | endpoints | list | A single entry for resourceType "Resource" that applies to all resource types | Control which interactions are supported for which resource type endpoints |
-| endpoints[0] | object | `{"interactions":["create","read","vread","history","search","update","patch","delete"],"profiles":null,"resourceType":"Resource","searchIncludes":null,"searchParameters":[{"code":"*","url":"*"}],"searchRevIncludes":null}` | A valid FHIR resource type; use "Resource" for whole-system behavior |
 | endpoints[0].interactions | list | All interactions. | The set of enabled interactions for this resource type: [create, read, vread, history, search, update, patch, delete] |
 | endpoints[0].profiles | list | `nil` | Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required |
+| endpoints[0].resourceType | string | `"Resource"` | A valid FHIR resource type; use "Resource" for whole-system behavior |
 | endpoints[0].searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
 | endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
 | endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
