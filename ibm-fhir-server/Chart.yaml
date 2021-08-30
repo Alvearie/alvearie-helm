@@ -1,5 +1,13 @@
-apiVersion: v1
+apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.0.4
+version: 0.0.5
 appVersion: 4.9.0
+sources:
+  - https://github.com/Alvearie/alvearie-helm
+  - https://github.com/IBM/FHIR
+maintainers:
+  - name: Lee Surprenant
+    email: lmsurpre@us.ibm.com
+  - name: Mike Schroeder
+    email: mschroed@us.ibm.com
