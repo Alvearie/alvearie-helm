@@ -77,7 +77,7 @@ We can demonstrate these approaches with the following section from the default 
     "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
     "checkReferenceTypes": true,
     "conditionalDeleteMaxNumber": 10,
-    "serverRegistryResourceProviderEnabled": &#123;&#123; &#46;Values&#46;serverRegistryResourceProviderEnabled &#125;&#125;,
+    "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
     "disabledOperations": "",
     "defaultPrettyPrint": true
 },
@@ -107,10 +107,10 @@ We can demonstrate these approaches with the following section from the default 
         "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
         "checkReferenceTypes": true,
         "conditionalDeleteMaxNumber": 10,
-        "serverRegistryResourceProviderEnabled": &#123;&#123; &#46;Values&#46;serverRegistryResourceProviderEnabled &#125;&#125;,
+        "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
         "disabledOperations": "",
         "defaultPrettyPrint": true,
-        "defaultPageSize": &#123;&#123; &#46;Values&#46;global&#46;defaultPageSize &#125;&#125;
+        "defaultPageSize": {{ .Values.global.defaultPageSize }}
     },
     ```
     As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom config template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
