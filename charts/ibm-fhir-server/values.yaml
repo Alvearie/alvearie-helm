@@ -99,7 +99,7 @@ audit:
     saslJaasConfig:
     sslEnabledProtocols: TLSv1.2
     sslProtocol: TLSv1.2
-    sslEndpointIdentificationAlgorithm: HTTPS
+    sslEndpointIdAlgorithm: HTTPS
   # -- The target Kafka topic for audit events
   topic: FHIR_AUDIT_DEV
   # -- `cadf` or `auditevent`
@@ -120,7 +120,7 @@ notifications:
     saslJaasConfig:
     sslEnabledProtocols: TLSv1.2
     sslProtocol: TLSv1.2
-    sslEndpointIdentificationAlgorithm: HTTPS
+    sslEndpointIdAlgorithm: HTTPS
   nats:
     enabled: false
     cluster:
@@ -184,10 +184,10 @@ resources:
     ephemeral-storage: "1Gi"
 
 # -- Template containing the fhir-server-config.json content
-fhirServerConfigTemplate: "fhirServerConfigJsonDefault"
+fhirServerConfigTemplate: "defaultFhirServerConfig"
 
 # -- Template containing the datasources.xml content
-datasourcesTemplate: "datasourcesXmlPostgres"
+datasourcesTemplate: "defaultPostgresDatasources"
 
 # -- Template containing the extension-search-parameters.json content
-extensionSearchParametersTemplate: "extensionSearchParametersJsonDefault"
+extensionSearchParametersTemplate: "defaultSearchParameters"

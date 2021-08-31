@@ -2,7 +2,7 @@
 {{/*
 The default extension-search-parameters.json.
 */}}
-{{- define "extensionSearchParametersJsonDefault" }}
+{{- define "defaultSearchParameters" }}
     {
         "resourceType": "Bundle",
         "id": "searchParams",
