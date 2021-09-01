@@ -2,7 +2,7 @@
 {{/*
 The datasource.xml file for a Postgres DB.
 */}}
-{{- define "datasourcesXmlPostgres" }}
+{{- define "defaultPostgresDatasources" }}
     <server>
         <!-- ============================================================== -->
         <!-- TENANT: default; DSID: default; TYPE: read-write               -->
@@ -59,7 +59,7 @@ The datasource.xml file for a Postgres DB.
 {{/*
 The datasource.xml file for a Db2 DB.
 */}}
-{{- define "datasourcesXmlDb2" }}
+{{- define "defaultDb2Datasources" }}
     <server>
         <!-- ============================================================== -->
         <!-- TENANT: default; DSID: default; TYPE: read-write               -->
@@ -110,7 +110,7 @@ The datasource.xml file for a Db2 DB.
 {{/*
 The datasource.xml file for a Db2 DB on Cloud.
 */}}
-{{- define "datasourcesXmlDb2Cloud" }}
+{{- define "defaultDb2CloudDatasources" }}
     <server>
         <!-- ============================================================== -->
         <!-- TENANT: default; DSID: default; TYPE: read-write               -->
@@ -163,7 +163,7 @@ The datasource.xml file for a Db2 DB on Cloud.
 {{/*
 The datasource.xml file for a Derby DB.
 */}}
-{{- define "datasourcesXmlDerby" }}
+{{- define "defaultDerbyDatasources" }}
     <server>
         <!-- ============================================================== -->
         <!-- This datasource aligns with the Apache Derby database that is  -->

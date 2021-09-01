@@ -1,4 +1,5 @@
-![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square)
+
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square) 
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -46,11 +47,72 @@ To connect to your database run the following command:
 
     kubectl run postgres-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.12.0-debian-10-r23 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgres -U postgres -d postgres -p 5432
 
+
+
 To connect to your database from outside the cluster execute the following commands:
 
     kubectl port-forward --namespace default svc/postgres 5432:5432 &
     PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
 ```
+
+## Customizing the FHIR server configuration
+This helm chart uses a [named template](https://helm.sh/docs/chart_template_guide/named_templates/) to generate the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The template name is `defaultFhirServerConfig` and it is defined in the `_fhirServerConfigJson.tpl` file. It uses many of this helm chart's values as the values of config properties within the generated `fhir-server-config.json` file.
+
+This design gives the deployer of this helm chart a number of different options to customize the FHIR server configuration:
+1. Use the `defaultFhirServerConfig` named template that is provided, but override values specified in the template to customize the configuration. Chart values are used to customize config properties in the following sections of the configuration:
+    - core
+    - resources
+    - notifications
+    - audit
+    - persistence
+    - bulkdata
+2. Provide a custom named template. If this helm chart is being deployed from another helm chart:
+    - In the deploying chart, create a custom fhir server config named template which specifies the exact configuration required.
+    - Override the `fhirServerConfigTemplate` chart value, setting it to the name of the custom named template. This helm chart will then use the specified named template to generate its `fhir-server-config.json` file.
+3. Provide a custom named template as above, but with the config properties within the template set to a mix of chart values provided by this helm chart and hard-coded values specific to the deployer's use case. With this approach, the deploying helm chart can decide how much of the configuration to make customizable to its users. If there are config properties for which values are not provided by this helm chart, but that the deploying helm chart wants to make customizable, it can define global chart values and use those in the provided custom named template. It is important to make the chart values global to allow them to be in scope for this helm chart.
+
+We can demonstrate these approaches with the following sample section from the `defaultFhirServerConfig` named template in the `_fhirServerConfigJson.tpl` file:
+```
+"core": {
+    "tenantIdHeaderName": "X-FHIR-TENANT-ID",
+    "datastoreIdHeaderName": "X-FHIR-DSID",
+    "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
+    "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
+    ...
+},
+```
+
+1. If the deployer just wants to change the `serverRegistryResourceProviderEnabled` config property, they can use the `defaultFhirServerConfig` named template provided and simply override the `serverRegistryResourceProviderEnabled` chart value when deploying this helm chart.
+2. If the deployer does not want this value to be customizable, and always wants the value to be set to `true`, they can provide a custom named template where the value has been hard-coded to `true`:
+
+    ```
+    "core": {
+        "tenantIdHeaderName": "X-FHIR-TENANT-ID",
+        "datastoreIdHeaderName": "X-FHIR-DSID",
+        "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
+        "serverRegistryResourceProviderEnabled": true,
+        ...
+    },
+    ```
+    When deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
+3. If the deployer wants to continue to allow the `serverRegistryResourceProviderEnabled` config property to be customizable, but they also want the `defaultPageSize` config property to be customizable, they can provide a custom named template where the "core" section takes the value of the `serverRegistryResourceProviderEnabled` config property from this helm chart's values file, and takes the value of the `defaultPageSize` config property from their own values file (as a global value):
+    ```
+    "core": {
+        "tenantIdHeaderName": "X-FHIR-TENANT-ID",
+        "datastoreIdHeaderName": "X-FHIR-DSID",
+        "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
+        "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
+        "defaultPageSize": {{ .Values.global.defaultPageSize }},
+        ...
+    },
+    ```
+    As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
+
+In addition to providing a default FHIR server configuration named template, this helm chart also provides default named templates for custom search parameters and datasources, both of which can be overridden by custom named templates in the same manner as the FHIR server configuration template.
+
+The deployer can specify a custom search parameters named template which will be used in the generation of the `extension-search-parameters.json` file by overriding the `extensionSearchParametersTemplate` chart value.
+
+The deployer can specify custom datasource named templates which will be used in the generation of the `datasource.xml` and `bulkdata.xml` files by overriding the `datasourcesTemplate` chart value. The default for this chart value is a datasources template for a Postgres database, but this helm chart also provides named templates for Db2, Db2 on Cloud, and Derby databases in the `_datasourcesXml.tpl` file.
 
 # Chart info
 
@@ -73,7 +135,7 @@ To connect to your database from outside the cluster execute the following comma
 | audit.kafkaServers | string | `nil` |  |
 | audit.topic | string | `"FHIR_AUDIT_DEV"` | The target Kafka topic for audit events |
 | audit.type | string | `"auditevent"` | `cadf` or `auditevent` |
-| datasourcesTemplate | string | `"datasourcesXmlPostgres"` | Template containing the datasources.xml content |
+| datasourcesTemplate | string | `"defaultPostgresDatasources"` | Template containing the datasources.xml content |
 | db.apiKey | string | `nil` | The database apiKey. If apiKeySecret is set, the apiKey will be set from its contents. |
 | db.apiKeySecretKey | string | `nil` | For the Secret specified in dbSecret, the key of the key/value pair containing the apiKey. This value will be ignored if the dbSecret value is not set. |
 | db.dbSecret | string | `"postgres"` | The name of a Secret from which to retrieve database information. If this value is set, it is expected that passwordSecretKey and/or apiKeySecretKey will also be set. |
@@ -97,11 +159,11 @@ To connect to your database from outside the cluster execute the following comma
 | endpoints[0].searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
 | endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
 | endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
-| extensionSearchParametersTemplate | string | `"extensionSearchParametersJsonDefault"` | Template containing the extension-search-parameters.json content |
+| extensionSearchParametersTemplate | string | `"defaultSearchParameters"` | Template containing the extension-search-parameters.json content |
 | fhirAdminPassword | string | `"change-password"` | The fhirAdminPassword. If fhirPasswordSecret is set, the fhirAdminPassword will be set from its contents. |
 | fhirAdminPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirAdminPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fhirPasswordSecret | string | `nil` | The name of a Secret from which to retrieve fhirUserPassword and fhirAdminPassword. If this value is set, it is expected that fhirUserPasswordSecretKey and fhirAdminPasswordSecretKey will also be set. |
-| fhirServerConfigTemplate | string | `"fhirServerConfigJsonDefault"` | Template containing the fhir-server-config.json content |
+| fhirServerConfigTemplate | string | `"defaultFhirServerConfig"` | Template containing the fhir-server-config.json content |
 | fhirUserPassword | string | `"change-password"` | The fhirUserPassword. If fhirPasswordSecret is set, the fhirUserPassword will be set from its contents. |
 | fhirUserPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
@@ -161,6 +223,7 @@ To connect to your database from outside the cluster execute the following comma
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
 | schemaMigration.image.tag | string | `"4.9.0"` |  |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
+
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

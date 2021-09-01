@@ -2,7 +2,7 @@
 {{/*
 The default fhir-server-config.json.
 */}}
-{{- define "fhirServerConfigJsonDefault" }}
+{{- define "defaultFhirServerConfig" }}
     {
         "__comment": "FHIR Server configuration",
         "fhirServer": {
