@@ -1,4 +1,5 @@
-![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square) 
+
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square) 
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -55,71 +56,63 @@ To connect to your database from outside the cluster execute the following comma
 ```
 
 ## Customizing the FHIR server configuration
-Many of this helm chart's values are used in the generation of the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The `defaultFhirServerConfig` template in the `_fhirServerConfigJson.tpl` file defines the default FHIR server configuration that will be generated.
+This helm chart uses a [named template](https://helm.sh/docs/chart_template_guide/named_templates/) to generate the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The template name is `defaultFhirServerConfig` and it is defined in the `_fhirServerConfigJson.tpl` file. It uses many of this helm chart's values as the values of config properties within the generated `fhir-server-config.json` file.
 
-The deployer of this helm chart can customize the FHIR server configuration in a number of ways:
-1. Use the default configuration template, but override values specified in the template to customize the configuration. Chart values are used to customize config properties in the following sections of the configuration:
-    - persistence
-    - auditing
+This design gives the deployer of this helm chart a number of different options to customize the FHIR server configuration:
+1. Use the `defaultFhirServerConfig` named template that is provided, but override values specified in the template to customize the configuration. Chart values are used to customize config properties in the following sections of the configuration:
+    - core
+    - resources
     - notifications
-    - bulk data
-    - resource type-specific capabilities
-2. Provide a custom configuration template. If this helm chart is being deployed from another helm chart:
-    - In the deploying chart, create a custom fhir server config template which specifies the exact configuration required.
-    - Override the `fhirServerConfigTemplate` chart value, setting it to the name of the custom template. This helm chart will then use the specified custom template to generate its `fhir-server-config.json` file.
-3. Provide a custom configuration template as above, but with config properties set to a mix of chart values provided by this helm chart and hard-coded values specific to the deployer's use case. With this approach, the deploying helm chart can decide how much of the configuration to make customizable to its users. If there are config properties for which values are not provided by this helm chart, but that the deploying helm chart wants to make customizable, it can define global chart values and use those in the provided custom template. Making the chart values global will allow them to be in scope for this helm chart.
+    - audit
+    - persistence
+    - bulkdata
+2. Provide a custom named template. If this helm chart is being deployed from another helm chart:
+    - In the deploying chart, create a custom fhir server config named template which specifies the exact configuration required.
+    - Override the `fhirServerConfigTemplate` chart value, setting it to the name of the custom named template. This helm chart will then use the specified named template to generate its `fhir-server-config.json` file.
+3. Provide a custom named template as above, but with the config properties within the template set to a mix of chart values provided by this helm chart and hard-coded values specific to the deployer's use case. With this approach, the deploying helm chart can decide how much of the configuration to make customizable to its users. If there are config properties for which values are not provided by this helm chart, but that the deploying helm chart wants to make customizable, it can define global chart values and use those in the provided custom named template. It is important to make the chart values global to allow them to be in scope for this helm chart.
 
-We can demonstrate these approaches with the following section from the default config template in the `_fhirServerConfigJson.tpl` file:
+We can demonstrate these approaches with the following sample section from the `defaultFhirServerConfig` named template in the `_fhirServerConfigJson.tpl` file:
 ```
 "core": {
     "tenantIdHeaderName": "X-FHIR-TENANT-ID",
     "datastoreIdHeaderName": "X-FHIR-DSID",
     "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
-    "checkReferenceTypes": true,
-    "conditionalDeleteMaxNumber": 10,
     "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
-    "disabledOperations": "",
-    "defaultPrettyPrint": true
+    ...
 },
 ```
 
-1. If the deployer just wants to change the `serverRegistryResourceProviderEnabled` config property, they can use the default config template provided and simply override the `serverRegistryResourceProviderEnabled` chart value when deploying this helm chart.
-2. If the deployer does not want this value to be customizable, and always wants the value to be set to `true`, they can provide a custom config template where the value has been hard-coded to `true`:
+1. If the deployer just wants to change the `serverRegistryResourceProviderEnabled` config property, they can use the `defaultFhirServerConfig` named template provided and simply override the `serverRegistryResourceProviderEnabled` chart value when deploying this helm chart.
+2. If the deployer does not want this value to be customizable, and always wants the value to be set to `true`, they can provide a custom named template where the value has been hard-coded to `true`:
 
     ```
     "core": {
         "tenantIdHeaderName": "X-FHIR-TENANT-ID",
         "datastoreIdHeaderName": "X-FHIR-DSID",
         "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
-        "checkReferenceTypes": true,
-        "conditionalDeleteMaxNumber": 10,
         "serverRegistryResourceProviderEnabled": true,
-        "disabledOperations": "",
-        "defaultPrettyPrint": true
+        ...
     },
     ```
-    When deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom config template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
-3. If the deployer wants to continue to allow the `serverRegistryResourceProviderEnabled` config property to be customizable, but they also want the `defaultPageSize` config property to be customizable, they can provide a custom config template where the "core" section takes the value of the `serverRegistryResourceProviderEnabled` config property from this helm chart's values file, and takes the value of the `defaultPageSize` config property from their own values file (as a global value):
+    When deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
+3. If the deployer wants to continue to allow the `serverRegistryResourceProviderEnabled` config property to be customizable, but they also want the `defaultPageSize` config property to be customizable, they can provide a custom named template where the "core" section takes the value of the `serverRegistryResourceProviderEnabled` config property from this helm chart's values file, and takes the value of the `defaultPageSize` config property from their own values file (as a global value):
     ```
     "core": {
         "tenantIdHeaderName": "X-FHIR-TENANT-ID",
         "datastoreIdHeaderName": "X-FHIR-DSID",
         "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
-        "checkReferenceTypes": true,
-        "conditionalDeleteMaxNumber": 10,
         "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
-        "disabledOperations": "",
-        "defaultPrettyPrint": true,
-        "defaultPageSize": {{ .Values.global.defaultPageSize }}
+        "defaultPageSize": {{ .Values.global.defaultPageSize }},
+        ...
     },
     ```
-    As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom config template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
+    As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
 
-In addition to providing a default FHIR server configuration template, this helm chart also provides default templates for custom search parameters and datasources, both of which can be overridden by custom templates in the same manner as the FHIR server configuration template.
+In addition to providing a default FHIR server configuration named template, this helm chart also provides default named templates for custom search parameters and datasources, both of which can be overridden by custom named templates in the same manner as the FHIR server configuration template.
 
-The deployer can specify a custom search parameters template which will be used in the generation of the `extension-search-parameters.json` file by overriding the `extensionSearchParametersTemplate` chart value.
+The deployer can specify a custom search parameters named template which will be used in the generation of the `extension-search-parameters.json` file by overriding the `extensionSearchParametersTemplate` chart value.
 
-The deployer can specify custom datasource templates which will be used in the generation of the `datasource.xml` and `bulkdata.xml` files by overriding the `datasourcesTemplate` chart value. The default for this chart value is a datasources template for a Postgres database, but this helm chart also provides templates for Db2, Db2 on Cloud, and Derby databases in the `_datasourcesXml.tpl` file.
+The deployer can specify custom datasource named templates which will be used in the generation of the `datasource.xml` and `bulkdata.xml` files by overriding the `datasourcesTemplate` chart value. The default for this chart value is a datasources template for a Postgres database, but this helm chart also provides named templates for Db2, Db2 on Cloud, and Derby databases in the `_datasourcesXml.tpl` file.
 
 # Chart info
 
