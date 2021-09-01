@@ -123,7 +123,7 @@ The default fhir-server-config.json.
                         "security.protocol": "{{ .Values.notifications.kafka.securityProtocol }}",
                         "ssl.protocol": "{{ .Values.notifications.kafka.sslProtocol }}",
                         "ssl.enabled.protocols": "{{ .Values.notifications.kafka.sslEnabledProtocols }}",
-                        "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdAlgorithm }}"
+                        "ssl.endpoint.identification.algorithm": "{{ .Values.notifications.kafka.sslEndpointIdentificationAlgorithm }}"
                     }
                     {{- end }}
                 },
@@ -163,7 +163,7 @@ The default fhir-server-config.json.
                         "security.protocol": "{{ .Values.audit.kafka.securityProtocol }}",
                         "ssl.protocol": "{{ .Values.audit.kafka.sslProtocol }}",
                         "ssl.enabled.protocols": "{{ .Values.audit.kafka.sslEnabledProtocols }}",
-                        "ssl.endpoint.identification.algorithm": "{{ .Values.audit.kafka.sslEndpointIdAlgorithm }}"
+                        "ssl.endpoint.identification.algorithm": "{{ .Values.audit.kafka.sslEndpointIdentificationAlgorithm }}"
                     },
                     "kafkaServers": "{{ .Values.audit.kafkaServers }}",
                     "kafkaApiKey": "{{ .Values.audit.kafkaApiKey }}"

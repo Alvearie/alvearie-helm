@@ -99,7 +99,7 @@ audit:
     saslJaasConfig:
     sslEnabledProtocols: TLSv1.2
     sslProtocol: TLSv1.2
-    sslEndpointIdAlgorithm: HTTPS
+    sslEndpointIdentificationAlgorithm: HTTPS
   # -- The target Kafka topic for audit events
   topic: FHIR_AUDIT_DEV
   # -- `cadf` or `auditevent`
@@ -120,7 +120,7 @@ notifications:
     saslJaasConfig:
     sslEnabledProtocols: TLSv1.2
     sslProtocol: TLSv1.2
-    sslEndpointIdAlgorithm: HTTPS
+    sslEndpointIdentificationAlgorithm: HTTPS
   nats:
     enabled: false
     cluster:

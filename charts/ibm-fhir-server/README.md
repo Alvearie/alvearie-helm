@@ -129,7 +129,7 @@ The deployer can specify custom datasource named templates which will be used in
 | audit.kafka.saslMechanism | string | `"PLAIN"` |  |
 | audit.kafka.securityProtocol | string | `"SASL_SSL"` |  |
 | audit.kafka.sslEnabledProtocols | string | `"TLSv1.2"` |  |
-| audit.kafka.sslEndpointIdAlgorithm | string | `"HTTPS"` |  |
+| audit.kafka.sslEndpointIdentificationAlgorithm | string | `"HTTPS"` |  |
 | audit.kafka.sslProtocol | string | `"TLSv1.2"` |  |
 | audit.kafkaApiKey | string | `nil` |  |
 | audit.kafkaServers | string | `nil` |  |
@@ -186,7 +186,7 @@ The deployer can specify custom datasource named templates which will be used in
 | notifications.kafka.saslMechanism | string | `"PLAIN"` |  |
 | notifications.kafka.securityProtocol | string | `"SASL_SSL"` |  |
 | notifications.kafka.sslEnabledProtocols | string | `"TLSv1.2"` |  |
-| notifications.kafka.sslEndpointIdAlgorithm | string | `"HTTPS"` |  |
+| notifications.kafka.sslEndpointIdentificationAlgorithm | string | `"HTTPS"` |  |
 | notifications.kafka.sslProtocol | string | `"TLSv1.2"` |  |
 | notifications.kafka.topicName | string | `nil` |  |
 | notifications.nats.channel | string | `nil` |  |
