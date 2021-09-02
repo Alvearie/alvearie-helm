@@ -19,7 +19,7 @@ metadata:
     # before-hook-creation	Delete the previous resource before a new hook is launched (default)
     # hook-succeeded	Delete the resource after the hook is successfully executed
     # hook-failed	Delete the resource if the hook failed during execution
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   template:
     metadata:
@@ -50,7 +50,7 @@ spec:
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fhir-db-secret
+                  name: {{ template "fhir.fullname" . }}-db-secret-preinstall
                   key: password
             {{- end }}
             - name: FHIR_DB_SCHEMA
