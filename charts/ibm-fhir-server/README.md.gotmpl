@@ -118,13 +118,13 @@ The deployer can specify custom datasource named templates which will be used in
 
 This helm chart specifies chart values for the following pieces of sensitive data:
 
-- database password and api key:
+- database password or api key:
     - `db.password`
     - `db.apiKey`
 - FHIR server user and admin passwords:
     - `fhirUserPassword`
     - `fhirAdminPassword`
-- object storage configuration information
+- object storage configuration information:
     - `objectStorage.location`
     - `objectStorage.endpointUrl`
     - `objectStorage.accessKey`
