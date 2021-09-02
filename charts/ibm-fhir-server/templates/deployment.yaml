@@ -92,14 +92,14 @@ spec:
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fhir-db-secret
+                  name: {{ template "fhir.fullname" . }}-db-secret
                   key: password
             {{- end }}
             {{- if .Values.db.apiKey }}
             - name: FHIR_DB_APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: fhir-db-secret
+                  name: {{ template "fhir.fullname" . }}-db-secret
                   key: apiKey
             {{- end }}
             {{- end }}
@@ -150,14 +150,14 @@ spec:
             - name: BATCH_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fhir-db-secret
+                  name: {{ template "fhir.fullname" . }}-db-secret
                   key: password
             {{- end }}
             {{- if .Values.db.apiKey }}
             - name: BATCH_DB_APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: fhir-db-secret
+                  name: {{ template "fhir.fullname" . }}-db-secret
                   key: apiKey
             {{- end }}
             {{- end }}
@@ -201,27 +201,27 @@ spec:
             - name: COS_LOCATION
               valueFrom:
                 secretKeyRef:
-                  name: object-storage-secret
+                  name: {{ template "fhir.fullname" . }}-object-storage-secret
                   key: cos.location
             - name: COS_ENDPOINT_INTERNAL
               valueFrom:
                 secretKeyRef:
-                  name: object-storage-secret
+                  name: {{ template "fhir.fullname" . }}-object-storage-secret
                   key: cos.endpoint.url.internal
             - name: COS_ENDPOINT_EXTERNAL
               valueFrom:
                 secretKeyRef:
-                  name: object-storage-secret
+                  name: {{ template "fhir.fullname" . }}-object-storage-secret
                   key: cos.endpoint.url.external
             - name: COS_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: object-storage-secret
+                  name: {{ template "fhir.fullname" . }}-object-storage-secret
                   key: cos.access.key
             - name: COS_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: object-storage-secret
+                  name: {{ template "fhir.fullname" . }}-object-storage-secret
                   key: cos.secret.key
             {{- end }}
             {{- end }}
@@ -240,12 +240,12 @@ spec:
             - name: FHIR_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fhir-user-secret
+                  name: {{ template "fhir.fullname" . }}-user-secret
                   key: fhir.user.password
             - name: FHIR_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fhir-user-secret
+                  name: {{ template "fhir.fullname" . }}-user-secret
                   key: fhir.admin.password
             {{- end }}
           readinessProbe:

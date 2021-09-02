@@ -49,7 +49,7 @@ spec:
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: fhir-db-secret
+                  name: {{ template "fhir.fullname" . }}-db-secret-preinstall
                   key: password
             {{- end }}
             - name: FHIR_DB_SCHEMA
