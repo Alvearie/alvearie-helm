@@ -1,5 +1,5 @@
 
-![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square) 
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square) 
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -113,6 +113,56 @@ In addition to providing a default FHIR server configuration named template, thi
 The deployer can specify a custom search parameters named template which will be used in the generation of the `extension-search-parameters.json` file by overriding the `extensionSearchParametersTemplate` chart value.
 
 The deployer can specify custom datasource named templates which will be used in the generation of the `datasource.xml` and `bulkdata.xml` files by overriding the `datasourcesTemplate` chart value. The default for this chart value is a datasources template for a Postgres database, but this helm chart also provides named templates for Db2, Db2 on Cloud, and Derby databases in the `_datasourcesXml.tpl` file.
+
+## Using existing Secrets for sensitive data
+
+This helm chart specifies chart values for the following pieces of sensitive data:
+
+- Database password or api key:
+    - `db.password`
+    - `db.apiKey`
+- FHIR server user and admin passwords:
+    - `fhirUserPassword`
+    - `fhirAdminPassword`
+- Object storage configuration information:
+    - `objectStorage.location`
+    - `objectStorage.endpointUrl`
+    - `objectStorage.accessKey`
+    - `objectStorage.secretKey`
+
+These values can be specified directly in the `values.yaml` file, or the deployer can specify names of existing Secrets from which to read them.
+
+### Database password or api key
+
+To have the `db.password` and `db.apiKey` values read from an existing Secret, the deployer must override the following chart values:
+
+- `db.dbSecret` - this is set to the name of the Secret from which the database information will be read
+- `db.passwordSecretKey` - this is set to the key of the key/value pair within the Secret that contains the password
+- `db.apiKeySecretKey` - this is set to the key of the key/value pair within the Secret that contains the api key
+
+If the `db.dbSecret` value is set, this helm chart will only look in the specified Secret for the password and api key. The `db.password` and `db.apiKey` chart values will be ignored.
+
+### FHIR server user and admin passwords
+
+To have the FHIR server user and admin passwords read from an existing Secret, the deployer must override the following chart values:
+
+- `fhirPasswordSecret` - this is set to the name of the Secret from which the FHIR server user and admin passwords will be read
+- `fhirUserPasswordSecretKey` - this is set to the key of the key/value pair within the Secret that contains the user password
+- `fhirAdminPasswordSecretKey` - this is set to the key of the key/value pair within the Secret that contains the admin password
+
+If the `fhirPasswordSecret` value is set, this helm chart will only look in the specified Secret for the FHIR server user and admin passwords. The `fhirUserPassword` and `fhirAdminPassword` chart values will be ignored.
+
+### Object storage configuration information
+
+To have object storage configuration information read from an existing Secret, the deployer must override the following chart values:
+
+- `objectStorage.objectStorageSecret` - this is set to the name of the Secret from which the object storage configuration information will be read
+- `objectStorage.locationSecretKey` - this is set to the key of the key/value pair within the Secret that contains the object storage location
+- `objectStorage.endpointUrlSecretKey` - this is set to the key of the key/value pair within the Secret that contains the object storage endpoint URL
+- `objectStorage.accessKeySecretKey` - this is set to the key of the key/value pair within the Secret that contains the object storage access key
+- `objectStorage.secretKeySecretKey` - this is set to the key of the key/value pair within the Secret that contains the object storage secret key
+
+If the `objectStorage.objectStorageSecret` value is set, this helm chart will only look in the specified Secret for the object storage configuration information. The `objectStorage.locationSecretKey`, `objectStorage.endpointUrlSecretKey`, `objectStorage.accessKeySecretKey`, and `objectStorage.secretKeySecretKey` chart values will be ignored.
 
 # Chart info
 
