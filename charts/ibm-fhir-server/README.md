@@ -261,6 +261,19 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | objectStorage.objectStorageSecret | string | `nil` | The name of a Secret from which to retrieve object storage information. If this value is set, it is expected that locationSecretKey, endpointSecretKey, accessKeySecretKey, and secretKeySecretKey will also be set. |
 | objectStorage.secretKey | string | `nil` | The object storage secret key. If objectStorageSecret is set, the secret key will be set from its contents. |
 | objectStorage.secretKeySecretKey | string | `nil` | For the Secret specified in objectStorageSecret, the key of the key/value pair containing the secret key. This value will be ignored if the objectStorageSecret value is not set. |
+| postgresql.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
+| postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. if set to `false`, the values under the `db` key are used |
+| postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret has to contain the keys `postgresql-password` which is the password for `postgresqlUsername` when it is different of `postgres`, `postgresql-postgres-password` which will override `postgresqlPassword`, `postgresql-replication-password` which will override `replication.password` and `postgresql-ldap-password` which will be sed to authenticate on LDAP. The value is evaluated as a template. |
+| postgresql.image.tag | string | `"13.4.0"` | update the default Postgres version to 13.4 |
+| postgresql.metrics.enabled | bool | `false` | should also be true for production use |
+| postgresql.metrics.serviceMonitor.additionalLabels | object | `{}` | the labels used for Prometheus autodiscover, e.g. could be `release: prometheus` |
+| postgresql.metrics.serviceMonitor.enabled | bool | `false` | create a Prometheus Operator ServiceMonitor resource |
+| postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
+| postgresql.replication.enabled | bool | `false` | should be true for production use |
+| postgresql.replication.numSynchronousReplicas | int | `1` | from the number of `readReplicas` defined above, set the number of those that will have synchronous replication |
+| postgresql.replication.readReplicas | int | `1` | number of read replicas |
+| postgresql.replication.synchronousCommit | string | `"on"` | set synchronous commit mode: on, off, remote_apply, remote_write and local |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |

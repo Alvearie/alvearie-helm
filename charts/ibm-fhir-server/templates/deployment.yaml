@@ -69,43 +69,30 @@ spec:
               value: "{{ .Values.ingress.hostname }}"
             {{- end }}
             - name: FHIR_DB_HOSTNAME
-              value: "{{ .Values.db.host }}"
+              value: "{{ include "fhir.database.host" $ }}"
             - name: FHIR_DB_PORT
-              value: "{{ .Values.db.port }}"
+              value: "{{ include "fhir.database.port" $ }}"
             - name: FHIR_DB_NAME
-              value: "{{ .Values.db.name }}"
+              value: "{{ include "fhir.database.name" $ }}"
             - name: FHIR_DB_USER
-              value: "{{ .Values.db.user }}"
-            {{- if .Values.db.dbSecret }}
-            {{- if .Values.db.passwordSecretKey }}
+              value: "{{ include "fhir.database.user" $ }}"
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.passwordSecretKey }}
-            {{- end }}
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.secretKey" $ }}"
             {{- if .Values.db.apiKeySecretKey }}
             - name: FHIR_DB_APIKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.db.dbSecret }}
                   key: {{ .Values.db.apiKeySecretKey }}
-            {{- end }}
-            {{- else }}
-            {{- if .Values.db.password }}
-            - name: FHIR_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: password
-            {{- end }}
-            {{- if .Values.db.apiKey }}
+            {{- else if .Values.db.apiKey }}
             - name: FHIR_DB_APIKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ template "fhir.fullname" . }}-db-secret
                   key: apiKey
-            {{- end }}
             {{- end }}
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
@@ -127,21 +114,18 @@ spec:
               value: "-1"
             {{- if .Values.objectStorage.enabled }}
             - name: BATCH_DB_HOSTNAME
-              value: "{{ .Values.db.host }}"
+              value: "{{ include "fhir.database.host" $ }}"
             - name: BATCH_DB_PORT
-              value: "{{ .Values.db.port }}"
+              value: "{{ include "fhir.database.port" $ }}"
             - name: BATCH_DB_NAME
-              value: "{{ .Values.db.name }}"
+              value: "{{ include "fhir.database.name" $ }}"
             - name: BATCH_DB_USER
-              value: "{{ .Values.db.user }}"
-            {{- if .Values.db.dbSecret }}
-            {{- if .Values.db.passwordSecretKey }}
+              value: "{{ include "fhir.database.user" $ }}"
             - name: BATCH_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.passwordSecretKey }}
-            {{- end }}
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.secretKey" $ }}"
             {{- if .Values.db.apiKeySecretKey }}
             - name: BATCH_DB_APIKEY
               valueFrom:
@@ -149,21 +133,12 @@ spec:
                   name: {{ .Values.db.dbSecret }}
                   key: {{ .Values.db.apiKeySecretKey }}
             {{- end }}
-            {{- else }}
-            {{- if .Values.db.password }}
-            - name: BATCH_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: password
-            {{- end }}
             {{- if .Values.db.apiKey }}
             - name: BATCH_DB_APIKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ template "fhir.fullname" . }}-db-secret
                   key: apiKey
-            {{- end }}
             {{- end }}
             - name: BATCH_DB_SSL
               value: "{{ .Values.db.sslConnection }}"

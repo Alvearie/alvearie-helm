@@ -3,6 +3,11 @@ description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
 version: 0.1.4
 appVersion: 4.9.1
+dependencies:
+  - name: postgresql
+    version: 10.7.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
 sources:
   - https://github.com/Alvearie/alvearie-helm
   - https://github.com/IBM/FHIR

@@ -32,37 +32,29 @@ spec:
             - name: FHIR_DB_TYPE
               value: "{{ .Values.db.type }}"
             - name: FHIR_DB_HOSTNAME
-              value: "{{ .Values.db.host }}"
+              value: "{{ include "fhir.database.host" $ }}"
             - name: FHIR_DB_PORT
-              value: "{{ .Values.db.port }}"
+              value: "{{ include "fhir.database.port" $ }}"
             - name: FHIR_DB_NAME
-              value: "{{ .Values.db.name }}"
+              value: "{{ include "fhir.database.name" $ }}"
             - name: FHIR_DB_USER
-              value: "{{ .Values.db.user }}"
-            {{- if .Values.db.dbSecret }}
-            - name: FHIR_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.passwordSecretKey }}
-            {{- else }}
-            - name: FHIR_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret-preinstall
-                  key: password
-            {{- end }}
+              value: "{{ include "fhir.database.user" $ }}"
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
+            - name: FHIR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.secretKey" $ }}"
           command:
             - bash
             - -c
             - /opt/java/openjdk/bin/java -jar /opt/schematool/fhir-persistence-schema-*-cli.jar
               --db-type {{ .Values.db.type }}
-              --prop db.host={{ .Values.db.host }}
-              --prop db.port={{ .Values.db.port }}
-              --prop db.database={{ .Values.db.name }}
-              --prop user={{ .Values.db.user }}
+              --prop db.host=${FHIR_DB_HOSTNAME}
+              --prop db.port=${FHIR_DB_PORT}
+              --prop db.database=${FHIR_DB_NAME}
+              --prop user=${FHIR_DB_USER}
               --prop password=${FHIR_DB_PASSWORD}
               {{- if .Values.db.enableTls }}
               {{- if eq .Values.db.type "db2" }}
