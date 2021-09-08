@@ -215,12 +215,12 @@ The default fhir-server-config.json.
                     "api": {
                         "url": "https://localhost:9443/ibm/api/batch",
                         "user": "fhiradmin",
-                        "password": "{{ .Values.fhirAdminPassword }}",
+                        "password": "${FHIR_ADMIN_PASSWORD}",
                         "truststore": "resources/security/fhirTrustStore.p12",
-                        "truststorePassword": "change-password", 
+                        "truststorePassword": "change-password",
                         "trustAll": true
                     },
-                    "cos" : { 
+                    "cos" : {
                         "partUploadTriggerSizeMB": 10,
                         "objectSizeThresholdMB": 200,
                         "objectResourceCountThreshold": 200000,
@@ -231,7 +231,7 @@ The default fhir-server-config.json.
                     {{- if .Values.objectStorage.batchIdEncryptionKey }}
                     "batchIdEncryptionKey": {{ .Values.objectStorage.batchIdEncryptionKey }},
                     {{- end }}
-                    "maxPartitions": 3, 
+                    "maxPartitions": 3,
                     "maxInputs": 5
                 },
                 "storageProviders": {
