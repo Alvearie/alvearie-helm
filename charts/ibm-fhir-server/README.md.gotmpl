@@ -10,7 +10,7 @@ ConfigMaps and Secrets to support the wide range of configuration options availa
 
 ## Sample usage
 ```
-helm upgrade --install ibm-fhir-server . --values values.yaml --set 'ingress.hostname=cluster1-blue-250babbbe4c3000e15508cd07c1d282b-0000.us-east.containers.appdomain.cloud' --set 'ingress.tls[0].secretName=cluster1-blue-250babbbe4c3000e15508cd07c1d282b-0000'
+helm upgrade --install ibm-fhir-server . --values values.yaml --set 'ingress.hostname=example.com' --set 'ingress.tls[0].secretName=cluster-tls-secret'
 ```
 
 ## Prerequisites
@@ -107,6 +107,8 @@ We can demonstrate these approaches with the following sample section from the `
     },
     ```
     As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
+
+For a complete list of configuration properties for the IBM FHIR Server, please see the [User's Guide](https://ibm.github.io/FHIR/guides/FHIRServerUsersGuide).
 
 In addition to providing a default FHIR server configuration named template, this helm chart also provides default named templates for custom search parameters and datasources, both of which can be overridden by custom named templates in the same manner as the FHIR server configuration template.
 
