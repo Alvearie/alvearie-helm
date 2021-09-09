@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.1.4
+version: 0.2.0
 appVersion: 4.9.1
 dependencies:
   - name: postgresql
@@ -16,3 +16,10 @@ maintainers:
     email: lmsurpre@us.ibm.com
   - name: Mike Schroeder
     email: mschroed@us.ibm.com
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/changes: |
+    # When using the list of objects option the valid supported kinds are
+    # added, changed, deprecated, removed, fixed, and security.
+    - kind: added
+      description: included a PostgreSQL sub-chart to simplify out-of-the box installation

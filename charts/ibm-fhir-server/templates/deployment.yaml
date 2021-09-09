@@ -27,6 +27,36 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if eq .Values.db.type "postgresql" }}
+      initContainers:
+        - name: wait-for-db-to-be-ready
+          image: docker.io/bitnami/postgresql:13.4.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          env:
+            - name: PGHOST
+              value: "{{ include "fhir.database.host" $ }}"
+            - name: PGPORT
+              value: "{{ include "fhir.database.port" $ }}"
+            - name: PGUSER
+              value: "{{ include "fhir.database.user" $ }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              until pg_isready; do
+                echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
+                sleep 15;
+              done;
+      {{- end }}
       containers:
         - name: {{ template "fhir.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
