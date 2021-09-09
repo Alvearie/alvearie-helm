@@ -1,5 +1,5 @@
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: 4.9.0](https://img.shields.io/badge/AppVersion-4.9.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![AppVersion: 4.9.1](https://img.shields.io/badge/AppVersion-4.9.1-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -219,7 +219,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ibmcom/ibm-fhir-server"` |  |
-| image.tag | string | `"4.9.0"` |  |
+| image.tag | string | `"4.9.1"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
@@ -271,7 +271,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | schemaMigration.image.pullPolicy | string | `"Always"` |  |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
-| schemaMigration.image.tag | string | `"4.9.0"` |  |
+| schemaMigration.image.tag | string | `"4.9.1"` |  |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 
 ----------------------------------------------
