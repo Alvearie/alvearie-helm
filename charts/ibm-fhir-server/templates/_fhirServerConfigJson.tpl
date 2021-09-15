@@ -7,12 +7,10 @@ The default fhir-server-config.json.
         "__comment": "FHIR Server configuration",
         "fhirServer": {
             "core": {
-                "tenantIdHeaderName": "X-FHIR-TENANT-ID",
-                "datastoreIdHeaderName": "X-FHIR-DSID",
-                "originalRequestUriHeaderName": "X-FHIR-FORWARDED-URL",
-                "checkReferenceTypes": true,
-                "conditionalDeleteMaxNumber": 10,
                 "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
+                {{- if .Values.ingress.enabled }}
+                "externalBaseUrl": "https://{{ .Values.ingress.hostname }}/fhir-server/api/v4",
+                {{- end}}
                 "disabledOperations": "",
                 "defaultPrettyPrint": true
             },
