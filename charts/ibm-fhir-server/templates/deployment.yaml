@@ -257,10 +257,16 @@ spec:
               command:
               - bash
               - -c
+              {{- if .Values.security.smartEnabled }}
+              - curl --fail -k -sS 'https://localhost:9443/fhir-server/api/v4/.well-known/smart-configuration'
+              {{- else if .Values.security.oauthEnabled }}
+              - curl --fail -k -sS 'https://localhost:9443/fhir-server/api/v4/metadata'
+              {{- else }}
               - curl --fail -k -sS -u "fhiruser:${FHIR_USER_PASSWORD}" 'https://localhost:9443/fhir-server/api/v4/$healthcheck'
-            initialDelaySeconds: 40
+              {{- end }}
+            initialDelaySeconds: 20
             periodSeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 3
           livenessProbe:
             exec:
               command:
