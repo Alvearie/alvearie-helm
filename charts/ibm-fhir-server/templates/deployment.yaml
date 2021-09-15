@@ -253,7 +253,7 @@ spec:
               command:
               - bash
               - -c
-              - curl --fail -k -sS -u "fhiruser:${FHIR_USER_PASSWORD}" https://localhost:9443/fhir-server/api/v4/$$healthcheck
+              - curl --fail -k -sS -u "fhiruser:${FHIR_USER_PASSWORD}" 'https://localhost:9443/fhir-server/api/v4/$healthcheck'
             initialDelaySeconds: 40
             periodSeconds: 10
             timeoutSeconds: 2
