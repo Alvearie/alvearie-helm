@@ -1,5 +1,5 @@
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: 4.9.1](https://img.shields.io/badge/AppVersion-4.9.1-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: 4.9.1](https://img.shields.io/badge/AppVersion-4.9.1-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
@@ -272,6 +272,13 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
 | schemaMigration.image.tag | string | `"4.9.1"` |  |
+| security.oauthAuthUrl | string | `nil` |  |
+| security.oauthEnabled | bool | `false` |  |
+| security.oauthRegUrl | string | `nil` |  |
+| security.oauthTokenUrl | string | `nil` |  |
+| security.smartCapabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
+| security.smartEnabled | bool | `false` |  |
+| security.smartScopes | list | openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types. | OAuth 2.0 scopes to advertise from the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 
 ----------------------------------------------

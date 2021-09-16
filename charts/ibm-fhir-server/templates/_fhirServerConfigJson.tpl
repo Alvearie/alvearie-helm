@@ -54,6 +54,7 @@ The default fhir-server-config.json.
             },
             "security": {
                 "cors": true,
+                {{- if not .Values.security.oauthEnabled }}
                 "basic": {
                     "enabled": true
                 },
@@ -62,50 +63,22 @@ The default fhir-server-config.json.
                     "authFilter": {
                         "enabled": false
                     }
-                },
+                }
+                {{- else }}
                 "oauth": {
-                    "enabled": false,
-                    "regUrl": "https://<host>:9443/oauth2/endpoint/oauth2-provider/registration",
-                    "authUrl": "https://<host>:9443/oauth2/endpoint/oauth2-provider/authorize",
-                    "tokenUrl": "https://<host>:9443/oauth2/endpoint/oauth2-provider/token",
+                    "enabled": true,
+                    {{- if .Values.oauthRegUrl }}
+                    "regUrl": {{ tpl .Values.security.oauthRegUrl $ | quote }},
+                    {{- end }}
+                    "authUrl": {{ tpl .Values.security.oauthAuthUrl $ | quote }},
+                    "tokenUrl": {{ tpl .Values.security.oauthTokenUrl $ | quote }},
                     "smart": {
-                        "enabled": false,
-                        "scopes": ["openid", "profile", "fhirUser", "launch/patient", "offline_access",
-                            "patient/*.read",
-                            "patient/AllergyIntolerance.read",
-                            "patient/CarePlan.read",
-                            "patient/CareTeam.read",
-                            "patient/Condition.read",
-                            "patient/Device.read",
-                            "patient/DiagnosticReport.read",
-                            "patient/DocumentReference.read",
-                            "patient/Encounter.read",
-                            "patient/ExplanationOfBenefit.read",
-                            "patient/Goal.read",
-                            "patient/Immunization.read",
-                            "patient/Location.read",
-                            "patient/Medication.read",
-                            "patient/MedicationRequest.read",
-                            "patient/Observation.read",
-                            "patient/Organization.read",
-                            "patient/Patient.read",
-                            "patient/Practitioner.read",
-                            "patient/PractitionerRole.read",
-                            "patient/Procedure.read",
-                            "patient/Provenance.read",
-                            "patient/RelatedPerson.read"
-                        ],
-                        "capabilities": [
-                            "sso-openid-connect",
-                            "launch-standalone",
-                            "client-public",
-                            "client-confidential-symmetric",
-                            "permission-offline",
-                            "context-standalone-patient",
-                            "permission-patient"
-                        ]
+                        "enabled": {{ .Values.security.smartEnabled }},
+                        "scopes": {{ toJson .Values.security.smartScopes }},
+                        "capabilities": {{ toJson .Values.security.smartCapabilities }}
                     }
                 }
+                {{- end }}
             },
             "notifications": {
                 "kafka": {
