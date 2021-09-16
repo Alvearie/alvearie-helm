@@ -3,6 +3,23 @@ entries:
   ibm-fhir-server:
   - apiVersion: v2
     appVersion: 4.9.1
+    created: "2021-09-16T13:25:36.763241097Z"
+    description: Helm chart for the IBM FHIR Server
+    digest: bf0d05b0cf5ca170418628f2ee0c5cada41090407f1fff25f06d31e05cc71b18
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.1.4/ibm-fhir-server-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 4.9.1
     created: "2021-09-15T12:40:10.36551963Z"
     description: Helm chart for the IBM FHIR Server
     digest: 85824ad50764d680b2c1e619d9f5fec37a6a1113ffed96472c1c948c776a7aac
@@ -103,4 +120,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-09-15T12:40:10.36553943Z"
+generated: "2021-09-16T13:25:36.763270397Z"
