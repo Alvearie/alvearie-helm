@@ -110,19 +110,13 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "fhir.database.secretName" $ }}"
-                  key: "{{ include "fhir.database.secretKey" $ }}"
-            {{- if .Values.db.apiKeySecretKey }}
+                  key: "{{ include "fhir.database.passwordSecretKey" $ }}"
+            {{- if ne .Values.db.type "postgresql" }}
             - name: FHIR_DB_APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.apiKeySecretKey }}
-            {{- else if .Values.db.apiKey }}
-            - name: FHIR_DB_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: apiKey
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.apiKeySecretKey" $ }}"
             {{- end }}
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
@@ -155,20 +149,13 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "fhir.database.secretName" $ }}"
-                  key: "{{ include "fhir.database.secretKey" $ }}"
-            {{- if .Values.db.apiKeySecretKey }}
+                  key: "{{ include "fhir.database.passwordSecretKey" $ }}"
+            {{- if ne .Values.db.type "postgresql" }}
             - name: BATCH_DB_APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.apiKeySecretKey }}
-            {{- end }}
-            {{- if .Values.db.apiKey }}
-            - name: BATCH_DB_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: apiKey
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.apiKeySecretKey" $ }}"
             {{- end }}
             - name: BATCH_DB_SSL
               value: "{{ .Values.db.sslConnection }}"

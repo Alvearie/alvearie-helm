@@ -75,34 +75,41 @@ Get the PostgreSQL server's port
 {{- end -}}
 
 {{/*
-Get the PostgreSQL credentials secret name.
+Get the database credentials secret name.
 */}}
 {{- define "fhir.database.secretName" -}}
 {{- if and (.Values.postgresql.enabled) (not .Values.postgresql.existingSecret) -}}
     {{- printf "%s" (include "fhir.postgresql.fullname" .) -}}
 {{- else if and (.Values.postgresql.enabled) (.Values.postgresql.existingSecret) -}}
     {{- printf "%s" .Values.postgresql.existingSecret -}}
-{{- else if .Values.db.password -}}
+{{- else if .Values.db.dbSecret -}}
+    {{- printf "%s" .Values.db.dbSecret -}}
+{{- else -}}
     {{- printf "%s-%s" (include "fhir.fullname" .) "db-secret" -}}
-{{- else }}
-    {{- if .Values.db.dbSecret -}}
-        {{- printf "%s" .Values.db.dbSecret -}}
-    {{- else -}}
-        {{ printf "%s-%s" (include "fhir.fullname" .) "db-secret-preinstall" }}
-    {{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Get the PostgreSQL credentials secret key.
+Get the database credentials password secret key.
 */}}
-{{- define "fhir.database.secretKey" -}}
-{{- if (.Values.db.dbSecret) -}}
-    {{- printf "%s" .Values.db.passwordSecretKey -}}
-{{- else if .Values.postgresql.enabled }}
+{{- define "fhir.database.passwordSecretKey" -}}
+{{- if .Values.postgresql.enabled }}
     {{- printf "postgresql-password" -}}
+{{- else if (.Values.db.dbSecret) -}}
+    {{- printf "%s" .Values.db.passwordSecretKey -}}
 {{- else }}
     {{- printf "password" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the database credentials apiKey secret key.
+*/}}
+{{- define "fhir.database.apiKeySecretKey" -}}
+{{- if (.Values.db.dbSecret) -}}
+    {{- printf "%s" .Values.db.apiKeySecretKey -}}
+{{- else }}
+    {{- printf "apiKey" -}}
 {{- end -}}
 {{- end -}}
 
