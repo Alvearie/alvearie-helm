@@ -48,18 +48,18 @@ postgresql:
   # if set to `false`, the connection settings under the `db` key are used
   enabled: true
   image:
-    # -- update the default Postgres version to 13.4
+    # -- the tag for the postgresql image
     tag: 13.4.0
   # -- name of the database to create.
   # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
   postgresqlDatabase: "fhir"
   # -- Name of existing secret to use for PostgreSQL passwords.
-  # The secret has to contain the keys `postgresql-password`
-  # which is the password for `postgresqlUsername` when it is
-  # different of `postgres`, `postgresql-postgres-password` which
-  # will override `postgresqlPassword`, `postgresql-replication-password`
-  # which will override `replication.password` and `postgresql-ldap-password`
-  # which will be sed to authenticate on LDAP. The value is evaluated as a template.
+  # The secret must contain the keys `postgresql-password`
+  # (the password for `postgresqlUsername` when it is different from `postgres`),
+  # `postgresql-postgres-password` (which will override `postgresqlPassword`),
+  # `postgresql-replication-password` (which will override `replication.password`), and
+  # `postgresql-ldap-password` (used to authenticate on LDAP).
+  # The value is evaluated as a template.
   existingSecret: ""
   containerSecurityContext:
     allowPrivilegeEscalation: false
