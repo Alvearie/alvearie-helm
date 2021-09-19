@@ -49,7 +49,7 @@ postgresql:
   enabled: true
   image:
     # -- the tag for the postgresql image
-    tag: 13.4.0
+    tag: 13.4.0-debian-10-r37
   # -- name of the database to create.
   # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
   postgresqlDatabase: "fhir"
