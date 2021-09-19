@@ -37,7 +37,7 @@ Return the appropriate apiVersion for ingress.
 {{- end -}}
 
 {{/*
-Create a default fully qualified postgresql name.
+Create a default fully qualified PostgreSQL name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 NOTE: we should be able to replace this approach once https://github.com/helm/helm/pull/9957 is available in Helm
 */}}
@@ -47,35 +47,35 @@ NOTE: we should be able to replace this approach once https://github.com/helm/he
 {{- end -}}
 
 {{/*
-Add environment variables to configure database values
+Get the PostgreSQL server's hostname
 */}}
 {{- define "fhir.database.host" -}}
 {{- ternary (include "fhir.postgresql.fullname" .) .Values.db.host .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Add environment variables to configure database values
+Get the user to connect to the PostgreSQL server
 */}}
 {{- define "fhir.database.user" -}}
 {{- ternary .Values.postgresql.postgresqlUsername .Values.db.user .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Add environment variables to configure database values
+Get the name of the PostgreSQL database
 */}}
 {{- define "fhir.database.name" -}}
 {{- ternary .Values.postgresql.postgresqlDatabase .Values.db.database .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Add environment variables to configure database values
+Get the PostgreSQL server's port
 */}}
 {{- define "fhir.database.port" -}}
 {{- ternary "5432" .Values.db.port .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Get the Postgresql credentials secret name.
+Get the PostgreSQL credentials secret name.
 */}}
 {{- define "fhir.database.secretName" -}}
 {{- if and (.Values.postgresql.enabled) (not .Values.postgresql.existingSecret) -}}
@@ -94,7 +94,7 @@ Get the Postgresql credentials secret name.
 {{- end -}}
 
 {{/*
-Get the Postgresql credentials secret key.
+Get the PostgreSQL credentials secret key.
 */}}
 {{- define "fhir.database.secretKey" -}}
 {{- if (.Values.db.dbSecret) -}}
@@ -104,4 +104,12 @@ Get the Postgresql credentials secret key.
 {{- else }}
     {{- printf "password" -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Image used to for the PostgreSQL readiness init containers
+If using Helm 3.7+, we could use `include "postgresql.image" .Subcharts.postgresql` instead
+*/}}
+{{- define "fhir.postgresql.waitForDB.image" -}}
+{{- printf "%s/%s:%s" .Values.postgresql.image.registry .Values.postgresql.image.repository .Values.postgresql.image.tag }}
 {{- end -}}

@@ -30,7 +30,7 @@ spec:
       {{- if eq .Values.db.type "postgresql" }}
       initContainers:
         - name: wait-for-db-to-be-ready
-          image: docker.io/bitnami/postgresql:13.4.0
+          image: {{ include "fhir.postgresql.waitForDB.image" . }}
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
