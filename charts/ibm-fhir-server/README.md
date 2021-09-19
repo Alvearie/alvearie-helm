@@ -2,6 +2,7 @@
 ![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: 4.9.1](https://img.shields.io/badge/AppVersion-4.9.1-informational?style=flat-square) 
 
 # The IBM FHIR Server Helm Chart
+
 The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
 with a focus on performance and configurability.
 
@@ -9,51 +10,13 @@ This helm chart will help you install the IBM FHIR Server in a Kubernetes enviro
 ConfigMaps and Secrets to support the wide range of configuration options available for the server.
 
 ## Sample usage
-```
-helm upgrade --install ibm-fhir-server . --values values.yaml --set 'ingress.hostname=example.com' --set 'ingress.tls[0].secretName=cluster-tls-secret'
-```
 
-## Prerequisites
-To install the IBM FHIR Server via helm, you must first have a database.
-
-To install a PostgreSQL database to the same cluster using helm, you can run the following command:
-```
-$ helm install my-release bitnami/postgresql --set fullnameOverride=postgres --set postgresqlExtendedConf.maxPreparedTransactions=100
+```sh
+helm repo add alvearie https://alvearie.io/alvearie-helm
+helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --values values.yaml --set 'ingress.hostname=example.com' --set 'ingress.tls[0].secretName=cluster-tls-secret'
 ```
 
-For example if you target the default namespace and name the release "postgres",
-then that would produce something like this:
-```
-$ helm install postgres bitnami/postgresql --set fullnameOverride=postgres --set postgresqlExtendedConf.maxPreparedTransactions=100
-
-NAME: postgres
-LAST DEPLOYED: Wed Jun 23 12:01:11 2021
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-NOTES:
-** Please be patient while the chart is being deployed **
-
-PostgreSQL can be accessed via port 5432 on the following DNS name from within your cluster:
-
-    postgres.default.svc.cluster.local - Read/Write connection
-
-To get the password for "postgres" run:
-
-    export POSTGRES_PASSWORD=$(kubectl get secret --namespace default postgres -o jsonpath="{.data.postgresql-password}" | base64 --decode)
-
-To connect to your database run the following command:
-
-    kubectl run postgres-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.12.0-debian-10-r23 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host postgres -U postgres -d postgres -p 5432
-
-
-
-To connect to your database from outside the cluster execute the following commands:
-
-    kubectl port-forward --namespace default svc/postgres 5432:5432 &
-    PGPASSWORD="$POSTGRES_PASSWORD" psql --host 127.0.0.1 -U postgres -d postgres -p 5432
-```
+This will install the latest version if the IBM FHIR Server using an included PostgreSQL database for persistence.
 
 ## Customizing the FHIR server configuration
 This helm chart uses a [named template](https://helm.sh/docs/chart_template_guide/named_templates/) to generate the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The template name is `defaultFhirServerConfig` and it is defined in the `_fhirServerConfigJson.tpl` file. It uses many of this helm chart's values as the values of config properties within the generated `fhir-server-config.json` file.
@@ -267,7 +230,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. if set to `false`, the connection settings under the `db` key are used |
 | postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret must contain the keys `postgresql-password` (the password for `postgresqlUsername` when it is different from `postgres`), `postgresql-postgres-password` (which will override `postgresqlPassword`), `postgresql-replication-password` (which will override `replication.password`), and `postgresql-ldap-password` (used to authenticate on LDAP). The value is evaluated as a template. |
-| postgresql.image.tag | string | `"13.4.0"` | the tag for the postgresql image |
+| postgresql.image.tag | string | `"13.4.0-debian-10-r37"` | the tag for the postgresql image |
 | postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create. see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
 | postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
