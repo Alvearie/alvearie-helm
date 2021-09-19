@@ -66,6 +66,10 @@ postgresql:
     capabilities:
       drop:
         - ALL
+  # -- Extended Runtime Config Parameters (appended to main or default configuration)
+  postgresqlExtendedConf:
+    # override the default value of 0 to support bulk import and export
+    maxPreparedTransactions: 24
 
 db:
   type: postgresql
@@ -100,8 +104,13 @@ security:
   smartEnabled: false
   # -- OAuth 2.0 scopes to advertise from the server
   # @default -- openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types.
-  smartScopes: [
-      "openid", "profile", "fhirUser", "launch/patient", "offline_access",
+  smartScopes:
+    [
+      "openid",
+      "profile",
+      "fhirUser",
+      "launch/patient",
+      "offline_access",
       "patient/*.read",
       "patient/AllergyIntolerance.read",
       "patient/CarePlan.read",
@@ -124,19 +133,20 @@ security:
       "patient/PractitionerRole.read",
       "patient/Procedure.read",
       "patient/Provenance.read",
-      "patient/RelatedPerson.read"
-  ]
+      "patient/RelatedPerson.read",
+    ]
   # -- SMART capabilities to advertise from the server
   # @default -- sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient
-  smartCapabilities: [
+  smartCapabilities:
+    [
       "sso-openid-connect",
       "launch-standalone",
       "client-public",
       "client-confidential-symmetric",
       "permission-offline",
       "context-standalone-patient",
-      "permission-patient"
-  ]
+      "permission-patient",
+    ]
 schemaMigration:
   enabled: true
   image:

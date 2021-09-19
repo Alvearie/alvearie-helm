@@ -266,9 +266,10 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | postgresql.containerSecurityContext.allowPrivilegeEscalation | bool | `false` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. if set to `false`, the connection settings under the `db` key are used |
-| postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret has to contain the keys `postgresql-password` which is the password for `postgresqlUsername` when it is different of `postgres`, `postgresql-postgres-password` which will override `postgresqlPassword`, `postgresql-replication-password` which will override `replication.password` and `postgresql-ldap-password` which will be sed to authenticate on LDAP. The value is evaluated as a template. |
-| postgresql.image.tag | string | `"13.4.0"` | update the default Postgres version to 13.4 |
+| postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret must contain the keys `postgresql-password` (the password for `postgresqlUsername` when it is different from `postgres`), `postgresql-postgres-password` (which will override `postgresqlPassword`), `postgresql-replication-password` (which will override `replication.password`), and `postgresql-ldap-password` (used to authenticate on LDAP). The value is evaluated as a template. |
+| postgresql.image.tag | string | `"13.4.0"` | the tag for the postgresql image |
 | postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create. see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
+| postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |
