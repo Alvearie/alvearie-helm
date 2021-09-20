@@ -47,28 +47,28 @@ NOTE: we should be able to replace this approach once https://github.com/helm/he
 {{- end -}}
 
 {{/*
-Get the PostgreSQL server's hostname
+Get the database server's hostname
 */}}
 {{- define "fhir.database.host" -}}
 {{- ternary (include "fhir.postgresql.fullname" .) .Values.db.host .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Get the user to connect to the PostgreSQL server
+Get the user to connect to the database server
 */}}
 {{- define "fhir.database.user" -}}
 {{- ternary .Values.postgresql.postgresqlUsername .Values.db.user .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Get the name of the PostgreSQL database
+Get the name of the database
 */}}
 {{- define "fhir.database.name" -}}
 {{- ternary .Values.postgresql.postgresqlDatabase .Values.db.database .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
-Get the PostgreSQL server's port
+Get the database server's port
 */}}
 {{- define "fhir.database.port" -}}
 {{- ternary "5432" .Values.db.port .Values.postgresql.enabled -}}
