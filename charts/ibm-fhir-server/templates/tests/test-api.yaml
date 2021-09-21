@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ template "fhir.fullname" . }}-test-api"
+  labels:
+    app: {{ template "fhir.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: get-patient
+      image: docker.io/curlimages/curl:7.78.0
+      command: ["/bin/sh", "-exc"]
+      args: ["curl -vvv --insecure --fail -u ${FHIR_USER_NAME}:${FHIR_USER_PASSWORD} https://${FHIR_SERVER_HOST}:9443/fhir-server/api/v4/Patient"]
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+        runAsUser: 65532
+        runAsNonRoot: true
+      env:
+        - name: FHIR_SERVER_HOST
+          value: {{ include "fhir.fullname" . }}
+        - name: FHIR_USER_NAME
+          value: fhiruser
+        - name: FHIR_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "fhir.fullname" . }}-user-secret
+              key: fhir.user.password
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+      livenessProbe:
+        exec:
+          command: ["/bin/true"]
+      readinessProbe:
+        exec:
+          command: ["/bin/true"]

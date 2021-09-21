@@ -1,0 +1,124 @@
+{{- if .Values.schemaMigration.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "fhir.fullname" . }}-schematool"
+  labels:
+    app: {{ template "fhir.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-schematool"
+    spec:
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: {{ .Values.schemaMigration.image.pullSecret }}
+      {{- if eq .Values.db.type "postgresql" }}
+      initContainers:
+        - name: wait-for-db-to-be-ready
+          image: {{ include "fhir.postgresql.waitForDB.image" . }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          env:
+            - name: PGHOST
+              value: "{{ include "fhir.database.host" $ }}"
+            - name: PGPORT
+              value: "{{ include "fhir.database.port" $ }}"
+            - name: PGUSER
+              value: "{{ include "fhir.database.user" $ }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              until pg_isready; do
+                echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
+                sleep 15;
+              done;
+      {{- end }}
+      containers:
+        - name: fhir-schematool
+          image: {{ .Values.schemaMigration.image.repository }}:{{ .Values.schemaMigration.image.tag }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          env:
+            - name: FHIR_DB_TYPE
+              value: "{{ .Values.db.type }}"
+            - name: FHIR_DB_HOSTNAME
+              value: "{{ include "fhir.database.host" $ }}"
+            - name: FHIR_DB_PORT
+              value: "{{ include "fhir.database.port" $ }}"
+            - name: FHIR_DB_NAME
+              value: "{{ include "fhir.database.name" $ }}"
+            - name: FHIR_DB_USER
+              value: "{{ include "fhir.database.user" $ }}"
+            - name: FHIR_DB_SCHEMA
+              value: {{ .Values.db.schema }}
+            - name: FHIR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.passwordSecretKey" $ }}"
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              echo "Running create-schemas task";
+
+              /opt/java/openjdk/bin/java -jar /opt/schematool/fhir-persistence-schema-*-cli.jar \
+                  --db-type {{ .Values.db.type }} \
+                  --prop db.host=${FHIR_DB_HOSTNAME} \
+                  --prop db.port=${FHIR_DB_PORT} \
+                  --prop db.database=${FHIR_DB_NAME} \
+                  --prop user=${FHIR_DB_USER} \
+                  --prop password=${FHIR_DB_PASSWORD} \
+              {{- if .Values.db.enableTls }}
+              {{- if eq .Values.db.type "db2" }}
+                  --prop sslConnection=true \
+              {{- else }}
+                  --prop ssl=true \
+                  --prop sslmode=verify-full \
+                  --prop sslrootcert=/opt/schematool/workarea/db.cert \
+              {{- end }}
+              {{- end }}
+                  --schema-name {{ .Values.db.schema }} \
+                  --create-schemas;
+
+              echo "Running update-schema task";
+
+              /opt/java/openjdk/bin/java -jar /opt/schematool/fhir-persistence-schema-*-cli.jar \
+                  --db-type {{ .Values.db.type }} \
+                  --prop db.host=${FHIR_DB_HOSTNAME} \
+                  --prop db.port=${FHIR_DB_PORT} \
+                  --prop db.database=${FHIR_DB_NAME} \
+                  --prop user=${FHIR_DB_USER} \
+                  --prop password=${FHIR_DB_PASSWORD} \
+              {{- if .Values.db.enableTls }}
+              {{- if eq .Values.db.type "db2" }}
+                  --prop sslConnection=true \
+              {{- else }}
+                  --prop ssl=true \
+                  --prop sslmode=verify-full \
+                  --prop sslrootcert=/opt/schematool/workarea/db.cert \
+              {{- end }}
+              {{- end }}
+                  --schema-name {{ .Values.db.schema }} \
+                  --update-schema
+  backoffLimit: 4
+{{- end }}

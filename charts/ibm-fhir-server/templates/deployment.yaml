@@ -27,6 +27,36 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if eq .Values.db.type "postgresql" }}
+      initContainers:
+        - name: wait-for-db-to-be-ready
+          image: {{ include "fhir.postgresql.waitForDB.image" . }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          env:
+            - name: PGHOST
+              value: "{{ include "fhir.database.host" $ }}"
+            - name: PGPORT
+              value: "{{ include "fhir.database.port" $ }}"
+            - name: PGUSER
+              value: "{{ include "fhir.database.user" $ }}"
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              until pg_isready; do
+                echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
+                sleep 15;
+              done;
+      {{- end }}
       containers:
         - name: {{ template "fhir.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -69,43 +99,24 @@ spec:
               value: "{{ .Values.ingress.hostname }}"
             {{- end }}
             - name: FHIR_DB_HOSTNAME
-              value: "{{ .Values.db.host }}"
+              value: "{{ include "fhir.database.host" $ }}"
             - name: FHIR_DB_PORT
-              value: "{{ .Values.db.port }}"
+              value: "{{ include "fhir.database.port" $ }}"
             - name: FHIR_DB_NAME
-              value: "{{ .Values.db.name }}"
+              value: "{{ include "fhir.database.name" $ }}"
             - name: FHIR_DB_USER
-              value: "{{ .Values.db.user }}"
-            {{- if .Values.db.dbSecret }}
-            {{- if .Values.db.passwordSecretKey }}
+              value: "{{ include "fhir.database.user" $ }}"
             - name: FHIR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.passwordSecretKey }}
-            {{- end }}
-            {{- if .Values.db.apiKeySecretKey }}
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.passwordSecretKey" $ }}"
+            {{- if ne .Values.db.type "postgresql" }}
             - name: FHIR_DB_APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.apiKeySecretKey }}
-            {{- end }}
-            {{- else }}
-            {{- if .Values.db.password }}
-            - name: FHIR_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: password
-            {{- end }}
-            {{- if .Values.db.apiKey }}
-            - name: FHIR_DB_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: apiKey
-            {{- end }}
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.apiKeySecretKey" $ }}"
             {{- end }}
             - name: FHIR_DB_SCHEMA
               value: {{ .Values.db.schema }}
@@ -127,43 +138,24 @@ spec:
               value: "-1"
             {{- if .Values.objectStorage.enabled }}
             - name: BATCH_DB_HOSTNAME
-              value: "{{ .Values.db.host }}"
+              value: "{{ include "fhir.database.host" $ }}"
             - name: BATCH_DB_PORT
-              value: "{{ .Values.db.port }}"
+              value: "{{ include "fhir.database.port" $ }}"
             - name: BATCH_DB_NAME
-              value: "{{ .Values.db.name }}"
+              value: "{{ include "fhir.database.name" $ }}"
             - name: BATCH_DB_USER
-              value: "{{ .Values.db.user }}"
-            {{- if .Values.db.dbSecret }}
-            {{- if .Values.db.passwordSecretKey }}
+              value: "{{ include "fhir.database.user" $ }}"
             - name: BATCH_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.passwordSecretKey }}
-            {{- end }}
-            {{- if .Values.db.apiKeySecretKey }}
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.passwordSecretKey" $ }}"
+            {{- if ne .Values.db.type "postgresql" }}
             - name: BATCH_DB_APIKEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.db.dbSecret }}
-                  key: {{ .Values.db.apiKeySecretKey }}
-            {{- end }}
-            {{- else }}
-            {{- if .Values.db.password }}
-            - name: BATCH_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: password
-            {{- end }}
-            {{- if .Values.db.apiKey }}
-            - name: BATCH_DB_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-db-secret
-                  key: apiKey
-            {{- end }}
+                  name: "{{ include "fhir.database.secretName" $ }}"
+                  key: "{{ include "fhir.database.apiKeySecretKey" $ }}"
             {{- end }}
             - name: BATCH_DB_SSL
               value: "{{ .Values.db.sslConnection }}"
