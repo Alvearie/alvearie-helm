@@ -1,6 +1,35 @@
 apiVersion: v1
 entries:
   ibm-fhir-server:
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: added
+          description: included a PostgreSQL sub-chart to simplify out-of-the box installation
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.1
+    created: "2021-09-21T16:31:41.322714203Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.10.1
+    description: Helm chart for the IBM FHIR Server
+    digest: 5f1753edd821f8cb5bd03b8661581c325387473da2a5c89201f1e5a493404f01
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.2.0/ibm-fhir-server-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v2
     appVersion: 4.9.1
     created: "2021-09-16T13:25:36.763241097Z"
@@ -120,4 +149,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-09-16T13:25:36.763270397Z"
+generated: "2021-09-21T16:31:41.322767804Z"
