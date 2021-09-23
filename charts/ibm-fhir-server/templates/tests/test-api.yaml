@@ -15,7 +15,7 @@ spec:
     - name: get-patient
       image: docker.io/curlimages/curl:7.78.0
       command: ["/bin/sh", "-exc"]
-      args: ["curl -vvv --insecure --fail -u ${FHIR_USER_NAME}:${FHIR_USER_PASSWORD} https://${FHIR_SERVER_HOST}:9443/fhir-server/api/v4/Patient"]
+      args: ["curl -vvv --retry-connrefuse --connect-timeout 30 --max-time 120 --retry 5 --retry-delay 15 --insecure --fail -u ${FHIR_USER_NAME}:${FHIR_USER_PASSWORD} https://${FHIR_SERVER_HOST}:9443/fhir-server/api/v4/Patient"]
       securityContext:
         allowPrivilegeEscalation: false
         capabilities:

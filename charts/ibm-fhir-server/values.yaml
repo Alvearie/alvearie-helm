@@ -6,7 +6,7 @@ fullnameOverride:
 nameOverride:
 
 # -- The number of replicas for the externally-facing FHIR server pods
-replicaCount: 2
+replicaCount: 1
 image:
   repository: ibmcom/ibm-fhir-server
   tag: "4.9.1"
@@ -17,6 +17,7 @@ restrictEndpoints: false
 # -- Control which interactions are supported for which resource type endpoints
 # @default -- A single entry for resourceType "Resource" that applies to all resource types
 endpoints:
+  # yamllint disable-line rule:comments
   - # -- A valid FHIR resource type; use "Resource" for whole-system behavior
     resourceType: Resource
     # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
