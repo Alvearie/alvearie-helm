@@ -1,0 +1,15 @@
+remote: origin
+target-branch: main
+chart-yaml-schema: .ct/chart-schema.yaml
+validate-maintainers: false
+validate-chart-schema: true
+validate-yaml: true
+check-version-increment: true
+chart-dirs:
+  - charts
+helm-extra-args: --timeout 10m
+upgrade: true
+skip-missing-values: true
+release-label: release
+chart-repos:
+  - bitnami=https://charts.bitnami.com/bitnami

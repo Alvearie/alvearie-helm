@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.2.0
+version: 0.2.1
 appVersion: 4.9.1
 dependencies:
   - name: postgresql
@@ -11,6 +11,8 @@ dependencies:
 sources:
   - https://github.com/Alvearie/alvearie-helm
   - https://github.com/IBM/FHIR
+home: https://ibm.github.io/FHIR/
+type: application
 maintainers:
   - name: Lee Surprenant
     email: lmsurpre@us.ibm.com
@@ -22,4 +24,6 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: added
-      description: included a PostgreSQL sub-chart to simplify out-of-the box installation
+      description: added `home` and `type` fields to Chart.yaml
+    - kind: changed
+      description: set default `replicaCount` for the FHIR server pods to 1
