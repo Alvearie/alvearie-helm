@@ -6,6 +6,39 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: added
+          description: added `home` and `type` fields to Chart.yaml
+        - kind: changed
+          description: set default `replicaCount` for the FHIR server pods to 1
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.1
+    created: "2021-09-24T15:48:39.745445845Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.10.1
+    description: Helm chart for the IBM FHIR Server
+    digest: f54ebb502584186aea755977e4a82559f4fda450125af4f6ce6ffe70fd0279cf
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.2.1/ibm-fhir-server-0.2.1.tgz
+    version: 0.2.1
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: added
           description: included a PostgreSQL sub-chart to simplify out-of-the box installation
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -149,4 +182,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-09-21T16:31:41.322767804Z"
+generated: "2021-09-24T15:48:39.745694558Z"
