@@ -3,10 +3,8 @@ kind: Pod
 metadata:
   name: "{{ template "fhir.fullname" . }}-test-api"
   labels:
-    app: {{ template "fhir.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "fhir.labels" . | nindent 4 }}
+    app.kubernetes.io/component: test-api
   annotations:
     "helm.sh/hook": test
 spec:

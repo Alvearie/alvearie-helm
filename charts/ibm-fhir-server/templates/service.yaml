@@ -3,14 +3,11 @@ kind: Service
 metadata:
   name: {{ template "fhir.fullname" . }}
   labels:
-    app: {{ template "fhir.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "fhir.labels" . | nindent 4 }}
 spec:
   selector:
-    app: {{ template "fhir.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "fhir.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: server
   ports:
     - name: https
       protocol: TCP

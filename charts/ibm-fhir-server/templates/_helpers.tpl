@@ -26,6 +26,34 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "fhir.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "fhir.labels" -}}
+helm.sh/chart: {{ include "fhir.chart" . }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "fhir.matchLabels" . }}
+{{- if .Values.extraLabels }}
+    {{- toYaml .Values.extraLabels }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
+*/}}
+{{- define "fhir.matchLabels" -}}
+app.kubernetes.io/name: {{ include "fhir.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+
+{{/*
 Return the appropriate apiVersion for ingress.
 */}}
 {{- define "fhir.ingressAPIVersion" -}}

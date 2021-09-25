@@ -5,6 +5,9 @@ fullnameOverride:
 # -- Optional override for chart name portion of the created kube resources
 nameOverride:
 
+# -- Extra labels to apply to the created kube resources
+extraLabels: {}
+
 # -- The number of replicas for the externally-facing FHIR server pods
 replicaCount: 1
 image:
