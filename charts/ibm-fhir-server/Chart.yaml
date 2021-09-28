@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.2.1
+version: 0.2.2
 appVersion: 4.9.1
 dependencies:
   - name: postgresql
@@ -23,7 +23,5 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: added
-      description: added `home` and `type` fields to Chart.yaml
     - kind: changed
-      description: set default `replicaCount` for the FHIR server pods to 1
+      description: use app.kubernetes.io/* naming scheme for labels

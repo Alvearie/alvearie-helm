@@ -3,10 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "fhir.fullname" . }}-config
   labels:
-    app: {{ template "fhir.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "fhir.labels" . | nindent 4 }}
 data:
   datasources.xml: >
     {{- include .Values.datasourcesTemplate . }}
