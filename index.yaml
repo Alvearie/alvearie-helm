@@ -5,6 +5,37 @@ entries:
       artifacthub.io/changes: |
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: use app.kubernetes.io/* naming scheme for labels
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.1
+    created: "2021-09-28T16:28:03.594175597Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.10.1
+    description: Helm chart for the IBM FHIR Server
+    digest: df77c0abfcb5a6bf57237abab5fd3d7db92db0eb0c2ae13616e3775454ee68c9
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.2.2/ibm-fhir-server-0.2.2.tgz
+    version: 0.2.2
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
         - kind: added
           description: added `home` and `type` fields to Chart.yaml
         - kind: changed
@@ -182,4 +213,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-09-24T15:48:39.745694558Z"
+generated: "2021-09-28T16:28:03.594217698Z"
