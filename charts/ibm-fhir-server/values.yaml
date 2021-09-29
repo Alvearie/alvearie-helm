@@ -12,7 +12,7 @@ extraLabels: {}
 replicaCount: 1
 image:
   repository: ibmcom/ibm-fhir-server
-  tag: "4.9.1"
+  tag: "4.9.2"
   pullPolicy: Always
 imagePullSecrets: []
 # -- Set to true to restrict the API to a particular set of resource type endpoints
@@ -155,6 +155,7 @@ schemaMigration:
   enabled: true
   image:
     repository: ibmcom/ibm-fhir-schematool
+    # 4.9.2 doesn't exist (yet?) due to an automation issue, but there were no schema updates in the release anyway.
     tag: "4.9.1"
     pullPolicy: Always
     pullSecret: all-icr-io
