@@ -5,6 +5,39 @@ entries:
       artifacthub.io/changes: |
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
+        - kind: fixed
+          description: helper uses incorrect helm value for db name when the postgresql subchart disabled
+        - kind: changed
+          description: upgrade to ibm-fhir-server 4.9.2
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.2
+    created: "2021-09-29T17:02:39.702227521Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.10.1
+    description: Helm chart for the IBM FHIR Server
+    digest: 01b553ad1cc27323814832d11a4981a49fba01fe38b3e42ed7fceed75ab62f0c
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.2.3/ibm-fhir-server-0.2.3.tgz
+    version: 0.2.3
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
           description: use app.kubernetes.io/* naming scheme for labels
       artifacthub.io/license: Apache-2.0
@@ -213,4 +246,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-09-28T16:28:03.594217698Z"
+generated: "2021-09-29T17:02:39.702284321Z"
