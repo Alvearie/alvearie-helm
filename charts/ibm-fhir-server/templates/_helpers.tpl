@@ -92,7 +92,7 @@ Get the user to connect to the database server
 Get the name of the database
 */}}
 {{- define "fhir.database.name" -}}
-{{- ternary .Values.postgresql.postgresqlDatabase .Values.db.database .Values.postgresql.enabled -}}
+{{- ternary .Values.postgresql.postgresqlDatabase .Values.db.name .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{/*
