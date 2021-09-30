@@ -7,6 +7,9 @@ metadata:
     {{- include "fhir.labels" . | nindent 4 }}
     app.kubernetes.io/component: schematool
 spec:
+  {{- if semverCompare ">=1.21" .Capabilities.KubeVersion.Version }}
+  ttlSecondsAfterFinished: 100
+  {{- end }}
   template:
     metadata:
       name: "{{ .Release.Name }}-schematool"

@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.2.3
+version: 0.2.4
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -23,7 +23,5 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: fixed
-      description: helper uses incorrect helm value for db name when the postgresql subchart disabled
     - kind: changed
-      description: upgrade to ibm-fhir-server 4.9.2
+      description: conditionally add ttlSecondsAfterFinished to the schema job
