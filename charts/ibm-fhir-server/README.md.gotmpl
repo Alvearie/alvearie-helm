@@ -13,7 +13,7 @@ ConfigMaps and Secrets to support the wide range of configuration options availa
 
 ```sh
 helm repo add alvearie https://alvearie.io/alvearie-helm
-helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --values values.yaml --set 'ingress.hostname=example.com' --set 'ingress.tls[0].secretName=cluster-tls-secret'
+helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --values values.yaml --set 'ingress.hostname=example.com' --set 'ingress.tls[0].secretName=cluster-tls-secret' --render-subchart-notes
 ```
 
 This will install the latest version if the IBM FHIR Server using an included PostgreSQL database for persistence.
