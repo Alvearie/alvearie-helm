@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.5.2
+version: 0.6.0
 appVersion: 4.10.2
 dependencies:
   - name: postgresql
@@ -27,11 +27,7 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: added
-      description: switch for schema migration job auto-removal
     - kind: changed
-      description: upgrade to ibm-fhir-server 4.10.2
+      description: align endpoints config with fhir-server-config.json's fhirServer/resources section
     - kind: changed
-      description: upgrade bitnami/postgresql subchart version to 10.13.14
-    - kind: changed
-      description: upgrade codecentric/keycloak subchart version to 16.0.4
+      description: updated to version 10.12.2 of the embedded bitnami postgresql chart
