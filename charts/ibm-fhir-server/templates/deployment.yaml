@@ -6,7 +6,7 @@ metadata:
     {{- include "fhir.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
   annotations:
-    checksum/config: {{ include (print $.Template.BasePath "/configMap.yaml") . | sha256sum }}
+    rollme: {{ randAlphaNum 5 | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
