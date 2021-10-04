@@ -1,5 +1,5 @@
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -180,13 +180,12 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | db.tenantKey | string | `nil` |  |
 | db.type | string | `"postgresql"` |  |
 | db.user | string | `"postgres"` |  |
-| endpoints | list | A single entry for resourceType "Resource" that applies to all resource types | Control which interactions are supported for which resource type endpoints |
-| endpoints[0].interactions | list | All interactions. | The set of enabled interactions for this resource type: [create, read, vread, history, search, update, patch, delete] |
-| endpoints[0].profiles | list | `nil` | Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required |
-| endpoints[0].resourceType | string | `"Resource"` | A valid FHIR resource type; use "Resource" for whole-system behavior |
-| endpoints[0].searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
-| endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
-| endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
+| endpoints | object | A single entry for resourceType "Resource" that applies to all resource types | Control which interactions are supported for which resource type endpoints |
+| endpoints.Resource.interactions | list | All interactions. | The set of enabled interactions for this resource type: [create, read, vread, history, search, update, patch, delete] |
+| endpoints.Resource.profiles.atLeastOne | list | `nil` | Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required |
+| endpoints.Resource.searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
+| endpoints.Resource.searchParameters | object | `{"*":"*"}` | A mapping from enabled search parameter codes to search parameter definitions |
+| endpoints.Resource.searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
 | exposeHttpEndpoint | bool | `false` | if enabled, the server will listen to non-TLS requests |
 | extensionSearchParametersTemplate | string | `"defaultSearchParameters"` | Template containing the extension-search-parameters.json content |
 | extraEnv | string | `""` |  |

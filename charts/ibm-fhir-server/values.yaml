@@ -24,19 +24,20 @@ restrictEndpoints: false
 # -- Control which interactions are supported for which resource type endpoints
 # @default -- A single entry for resourceType "Resource" that applies to all resource types
 endpoints:
-  # yamllint disable-line rule:comments
-  - # -- A valid FHIR resource type; use "Resource" for whole-system behavior
-    resourceType: Resource
-    # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
+  Resource:
+    # -- (list) Valid _include arguments while searching this resource type;
+    # nil means no restrictions
     searchIncludes:
-    # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions
+    # -- (list) Valid _revInclude arguments while searching this resource type;
+    # nil means no restrictions
     searchRevIncludes:
-    # -- (list) Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required
     profiles:
+      # -- (list) Instances of this type must claim conformance to at least one of the listed profiles;
+      # nil means no profile conformance required
+      atLeastOne:
     # -- A mapping from enabled search parameter codes to search parameter definitions
     searchParameters:
-      - code: "*"
-        url: "*"
+      "*": "*"
     # -- The set of enabled interactions for this resource type:
     # [create, read, vread, history, search, update, patch, delete]
     # @default -- All interactions.
