@@ -9,7 +9,7 @@ The default fhir-server-config.json.
             "core": {
                 "serverRegistryResourceProviderEnabled": {{ .Values.serverRegistryResourceProviderEnabled }},
                 {{- if .Values.ingress.enabled }}
-                "externalBaseUrl": "https://{{ .Values.ingress.hostname }}/fhir-server/api/v4",
+                "externalBaseUrl": "https://{{ tpl .Values.ingress.hostname $ }}/fhir-server/api/v4",
                 {{- end}}
                 "disabledOperations": "",
                 "defaultPrettyPrint": true

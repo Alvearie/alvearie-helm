@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "fhir.labels" . | nindent 4 }}
     app.kubernetes.io/component: server
+  annotations:
+    rollme: {{ randAlphaNum 5 | quote }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -70,7 +72,14 @@ spec:
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/datasources.xml
               subPath: datasources.xml
             - name: fhir-server-config
-              mountPath: /opt/ol/wlp/usr/servers/defaultServer/config/default
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/config/default/fhir-server-config.json
+              subPath: fhir-server-config.json
+            - name: fhir-server-config
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/config/default/extension-search-parameters.json
+              subPath: extension-search-parameters.json
+            - name: fhir-server-config
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/jvm.options
+              subPath: jvm.options
           env:
             - name: MY_POD_NAME
               valueFrom:
@@ -79,7 +88,7 @@ spec:
             - name: SEC_TLS_TRUSTDEFAULTCERTS
               value: "true"
             - name: TRACE_SPEC
-              value: "*=info:com.ibm.fhir.*=info"
+              value: "{{ .Values.traceSpec }}"
             - name: WLP_LOGGING_MESSAGE_FORMAT
               value: json
             - name: WLP_LOGGING_MESSAGE_SOURCE
@@ -94,7 +103,7 @@ spec:
               value: loglevel:level
             {{- if .Values.ingress.enabled }}
             - name: FHIR_HOSTNAME
-              value: "{{ .Values.ingress.hostname }}"
+              value: "{{ tpl .Values.ingress.hostname $ }}"
             {{- end }}
             - name: FHIR_DB_HOSTNAME
               value: "{{ include "fhir.database.host" $ }}"
@@ -241,6 +250,9 @@ spec:
                 secretKeyRef:
                   name: {{ template "fhir.fullname" . }}-user-secret
                   key: fhir.admin.password
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- tpl . $ | nindent 12 }}
             {{- end }}
           readinessProbe:
             exec:

@@ -11,3 +11,13 @@ data:
     {{- include .Values.extensionSearchParametersTemplate . }}
   fhir-server-config.json: >
     {{- include .Values.fhirServerConfigTemplate . }}
+  jvm.options: |
+    # Initial heap size
+    -Xms{{ .Values.minHeap }}
+
+    # Maximum heap size
+    -Xmx{{ .Values.maxHeap }}
+
+    {{- with .Values.extraJvmOptions }}
+    {{ tpl . $ | nindent 4 }}
+    {{- end }}

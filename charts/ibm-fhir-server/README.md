@@ -1,5 +1,5 @@
 
-![Version: 0.2.4](https://img.shields.io/badge/Version-0.2.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -175,6 +175,8 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
 | endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
 | extensionSearchParametersTemplate | string | `"defaultSearchParameters"` | Template containing the extension-search-parameters.json content |
+| extraEnv | string | `""` |  |
+| extraJvmOptions | string | `""` |  |
 | extraLabels | object | `{}` | Extra labels to apply to the created kube resources |
 | fhirAdminPassword | string | `"change-password"` | The fhirAdminPassword. If fhirPasswordSecret is set, the fhirAdminPassword will be set from its contents. |
 | fhirAdminPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirAdminPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
@@ -189,12 +191,13 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
-| ingress.hostname | string | `"fhir.example.com"` | The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts. If you have more than one, you'll need to set overrides for the rules and tls separately. |
-| ingress.rules[0].host | string | `"{{ .Release.Name }}.{{ $.Values.ingress.hostname }}"` |  |
+| ingress.hostname | string | `"{{ .Release.Name }}.example.com"` | The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts. If you have more than one, you'll need to set overrides for the rules and tls separately. |
+| ingress.rules[0].host | string | `"{{ tpl $.Values.ingress.hostname $ }}"` |  |
 | ingress.rules[0].paths[0] | string | `"/"` |  |
 | ingress.servicePort | string | `"https"` |  |
-| ingress.tls[0].hosts[0] | string | `"{{ $.Values.ingress.hostname }}"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
+| maxHeap | string | `"4096m"` |  |
+| minHeap | string | `"1024m"` |  |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | notifications.kafka.bootstrapServers | string | `nil` |  |
 | notifications.kafka.enabled | bool | `false` |  |
@@ -234,11 +237,11 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | postgresql.image.tag | string | `"13.4.0-debian-10-r37"` | the tag for the postgresql image |
 | postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create. see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
 | postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
-| replicaCount | int | `1` | The number of replicas for the externally-facing FHIR server pods |
+| replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
-| resources.requests.memory | string | `"4Gi"` |  |
+| resources.requests.memory | string | `"2Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
 | schemaMigration.enabled | bool | `true` |  |
 | schemaMigration.image.pullPolicy | string | `"Always"` |  |
@@ -253,6 +256,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | security.smartEnabled | bool | `false` |  |
 | security.smartScopes | list | openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types. | OAuth 2.0 scopes to advertise from the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
+| traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

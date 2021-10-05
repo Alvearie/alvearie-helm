@@ -9,12 +9,16 @@ nameOverride:
 extraLabels: {}
 
 # -- The number of replicas for the externally-facing FHIR server pods
-replicaCount: 1
+replicaCount: 2
 image:
   repository: ibmcom/ibm-fhir-server
   tag: "4.9.2"
   pullPolicy: Always
 imagePullSecrets: []
+# -- The trace specification to use for selectively tracing components of the IBM FHIR Server.
+# The log detail level specification is in the following format: `component1=level1:component2=level2`
+# See https://openliberty.io/docs/latest/log-trace-configuration.html for more information.
+traceSpec: "*=info"
 # -- Set to true to restrict the API to a particular set of resource type endpoints
 restrictEndpoints: false
 # -- Control which interactions are supported for which resource type endpoints
@@ -251,23 +255,26 @@ ingress:
   annotations: {}
   # -- The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts.
   # If you have more than one, you'll need to set overrides for the rules and tls separately.
-  hostname: fhir.example.com
+  hostname: "{{ .Release.Name }}.example.com"
   rules:
-    - host: "{{ .Release.Name }}.{{ $.Values.ingress.hostname }}"
+    - host: "{{ tpl $.Values.ingress.hostname $ }}"
       paths:
         - "/"
   servicePort: https
   tls:
     - secretName: ""
-      hosts:
-        - "{{ $.Values.ingress.hostname }}"
 resources:
   requests:
-    memory: "4Gi"
+    memory: "2Gi"
     ephemeral-storage: "1Gi"
   limits:
     memory: "5Gi"
     ephemeral-storage: "1Gi"
+
+minHeap: "1024m"
+maxHeap: "4096m"
+extraJvmOptions: ""
+extraEnv: ""
 
 # -- Template containing the fhir-server-config.json content
 fhirServerConfigTemplate: "defaultFhirServerConfig"
