@@ -25,3 +25,5 @@ annotations:
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
       description: align endpoints config with fhir-server-config.json's fhirServer/resources section
+    - kind: changed
+      description: updated to version 10.12.2 of the embedded bitnami postgresql chart
