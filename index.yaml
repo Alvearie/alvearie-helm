@@ -6,6 +6,55 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: upgrade to the latest bitnami postgresql chart
+        - kind: changed
+          description: only create the fhir-db-secret when we actually need it
+        - kind: changed
+          description: support templated hostnames in the default fhir-server-config
+        - kind: added
+          description: support for sizing the initial and maximum memory allocation pools
+        - kind: changed
+          description: the default minHeap (-Xms) size is now 1024m (was 4096m)
+        - kind: changed
+          description: the default kubernetes memory request is now 2Gi (was 4Gi)
+        - kind: changed
+          description: the default replicaCount is now 2
+        - kind: added
+          description: support for setting custom JVM options
+        - kind: added
+          description: support for setting custom environement variables
+        - kind: added
+          description: support for setting the Liberty trace specification via helm
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.2
+    created: "2021-10-05T00:56:36.528415318Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.12.0
+    description: Helm chart for the IBM FHIR Server
+    digest: 80483722e8fa89007948c61959141608c517a6b103b45d73c7f3b1e05f1938f0
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.3.0/ibm-fhir-server-0.3.0.tgz
+    version: 0.3.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: conditionally add ttlSecondsAfterFinished to the schema job
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -277,4 +326,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-09-30T14:32:18.448053635Z"
+generated: "2021-10-05T00:56:36.528497619Z"
