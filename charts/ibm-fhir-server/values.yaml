@@ -284,3 +284,6 @@ datasourcesTemplate: "defaultPostgresDatasources"
 
 # -- Template containing the extension-search-parameters.json content
 extensionSearchParametersTemplate: "defaultSearchParameters"
+
+# -- if enabled, the server will listen to non-TLS requests
+exposeHttpEndpoint: false

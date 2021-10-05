@@ -12,3 +12,8 @@ spec:
     - name: https
       protocol: TCP
       port: 9443
+  {{- if .Values.exposeHttpEndpoint }}
+    - name: http
+      protocol: TCP
+      port: 9080
+  {{- end }}

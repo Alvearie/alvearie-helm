@@ -21,3 +21,10 @@ data:
     {{- with .Values.extraJvmOptions }}
     {{ tpl . $ | nindent 4 }}
     {{- end }}
+  {{- if .Values.exposeHttpEndpoint }}
+  expose-http-endpoint.xml: >
+    <server>
+      <!-- Serve non-TLS traffic on port 9080 -->
+      <httpEndpoint id="defaultHttpEndpoint" httpPort="9080"/>
+    </server>
+  {{- end }}

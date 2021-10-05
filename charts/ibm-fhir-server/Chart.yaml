@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.3.0
+version: 0.3.1
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -23,23 +23,5 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: changed
-      description: upgrade to the latest bitnami postgresql chart
-    - kind: changed
-      description: only create the fhir-db-secret when we actually need it
-    - kind: changed
-      description: support templated hostnames in the default fhir-server-config
     - kind: added
-      description: support for sizing the initial and maximum memory allocation pools
-    - kind: changed
-      description: the default minHeap (-Xms) size is now 1024m (was 4096m)
-    - kind: changed
-      description: the default kubernetes memory request is now 2Gi (was 4Gi)
-    - kind: changed
-      description: the default replicaCount is now 2
-    - kind: added
-      description: support for setting custom JVM options
-    - kind: added
-      description: support for setting custom environement variables
-    - kind: added
-      description: support for setting the Liberty trace specification via helm
+      description: allow exposing the server on a non-TLS-secured port
