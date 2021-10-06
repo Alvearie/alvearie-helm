@@ -65,6 +65,11 @@ spec:
             - name: https
               containerPort: 9443
               protocol: TCP
+          {{- if .Values.exposeHttpEndpoint }}
+            - name: http
+              containerPort: 9080
+              protocol: TCP
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
@@ -80,6 +85,11 @@ spec:
             - name: fhir-server-config
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/jvm.options
               subPath: jvm.options
+          {{- if .Values.exposeHttpEndpoint }}
+            - name: fhir-server-config
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/expose-http-endpoint.xml
+              subPath: expose-http-endpoint.xml
+          {{- end }}
           env:
             - name: MY_POD_NAME
               valueFrom:
