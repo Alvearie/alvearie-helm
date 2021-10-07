@@ -18,6 +18,16 @@ helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir
 
 This will install the latest version if the IBM FHIR Server using an included PostgreSQL database for persistence.
 
+By default, the IBM FHIR Server will only serve HTTPS traffic.
+With the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx),
+this means that users must set the following ingress annotation:
+```
+nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+```
+This can be accomplished via `--set 'ingress.annotations.nginx\.ingress\.kubernetes\.io/backend-protocol=HTTPS'` or
+from your values override file.
+See https://github.com/Alvearie/alvearie-helm/blob/main/charts/ibm-fhir-server/values-nginx.yaml for an example.
+
 ## Customizing the FHIR server configuration
 This helm chart uses a [named template](https://helm.sh/docs/chart_template_guide/named_templates/) to generate the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The template name is `defaultFhirServerConfig` and it is defined in the `_fhirServerConfigJson.tpl` file. It uses many of this helm chart's values as the values of config properties within the generated `fhir-server-config.json` file.
 
