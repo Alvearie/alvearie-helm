@@ -83,7 +83,7 @@ spec:
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/config/default/extension-search-parameters.json
               subPath: extension-search-parameters.json
             - name: fhir-server-config
-              mountPath: /opt/ol/wlp/usr/servers/defaultServer/jvm.options
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/jvm.options
               subPath: jvm.options
           {{- if .Values.exposeHttpEndpoint }}
             - name: fhir-server-config
@@ -115,6 +115,8 @@ spec:
             - name: FHIR_HOSTNAME
               value: "{{ tpl .Values.ingress.hostname $ }}"
             {{- end }}
+            - name: FHIR_TRANSACTION_MANAGER_TIMEOUT
+              value: "{{ .Values.transactionTimeout }}"
             - name: FHIR_DB_HOSTNAME
               value: "{{ include "fhir.database.host" $ }}"
             - name: FHIR_DB_PORT

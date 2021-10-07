@@ -265,14 +265,17 @@ ingress:
     - secretName: ""
 resources:
   requests:
-    memory: "2Gi"
+    memory: "1Gi"
     ephemeral-storage: "1Gi"
   limits:
-    memory: "5Gi"
+    memory: "4Gi"
     ephemeral-storage: "1Gi"
 
-minHeap: "1024m"
-maxHeap: "4096m"
+transactionTimeout: "120s"
+# -- The value passed to the JVM via -Xms to set the initial heap size
+minHeap: ""
+# -- The value passed to the JVM via -Xmx to set the max heap size.
+maxHeap: ""
 extraJvmOptions: ""
 extraEnv: ""
 

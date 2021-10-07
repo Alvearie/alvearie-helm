@@ -27,3 +27,15 @@ annotations:
       description: align endpoints config with fhir-server-config.json's fhirServer/resources section
     - kind: changed
       description: updated to version 10.12.2 of the embedded bitnami postgresql chart
+    - kind: changed
+      description: updated the version of the bitnami postgresql image to 13.4.0-debian-10-r53
+    - kind: changed
+      description: mount jvm.options to overrides instead of overwriting the default jvm.options
+    - kind: added
+      description: transactionTimeout helm value for setting FHIR_TRANSACTION_MANAGER_TIMEOUT
+    - kind: removed
+      description: the default value for minHeap; instead we will defer to the IBM FHIR Server default
+    - kind: removed
+      description: the default value for maxHeap; instead we will defer to the JVM default
+    - kind: changed
+      description: reduced the default memory request to 1Gi and the default memory limit to 4Gi
