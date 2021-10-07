@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.3.1
+version: 0.3.2
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
