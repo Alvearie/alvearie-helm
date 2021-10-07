@@ -346,7 +346,7 @@ resources:
     memory: "1Gi"
     ephemeral-storage: "1Gi"
   limits:
-    memory: "5Gi"
+    memory: "4Gi"
     ephemeral-storage: "1Gi"
 # -- Pod affinity
 # @default -- Preferred zone anti-affinity
@@ -366,10 +366,14 @@ nodeSelector: {}
 # -- Node taints to tolerate
 tolerations: []
 
-# -- Initial heap size
-minHeap: "768m"
-# -- Max heap size
-maxHeap: "4096m"
+transactionTimeout: "120s"
+
+# -- The value passed to the JVM via -Xms to set the initial heap size.
+# @default -- The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2
+minHeap: ""
+# -- The value passed to the JVM via -Xmx to set the max heap size.
+maxHeap: ""
+
 extraJvmOptions: ""
 extraEnv: ""
 # -- Add additional volumes. Evaluated as a template.

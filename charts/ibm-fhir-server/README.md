@@ -1,5 +1,5 @@
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -38,6 +38,7 @@ This design gives the deployer of this helm chart a number of different options 
 1. Use the `defaultFhirServerConfig` named template that is provided, but override values specified in the template to customize the configuration. Chart values are used to customize config properties in the following sections of the configuration:
     - core
     - resources
+    - security
     - notifications
     - audit
     - persistence
@@ -280,8 +281,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.realms.test.clients.infernoBulk.publicClient | bool | `true` |  |
 | keycloak.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
-| maxHeap | string | `"4096m"` | Max heap size |
-| minHeap | string | `"768m"` | Initial heap size |
+| maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |
+| minHeap | string | The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2 | The value passed to the JVM via -Xms to set the initial heap size. |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | nodeSelector | object | `{}` | Node labels for Pod assignment |
 | notifications.kafka.bootstrapServers | string | `nil` |  |
@@ -324,7 +325,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
-| resources.limits.memory | string | `"5Gi"` |  |
+| resources.limits.memory | string | `"4Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
@@ -358,6 +359,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | tolerations | list | `[]` | Node taints to tolerate |
 | topologySpreadConstraints | string | `nil` | Topology spread constraints template |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
+| transactionTimeout | string | `"120s"` |  |
 | trustStoreFormat | string | `"PKCS12"` | For the truststore specified in trustStoreSecret, the truststore format (PKCS12 or JKS). This value will be ignored if the trustStoreSecret value is not set. |
 | trustStoreSecret | string | `nil` | Secret containing the FHIR server truststore file and its password. The secret must contain the keys 'fhirTrustStore' (the truststore file contents in the format specified in trustStoreFormat) and 'fhirTrustStorePassword' (the truststore password) |
 
