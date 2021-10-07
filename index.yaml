@@ -6,6 +6,37 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: added
+          description: updating to ibm-fhir-schematool v4.9.2's image as default
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.2
+    created: "2021-10-07T17:29:06.881225147Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.12.0
+    description: Helm chart for the IBM FHIR Server
+    digest: dd7a1ec604715e1c8911c79dbf8ef28ee81d6839b0ab18b59a76f68736cbfb2c
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.3.2/ibm-fhir-server-0.3.2.tgz
+    version: 0.3.2
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: added
           description: allow exposing the server on a non-TLS-secured port
       artifacthub.io/license: Apache-2.0
     apiVersion: v2
@@ -357,4 +388,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-10-06T01:13:19.159524079Z"
+generated: "2021-10-07T17:29:06.881454349Z"
