@@ -13,10 +13,13 @@ ConfigMaps and Secrets to support the wide range of configuration options availa
 
 ```sh
 helm repo add alvearie https://alvearie.io/alvearie-helm
-helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --values values.yaml --set 'ingress.hostname=example.com' --set 'ingress.tls[0].secretName=cluster-tls-secret'
+export POSTGRES_PASSWORD=$(openssl rand -hex 20)
+helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --set postgresql.postgresqlPassword=${POSTGRES_PASSWORD} --set ingress.hostname=example.com --set 'ingress.tls[0].secretName=cluster-tls-secret'
 ```
 
 This will install the latest version if the IBM FHIR Server using an included PostgreSQL database for persistence.
+Note that `postgresql.postgresqlPassword` must be set for all upgrades that use the embedded postgresql chart,
+otherwise [the postgresql password will be overwritten and lost](https://artifacthub.io/packages/helm/bitnami/postgresql#troubleshooting).
 
 By default, the IBM FHIR Server will only serve HTTPS traffic.
 With the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx),
