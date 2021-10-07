@@ -248,7 +248,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | schemaMigration.image.pullPolicy | string | `"Always"` |  |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
-| schemaMigration.image.tag | string | `"4.9.1"` |  |
+| schemaMigration.image.tag | string | `"4.9.2"` |  |
 | security.oauthAuthUrl | string | `nil` |  |
 | security.oauthEnabled | bool | `false` |  |
 | security.oauthRegUrl | string | `nil` |  |
