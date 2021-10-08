@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.3.3
+version: 0.3.4
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -23,7 +23,7 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: changed
-      description: updated to version 10.12.2 of the embedded bitnami postgresql chart
-    - kind: changed
-      description: updated the version of the bitnami postgresql image to 13.4.0-debian-10-r54
+    - kind: added
+      description: allow configuring the pod and container security context and set restrictive default values
+    - kind: added
+      description: allow configuring the schema tool's resource requests and limits

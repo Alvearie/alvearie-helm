@@ -27,6 +27,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
       {{- if eq .Values.db.type "postgresql" }}
       initContainers:
         - name: wait-for-db-to-be-ready
@@ -72,6 +74,8 @@ spec:
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
           volumeMounts:
             - name: fhir-server-config
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/datasources.xml
