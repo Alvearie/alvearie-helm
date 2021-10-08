@@ -90,6 +90,11 @@ spec:
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/expose-http-endpoint.xml
               subPath: expose-http-endpoint.xml
           {{- end }}
+          {{- if .Values.security.jwtValidation.enabled }}
+            - name: fhir-server-config
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/jwt-validation.xml
+              subPath: jwt-validation.xml
+          {{- end }}
           env:
             - name: MY_POD_NAME
               valueFrom:

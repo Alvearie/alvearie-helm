@@ -1,5 +1,5 @@
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -262,6 +262,12 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
 | schemaMigration.image.tag | string | `"4.9.2"` |  |
+| security.jwtValidation.audience | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4"` |  |
+| security.jwtValidation.enabled | bool | `false` |  |
+| security.jwtValidation.groupNameAttribute | string | `"group"` |  |
+| security.jwtValidation.issuer | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test"` |  |
+| security.jwtValidation.jwksUri | string | `"http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs"` |  |
+| security.jwtValidation.usersGroup | string | `"fhirUser"` |  |
 | security.oauthAuthUrl | string | `nil` |  |
 | security.oauthEnabled | bool | `false` |  |
 | security.oauthRegUrl | string | `nil` |  |
