@@ -1,5 +1,5 @@
 
-![Version: 0.3.4](https://img.shields.io/badge/Version-0.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.3.5](https://img.shields.io/badge/Version-0.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -163,6 +163,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | audit.kafkaServers | string | `nil` |  |
 | audit.topic | string | `"FHIR_AUDIT_DEV"` | The target Kafka topic for audit events |
 | audit.type | string | `"auditevent"` | `cadf` or `auditevent` |
+| containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":false,"runAsNonRoot":true,"runAsUser":1001}` | security context for the server container |
 | datasourcesTemplate | string | `"defaultPostgresDatasources"` | Template containing the datasources.xml content |
 | db.apiKey | string | `nil` | The database apiKey. If apiKeySecret is set, the apiKey will be set from its contents. |
 | db.apiKeySecretKey | string | `nil` | For the Secret specified in dbSecret, the key of the key/value pair containing the apiKey. This value will be ignored if the dbSecret value is not set. |
@@ -262,6 +263,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
 | schemaMigration.image.tag | string | `"4.9.2"` |  |
+| schemaMigration.resources | object | `{}` | container resources for the schema migration job |
 | security.jwtValidation.audience | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4"` |  |
 | security.jwtValidation.enabled | bool | `false` |  |
 | security.jwtValidation.groupNameAttribute | string | `"group"` |  |
@@ -275,6 +277,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | security.smartCapabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
 | security.smartEnabled | bool | `false` |  |
 | security.smartScopes | list | openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types. | OAuth 2.0 scopes to advertise from the server |
+| securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
 

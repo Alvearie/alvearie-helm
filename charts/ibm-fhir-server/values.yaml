@@ -169,6 +169,8 @@ schemaMigration:
     tag: "4.9.2"
     pullPolicy: Always
     pullSecret: all-icr-io
+  # -- container resources for the schema migration job
+  resources: {}
 # -- The name of a Secret from which to retrieve fhirUserPassword and fhirAdminPassword.
 # If this value is set, it is expected that fhirUserPasswordSecretKey and fhirAdminPasswordSecretKey will also be set.
 fhirPasswordSecret:
@@ -293,3 +295,16 @@ extensionSearchParametersTemplate: "defaultSearchParameters"
 
 # -- if enabled, the server will listen to non-TLS requests
 exposeHttpEndpoint: false
+
+# -- security context for the server container
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1001
+
+# -- pod security context for the server
+securityContext: {}

@@ -59,6 +59,8 @@ spec:
             runAsNonRoot: true
             runAsUser: 1001
             runAsGroup: 1001
+          resources:
+            {{ toYaml .Values.resources | nindent 12 }}
           env:
             - name: FHIR_DB_TYPE
               value: "{{ .Values.db.type }}"
