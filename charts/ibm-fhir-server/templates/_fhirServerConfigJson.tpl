@@ -40,7 +40,7 @@ The default fhir-server-config.json.
                     "searchParameters": {
                         {{- $lastIndex := sub (len $endpoint.searchParameters) 1 }}
                         {{- range $j, $param := $endpoint.searchParameters }}
-                        "{{ $param.code }}": "{{ $param.url }}"{{ if not (eq $j $lastIndex) }},{{ end }}
+                        "{{ $param.code }}": "{{ $param.url }}"{{ if ne $j $lastIndex }},{{ end }}
                         {{- end }}
                     }
                     {{- end}}

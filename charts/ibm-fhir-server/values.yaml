@@ -104,6 +104,31 @@ db:
   sslConnection: true
   pluginName:
   securityMechanism:
+
+keycloak:
+  enabled: false
+  realms:
+    test:
+      clients:
+        inferno:
+        infernoBulk:
+      scopes:
+        patient:
+          - resourceTypes:
+              - Patient
+              - "*"
+            permission: "*"
+        user:
+          - resourceTypes:
+              - Organization
+              - "*"
+            permission: "*"
+        system:
+          - resourceTypes:
+              - Patient
+              - "*"
+            permission: "*"
+
 security:
   oauthEnabled: false
   oauthRegUrl:
@@ -292,6 +317,9 @@ datasourcesTemplate: "defaultPostgresDatasources"
 
 # -- Template containing the extension-search-parameters.json content
 extensionSearchParametersTemplate: "defaultSearchParameters"
+
+# -- Template with keycloak-config.json input for the Alvearie keycloak-config project
+keycloakConfigTemplate: "defaultKeycloakConfig"
 
 # -- if enabled, the server will listen to non-TLS requests
 exposeHttpEndpoint: false

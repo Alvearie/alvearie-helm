@@ -1,5 +1,5 @@
 
-![Version: 0.3.5](https://img.shields.io/badge/Version-0.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.3.6](https://img.shields.io/badge/Version-0.3.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -211,6 +211,19 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | ingress.rules[0].paths[0] | string | `"/"` |  |
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
+| keycloak.enabled | bool | `false` |  |
+| keycloak.realms.test.clients.inferno | string | `nil` |  |
+| keycloak.realms.test.clients.infernoBulk | string | `nil` |  |
+| keycloak.realms.test.scopes.patient[0].permission | string | `"*"` |  |
+| keycloak.realms.test.scopes.patient[0].resourceTypes[0] | string | `"Patient"` |  |
+| keycloak.realms.test.scopes.patient[0].resourceTypes[1] | string | `"*"` |  |
+| keycloak.realms.test.scopes.system[0].permission | string | `"*"` |  |
+| keycloak.realms.test.scopes.system[0].resourceTypes[0] | string | `"Patient"` |  |
+| keycloak.realms.test.scopes.system[0].resourceTypes[1] | string | `"*"` |  |
+| keycloak.realms.test.scopes.user[0].permission | string | `"*"` |  |
+| keycloak.realms.test.scopes.user[0].resourceTypes[0] | string | `"Organization"` |  |
+| keycloak.realms.test.scopes.user[0].resourceTypes[1] | string | `"*"` |  |
+| keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `"4096m"` |  |
 | minHeap | string | `"1024m"` |  |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
