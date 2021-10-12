@@ -22,9 +22,45 @@ data:
     {{ tpl . $ | nindent 4 }}
     {{- end }}
   {{- if .Values.exposeHttpEndpoint }}
-  expose-http-endpoint.xml: >
+  expose-http-endpoint.xml: |
     <server>
       <!-- Serve non-TLS traffic on port 9080 -->
       <httpEndpoint id="defaultHttpEndpoint" httpPort="9080"/>
     </server>
+  {{- end }}
+  {{- if .Values.security.jwtValidation.enabled }}
+  {{- with .Values.security.jwtValidation }}
+  jwt-validation.xml: |
+    <server description="fhir-server">
+        <featureManager>
+            <!-- mpJwt-1.2 is already enabled in the default server.xml, but it doesn't hurt to repeat it here -->
+            <feature>mpJwt-1.2</feature>
+        </featureManager>
+
+        <!-- Override the application-bnd binding of the main webapp -->
+        <webApplication id="fhir-server-webapp">
+            <application-bnd id="bind">
+                <security-role id="users" name="FHIRUsers">
+                    <group id="usersGroup" access-id="group:{{ tpl .issuer $ }}/{{ .usersGroup }}"/>
+                </security-role>
+            </application-bnd>
+        </webApplication>
+
+        <!-- The MP JWT configuration that injects the caller's JWT into a
+             ResourceScoped bean for inspection. -->
+        <mpJwt id="jwtConsumer"
+               jwksUri="{{ tpl .jwksUri $ }}"
+               audiences="{{ tpl .audience $ }}"
+               userNameAttribute="sub"
+               groupNameAttribute="{{ .groupNameAttribute }}"
+               issuer="{{ tpl .issuer $ }}"
+               authFilterRef="filter"/>
+
+        <authFilter id="filter">
+            <requestUrl urlPattern="/fhir-server" />
+            <requestUrl matchType="notContain" urlPattern="/fhir-server/api/v4/metadata" />
+            <requestUrl matchType="notContain" urlPattern="/fhir-server/api/v4/.well-known/smart-configuration" />
+        </authFilter>
+    </server>
+  {{- end }}
   {{- end }}

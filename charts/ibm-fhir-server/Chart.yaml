@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.3.4
+version: 0.3.5
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -24,6 +24,6 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: added
-      description: allow configuring the pod and container security context and set restrictive default values
-    - kind: added
-      description: allow configuring the schema tool's resource requests and limits
+      description: JWT validation option; typically used when OAuth is enabled
+    - kind: fixed
+      description: moved annotation for rolling the deployment to the right spot
