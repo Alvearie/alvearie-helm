@@ -6,6 +6,39 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: added
+          description: JWT validation option; typically used when OAuth is enabled
+        - kind: fixed
+          description: moved annotation for rolling the deployment to the right spot
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.2
+    created: "2021-10-12T13:01:34.183575357Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.12.2
+    description: Helm chart for the IBM FHIR Server
+    digest: 6ac07aa1bcf89036f70dcd53875a9fbc726112af3ed99ae0e9d99493012196af
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.3.5/ibm-fhir-server-0.3.5.tgz
+    version: 0.3.5
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: added
           description: allow configuring the pod and container security context and set restrictive default values
         - kind: added
           description: allow configuring the schema tool's resource requests and limits
@@ -454,4 +487,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-10-11T17:44:52.17556116Z"
+generated: "2021-10-12T13:01:34.183749557Z"
