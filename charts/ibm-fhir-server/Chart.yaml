@@ -25,3 +25,5 @@ annotations:
     # added, changed, deprecated, removed, fixed, and security.
     - kind: added
       description: JWT validation option; typically used when OAuth is enabled
+    - kind: fixed
+      description: moved annotation for rolling the deployment to the right spot
