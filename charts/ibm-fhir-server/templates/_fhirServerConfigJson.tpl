@@ -54,7 +54,7 @@ The default fhir-server-config.json.
             },
             "security": {
                 "cors": true,
-                {{- if not .Values.security.oauthEnabled }}
+                {{- if not .Values.security.oauth.enabled }}
                 "basic": {
                     "enabled": true
                 },
@@ -67,15 +67,15 @@ The default fhir-server-config.json.
                 {{- else }}
                 "oauth": {
                     "enabled": true,
-                    {{- if .Values.oauthRegUrl }}
-                    "regUrl": {{ tpl .Values.security.oauthRegUrl $ | quote }},
+                    {{- if .Values.security.oauth.regUrl }}
+                    "regUrl": {{ tpl .Values.security.oauth.regUrl $ | quote }},
                     {{- end }}
-                    "authUrl": {{ tpl .Values.security.oauthAuthUrl $ | quote }},
-                    "tokenUrl": {{ tpl .Values.security.oauthTokenUrl $ | quote }},
+                    "authUrl": {{ tpl .Values.security.oauth.authUrl $ | quote }},
+                    "tokenUrl": {{ tpl .Values.security.oauth.tokenUrl $ | quote }},
                     "smart": {
-                        "enabled": {{ .Values.security.smartEnabled }},
-                        "scopes": {{ toJson .Values.security.smartScopes }},
-                        "capabilities": {{ toJson .Values.security.smartCapabilities }}
+                        "enabled": {{ .Values.security.oauth.smart.enabled }},
+                        "scopes": {{ toJson .Values.security.oauth.smart.resourceScopes }},
+                        "capabilities": {{ toJson .Values.security.oauth.smart.capabilities }}
                     }
                 }
                 {{- end }}

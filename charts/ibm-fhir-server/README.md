@@ -212,17 +212,18 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
 | keycloak.enabled | bool | `false` |  |
-| keycloak.realms.test.clients.inferno | string | `nil` |  |
-| keycloak.realms.test.clients.infernoBulk | string | `nil` |  |
-| keycloak.realms.test.scopes.patient[0].permission | string | `"*"` |  |
-| keycloak.realms.test.scopes.patient[0].resourceTypes[0] | string | `"Patient"` |  |
-| keycloak.realms.test.scopes.patient[0].resourceTypes[1] | string | `"*"` |  |
-| keycloak.realms.test.scopes.system[0].permission | string | `"*"` |  |
-| keycloak.realms.test.scopes.system[0].resourceTypes[0] | string | `"Patient"` |  |
-| keycloak.realms.test.scopes.system[0].resourceTypes[1] | string | `"*"` |  |
-| keycloak.realms.test.scopes.user[0].permission | string | `"*"` |  |
-| keycloak.realms.test.scopes.user[0].resourceTypes[0] | string | `"Organization"` |  |
-| keycloak.realms.test.scopes.user[0].resourceTypes[1] | string | `"*"` |  |
+| keycloak.extraEnv | string | `""` |  |
+| keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
+| keycloak.realms.test.clients.inferno.consentRequired | bool | `true` |  |
+| keycloak.realms.test.clients.inferno.defaultScopes | list | `[]` |  |
+| keycloak.realms.test.clients.inferno.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.realms.test.clients.inferno.publicClient | bool | `true` |  |
+| keycloak.realms.test.clients.inferno.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
+| keycloak.realms.test.clients.infernoBulk.consentRequired | bool | `true` |  |
+| keycloak.realms.test.clients.infernoBulk.defaultScopes | list | `[]` |  |
+| keycloak.realms.test.clients.infernoBulk.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.realms.test.clients.infernoBulk.publicClient | bool | `true` |  |
+| keycloak.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `"4096m"` |  |
 | minHeap | string | `"1024m"` |  |
@@ -283,13 +284,18 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | security.jwtValidation.issuer | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test"` |  |
 | security.jwtValidation.jwksUri | string | `"http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs"` |  |
 | security.jwtValidation.usersGroup | string | `"fhirUser"` |  |
-| security.oauthAuthUrl | string | `nil` |  |
-| security.oauthEnabled | bool | `false` |  |
-| security.oauthRegUrl | string | `nil` |  |
-| security.oauthTokenUrl | string | `nil` |  |
-| security.smartCapabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
-| security.smartEnabled | bool | `false` |  |
-| security.smartScopes | list | openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types. | OAuth 2.0 scopes to advertise from the server |
+| security.oauth.authUrl | string | `nil` |  |
+| security.oauth.enabled | bool | `false` |  |
+| security.oauth.offlineAccessScopeEnabled | bool | `true` |  |
+| security.oauth.onlineAccessScopeEnabled | bool | `true` |  |
+| security.oauth.profileScopeEnabled | bool | `true` |  |
+| security.oauth.regUrl | string | `nil` |  |
+| security.oauth.smart.capabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
+| security.oauth.smart.enabled | bool | `false` |  |
+| security.oauth.smart.fhirUserScopeEnabled | bool | `true` |  |
+| security.oauth.smart.launchPatientScopeEnabled | bool | `true` |  |
+| security.oauth.smart.resourceScopes | list | read access to number of resource types. | SMART resource scopes to advertise from the server |
+| security.oauth.tokenUrl | string | `nil` |  |
 | securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |

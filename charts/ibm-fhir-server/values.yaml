@@ -107,33 +107,32 @@ db:
 
 keycloak:
   enabled: false
+  postgresql:
+    nameOverride: keycloak-postgres
   realms:
     test:
       clients:
         inferno:
+          consentRequired: true
+          publicClient: true
+          redirectURIs:
+            - "http://localhost:4567/inferno/*"
+          defaultScopes: []
+          # -- OAuth 2.0 scopes supported by this client
+          # @default -- all scopes defined by the `security.oauth` configuration.
+          optionalScopes:
         infernoBulk:
-      scopes:
-        patient:
-          - resourceTypes:
-              - Patient
-              - "*"
-            permission: "*"
-        user:
-          - resourceTypes:
-              - Organization
-              - "*"
-            permission: "*"
-        system:
-          - resourceTypes:
-              - Patient
-              - "*"
-            permission: "*"
+          consentRequired: true
+          publicClient: true
+          redirectURIs:
+            - "http://localhost:4567/inferno/*"
+          defaultScopes: []
+          # -- OAuth 2.0 scopes supported by this client
+          # @default -- all scopes defined by the `security.oauth` configuration.
+          optionalScopes:
+  extraEnv: ""
 
 security:
-  oauthEnabled: false
-  oauthRegUrl:
-  oauthAuthUrl:
-  oauthTokenUrl:
   jwtValidation:
     enabled: false
     audience: https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4
@@ -141,52 +140,56 @@ security:
     jwksUri: http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs
     groupNameAttribute: group
     usersGroup: fhirUser
-  smartEnabled: false
-  # -- OAuth 2.0 scopes to advertise from the server
-  # @default -- openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types.
-  smartScopes:
-    [
-      "openid",
-      "profile",
-      "fhirUser",
-      "launch/patient",
-      "offline_access",
-      "patient/*.read",
-      "patient/AllergyIntolerance.read",
-      "patient/CarePlan.read",
-      "patient/CareTeam.read",
-      "patient/Condition.read",
-      "patient/Device.read",
-      "patient/DiagnosticReport.read",
-      "patient/DocumentReference.read",
-      "patient/Encounter.read",
-      "patient/ExplanationOfBenefit.read",
-      "patient/Goal.read",
-      "patient/Immunization.read",
-      "patient/Location.read",
-      "patient/Medication.read",
-      "patient/MedicationRequest.read",
-      "patient/Observation.read",
-      "patient/Organization.read",
-      "patient/Patient.read",
-      "patient/Practitioner.read",
-      "patient/PractitionerRole.read",
-      "patient/Procedure.read",
-      "patient/Provenance.read",
-      "patient/RelatedPerson.read",
-    ]
-  # -- SMART capabilities to advertise from the server
-  # @default -- sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient
-  smartCapabilities:
-    [
-      "sso-openid-connect",
-      "launch-standalone",
-      "client-public",
-      "client-confidential-symmetric",
-      "permission-offline",
-      "context-standalone-patient",
-      "permission-patient",
-    ]
+  oauth:
+    enabled: false
+    regUrl:
+    authUrl:
+    tokenUrl:
+    profileScopeEnabled: true
+    offlineAccessScopeEnabled: true
+    onlineAccessScopeEnabled: true
+    smart:
+      enabled: false
+      fhirUserScopeEnabled: true
+      launchPatientScopeEnabled: true
+      # -- SMART resource scopes to advertise from the server
+      # @default -- read access to number of resource types.
+      resourceScopes:
+        - "patient/*.read"
+        - "patient/AllergyIntolerance.read"
+        - "patient/CarePlan.read"
+        - "patient/CareTeam.read"
+        - "patient/Condition.read"
+        - "patient/Device.read"
+        - "patient/DiagnosticReport.read"
+        - "patient/DocumentReference.read"
+        - "patient/Encounter.read"
+        - "patient/ExplanationOfBenefit.read"
+        - "patient/Goal.read"
+        - "patient/Immunization.read"
+        - "patient/Location.read"
+        - "patient/Medication.read"
+        - "patient/MedicationRequest.read"
+        - "patient/MedicationDispense.read"
+        - "patient/Observation.read"
+        - "patient/Organization.read"
+        - "patient/Patient.read"
+        - "patient/Practitioner.read"
+        - "patient/PractitionerRole.read"
+        - "patient/Procedure.read"
+        - "patient/Provenance.read"
+        - "patient/RelatedPerson.read"
+      # -- SMART capabilities to advertise from the server
+      # @default -- sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient
+      capabilities:
+        - "sso-openid-connect"
+        - "launch-standalone"
+        - "client-public"
+        - "client-confidential-symmetric"
+        - "permission-offline"
+        - "context-standalone-patient"
+        - "permission-patient"
+
 schemaMigration:
   enabled: true
   image:
