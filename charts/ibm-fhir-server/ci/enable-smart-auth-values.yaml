@@ -1,0 +1,12 @@
+security:
+  jwtValidation:
+    enabled: true
+  oauth:
+    enabled: true
+    regUrl: https://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth/realms/test/clients-registrations/openid-connect
+    authUrl: https://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/auth
+    tokenUrl: https://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/token
+    smart:
+      enabled: true
+keycloak:
+  enabled: true

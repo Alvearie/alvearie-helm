@@ -168,9 +168,9 @@ security:
     usersGroup: fhirUser
   oauth:
     enabled: false
-    regUrl:
-    authUrl:
-    tokenUrl:
+    regUrl: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/clients-registrations/openid-connect
+    authUrl: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/auth
+    tokenUrl: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/token
     profileScopeEnabled: true
     offlineAccessScopeEnabled: true
     onlineAccessScopeEnabled: true

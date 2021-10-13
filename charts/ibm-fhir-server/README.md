@@ -290,18 +290,18 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | security.jwtValidation.issuer | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test"` |  |
 | security.jwtValidation.jwksUri | string | `"http://{{ template \"keycloak.fullname\" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/certs"` |  |
 | security.jwtValidation.usersGroup | string | `"fhirUser"` |  |
-| security.oauth.authUrl | string | `nil` |  |
+| security.oauth.authUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/auth"` |  |
 | security.oauth.enabled | bool | `false` |  |
 | security.oauth.offlineAccessScopeEnabled | bool | `true` |  |
 | security.oauth.onlineAccessScopeEnabled | bool | `true` |  |
 | security.oauth.profileScopeEnabled | bool | `true` |  |
-| security.oauth.regUrl | string | `nil` |  |
+| security.oauth.regUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/clients-registrations/openid-connect"` |  |
 | security.oauth.smart.capabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
 | security.oauth.smart.enabled | bool | `false` |  |
 | security.oauth.smart.fhirUserScopeEnabled | bool | `true` |  |
 | security.oauth.smart.launchPatientScopeEnabled | bool | `true` |  |
 | security.oauth.smart.resourceScopes | list | read access to number of resource types. | SMART resource scopes to advertise from the server |
-| security.oauth.tokenUrl | string | `nil` |  |
+| security.oauth.tokenUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/token"` |  |
 | securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
