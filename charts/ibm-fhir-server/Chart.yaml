@@ -5,7 +5,7 @@ version: 0.3.6
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
-    version: 10.12.2
+    version: 10.12.3
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: keycloak
@@ -29,3 +29,5 @@ annotations:
     # added, changed, deprecated, removed, fixed, and security.
     - kind: added
       description: optional keycloak subchart
+    - kind: changed
+      description: update bitnami postgresql dependency
