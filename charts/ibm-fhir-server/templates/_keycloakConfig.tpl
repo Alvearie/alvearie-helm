@@ -245,26 +245,3 @@ Helper method for constructing the scope description / consent text for a SMART 
   {{ $permission }}
 {{- end }} access to all{{ if ne $resourceType "*" }} {{ $resourceType }}{{ end }} data for the {{ $context }}
 {{- end -}}
-
-{{/*
-Helper method for constructing a SMART scope string from a dict with patient, user, and system scopes
-*/}}
-{{- define "scopeList" -}}
-  {{- $scopes := $.Values.security.oauth.smart.resourceScopes }}
-  {{- if $.Values.security.oauth.smart.launchPatientScopeEnabled }}
-    {{- $scopes = prepend $scopes "launch/patient" }}
-  {{- end }}
-  {{- if $.Values.security.oauth.smart.fhirUserScopeEnabled }}
-    {{- $scopes = prepend $scopes "fhirUser" }}
-  {{- end }}
-  {{- if $.Values.security.oauth.profileScopeEnabled }}
-    {{- $scopes = prepend $scopes "profile" }}
-  {{- end }}
-  {{- if $.Values.security.oauth.offlineAccessScopeEnabled }}
-    {{- $scopes = prepend $scopes "offline_access" }}
-  {{- end }}
-  {{- if $.Values.security.oauth.offlineAccessScopeEnabled }}
-    {{- $scopes = prepend $scopes "online_access" }}
-  {{- end }}
-  {{- toJson $scopes }}
-{{- end -}}

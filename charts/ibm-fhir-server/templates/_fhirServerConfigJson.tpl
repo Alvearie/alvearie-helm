@@ -74,7 +74,7 @@ The default fhir-server-config.json.
                     "tokenUrl": {{ tpl .Values.security.oauth.tokenUrl $ | quote }},
                     "smart": {
                         "enabled": {{ .Values.security.oauth.smart.enabled }},
-                        "scopes": {{ toJson .Values.security.oauth.smart.resourceScopes }},
+                        "scopes": {{ include "scopeList" $ }},
                         "capabilities": {{ toJson .Values.security.oauth.smart.capabilities }}
                     }
                 }
