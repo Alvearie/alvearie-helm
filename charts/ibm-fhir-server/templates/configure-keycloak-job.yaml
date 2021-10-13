@@ -12,7 +12,7 @@ spec:
   {{- end }}
   template:
     metadata:
-      generateName: configure-keycloak
+      name: "{{ .Release.Name }}-configure-keycloak"
     spec:
       restartPolicy: Never
       volumes:
@@ -25,7 +25,7 @@ spec:
       {{- end }}
       initContainers:
         - name: wait-for-keycloak-to-be-ready
-          image: registry.access.redhat.com/ubi8/ubi:latest
+          image: registry.access.redhat.com/ubi8/ubi:8.4
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
@@ -46,8 +46,18 @@ spec:
               done
       containers:
         - name: keycloak-config
-          image: us.icr.io/fhir-rns/keycloak-config:latest
-          imagePullPolicy: Always
+          image: alvearie/keycloak-config:0.3.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
           volumeMounts:
             - name: keycloak-config
               mountPath: /config
