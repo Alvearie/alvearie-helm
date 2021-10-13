@@ -107,6 +107,33 @@ db:
 
 keycloak:
   enabled: false
+  image:
+    repository: alvearie/smart-keycloak
+    tag: 0.3.0
+  # -- An initial keycloak admin username for creating the initial Keycloak admin user
+  adminUsername: admin
+  # -- An initial keycloak admin password for creating the initial Keycloak admin user
+  adminPassword: change-password
+  # -- Extra volumes for the Keycloak StatefulSets
+  # @default -- a single volume named keycloak-admin with contents from the keycloak-admin-secret
+  extraVolumes: |
+    - name: keycloak-admin
+      secret:
+        secretName: {{ template "keycloak.fullname" $ }}-admin-secret
+  # -- Extra volume mounts for the Keycloak StatefulSet
+  # @default -- mount the keycloak-admin volume at /secrets/keycloak-admin
+  extraVolumeMounts: |
+    - name: keycloak-admin
+      mountPath: /secrets/keycloak-admin
+  # -- Extra environment variables for the Keycloak StatefulSet
+  # @default -- DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath
+  extraEnv: |
+    - name: KEYCLOAK_USER_FILE
+      value: /secrets/keycloak-admin/username
+    - name: KEYCLOAK_PASSWORD_FILE
+      value: /secrets/keycloak-admin/password
+    - name: DB_VENDOR
+      value: postgres
   postgresql:
     nameOverride: keycloak-postgres
   realms:
@@ -130,14 +157,13 @@ keycloak:
           # -- OAuth 2.0 scopes supported by this client
           # @default -- all scopes defined by the `security.oauth` configuration.
           optionalScopes:
-  extraEnv: ""
 
 security:
   jwtValidation:
     enabled: false
     audience: https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4
     issuer: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test
-    jwksUri: http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs
+    jwksUri: http://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/certs
     groupNameAttribute: group
     usersGroup: fhirUser
   oauth:

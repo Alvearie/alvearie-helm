@@ -211,8 +211,14 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | ingress.rules[0].paths[0] | string | `"/"` |  |
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
+| keycloak.adminPassword | string | `"change-password"` | An initial keycloak admin password for creating the initial Keycloak admin user |
+| keycloak.adminUsername | string | `"admin"` | An initial keycloak admin username for creating the initial Keycloak admin user |
 | keycloak.enabled | bool | `false` |  |
-| keycloak.extraEnv | string | `""` |  |
+| keycloak.extraEnv | string | DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath | Extra environment variables for the Keycloak StatefulSet |
+| keycloak.extraVolumeMounts | string | mount the keycloak-admin volume at /secrets/keycloak-admin | Extra volume mounts for the Keycloak StatefulSet |
+| keycloak.extraVolumes | string | a single volume named keycloak-admin with contents from the keycloak-admin-secret | Extra volumes for the Keycloak StatefulSets |
+| keycloak.image.repository | string | `"alvearie/smart-keycloak"` |  |
+| keycloak.image.tag | string | `"0.3.0"` |  |
 | keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
 | keycloak.realms.test.clients.inferno.consentRequired | bool | `true` |  |
 | keycloak.realms.test.clients.inferno.defaultScopes | list | `[]` |  |
@@ -282,7 +288,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | security.jwtValidation.enabled | bool | `false` |  |
 | security.jwtValidation.groupNameAttribute | string | `"group"` |  |
 | security.jwtValidation.issuer | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test"` |  |
-| security.jwtValidation.jwksUri | string | `"http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs"` |  |
+| security.jwtValidation.jwksUri | string | `"http://{{ template \"keycloak.fullname\" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/certs"` |  |
 | security.jwtValidation.usersGroup | string | `"fhirUser"` |  |
 | security.oauth.authUrl | string | `nil` |  |
 | security.oauth.enabled | bool | `false` |  |

@@ -65,13 +65,13 @@ spec:
             - name: KEYCLOAK_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-keycloak-admin-secret
-                  key: keycloak.admin.username
+                  name: {{ template "keycloak.fullname" .Subcharts.keycloak }}-admin-secret
+                  key: username
             - name: KEYCLOAK_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "fhir.fullname" . }}-keycloak-admin-secret
-                  key: keycloak.admin.password
+                  name: {{ template "keycloak.fullname" .Subcharts.keycloak }}-admin-secret
+                  key: password
             - name: KEYCLOAK_BASE_URL
               value: http://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth
             - name: FHIR_BASE_URL
