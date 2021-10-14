@@ -6,6 +6,43 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: added
+          description: optional keycloak subchart
+        - kind: changed
+          description: update bitnami postgresql dependency
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.9.2
+    created: "2021-10-14T19:35:28.569418123Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.12.3
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://codecentric.github.io/helm-charts
+      version: 15.1.0
+    description: Helm chart for the IBM FHIR Server
+    digest: 62dc69fa590e943fa6d2bf238b2b70dff25f496c961375faeb2b5971e77f8a86
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.4.0/ibm-fhir-server-0.4.0.tgz
+    version: 0.4.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: added
           description: JWT validation option; typically used when OAuth is enabled
         - kind: fixed
           description: moved annotation for rolling the deployment to the right spot
@@ -487,4 +524,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-10-12T13:01:34.183749557Z"
+generated: "2021-10-14T19:35:28.569595633Z"
