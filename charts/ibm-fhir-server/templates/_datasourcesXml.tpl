@@ -178,6 +178,19 @@ The datasource.xml file for a Derby DB.
             <properties.derby.embedded databaseName="derby/fhirDB"/>
             <connectionManager maxPoolSize="50" minPoolSize="10"/>
         </dataSource>
+        
+        {{- if .Values.objectStorage.enabled }}
+        <featureManager>
+            <feature>batch-1.0</feature>
+            <feature>batchManagement-1.0</feature>
+        </featureManager>
+
+        <dataSource id="fhirbatchDS" jndiName="jdbc/fhirbatchDB" type="javax.sql.XADataSource" statementCacheSize="200" syncQueryTimeoutWithTransactionTimeout="true" validationTimeout="30s">
+            <jdbcDriver javax.sql.XADataSource="org.apache.derby.jdbc.EmbeddedXADataSource" libraryRef="sharedLibDerby"/>
+            <properties.derby.embedded databaseName="derby/fhirDB"/>
+            <connectionManager maxPoolSize="50" minPoolSize="10"/>
+        </dataSource>
+        {{- end }}
     </server>
 {{- end }}
 

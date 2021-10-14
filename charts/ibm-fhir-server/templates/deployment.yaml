@@ -124,6 +124,10 @@ spec:
             - name: FHIR_HOSTNAME
               value: "{{ tpl .Values.ingress.hostname $ }}"
             {{- end }}
+            {{- if eq .Values.db.type "derby" }}
+            - name: BOOTSTRAP_DB
+              value: "true"
+            {{- else }}
             - name: FHIR_DB_HOSTNAME
               value: "{{ include "fhir.database.host" $ }}"
             - name: FHIR_DB_PORT
@@ -162,7 +166,9 @@ spec:
               value: "100"
             - name: DS_AGED_TIMEOUT
               value: "-1"
+            {{- end }}
             {{- if .Values.objectStorage.enabled }}
+            {{- if ne .Values.db.type "derby" }}
             - name: BATCH_DB_HOSTNAME
               value: "{{ include "fhir.database.host" $ }}"
             - name: BATCH_DB_PORT
@@ -192,6 +198,7 @@ spec:
             {{- if .Values.db.securityMechanism }}
             - name: BATCH_DB_SECURITY
               value: {{ .Values.db.securityMechanism }}
+            {{- end }}
             {{- end }}
             {{- if .Values.objectStorage.objectStorageSecret }}
             - name: COS_LOCATION
