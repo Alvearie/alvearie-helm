@@ -5,5 +5,5 @@ metadata:
   name: {{ template "fhir.fullname" . }}-keycloak-config
 data:
   keycloak-config.json: >
-    {{ include .Values.keycloakConfigTemplate . }}
+    {{ include .Values.keycloakConfigTemplate $ }}
 {{- end }}

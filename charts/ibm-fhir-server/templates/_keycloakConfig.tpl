@@ -5,7 +5,7 @@ The default keycloak-config.json.
 {{- define "defaultKeycloakConfig" -}}
     {
       "keycloak": {
-        "serverUrl": "http://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth",
+        "serverUrl": "http://{{ template "keycloak.fullname" $.Subcharts.keycloak }}-http/auth",
         "adminUser": "{{ .Values.keycloak.adminUsername }}",
         "adminPassword": "${KEYCLOAK_PASSWORD}",
         "adminClientId": "admin-cli",
