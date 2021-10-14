@@ -18,7 +18,7 @@ spec:
       volumes:
         - name: keycloak-config
           configMap:
-            name: smart-ibm-fhir-server-keycloak-config
+            name: {{ template "fhir.fullname" . }}-keycloak-config
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
