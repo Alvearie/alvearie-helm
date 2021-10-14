@@ -1,13 +1,17 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.3.5
+version: 0.4.0
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
-    version: 10.12.2
+    version: 10.12.3
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
+  - name: keycloak
+    version: 15.1.0
+    repository: https://codecentric.github.io/helm-charts
+    condition: keycloak.enabled
 sources:
   - https://github.com/Alvearie/alvearie-helm
   - https://github.com/IBM/FHIR
@@ -24,6 +28,6 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: added
-      description: JWT validation option; typically used when OAuth is enabled
-    - kind: fixed
-      description: moved annotation for rolling the deployment to the right spot
+      description: optional keycloak subchart
+    - kind: changed
+      description: update bitnami postgresql dependency

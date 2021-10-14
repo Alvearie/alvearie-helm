@@ -142,9 +142,33 @@ Get the database credentials apiKey secret key.
 {{- end -}}
 
 {{/*
-Image used to for the PostgreSQL readiness init containers
+Image used for the PostgreSQL readiness init containers
 If using Helm 3.7+, we could use `include "postgresql.image" .Subcharts.postgresql` instead
 */}}
 {{- define "fhir.postgresql.waitForDB.image" -}}
 {{- printf "%s/%s:%s" .Values.postgresql.image.registry .Values.postgresql.image.repository .Values.postgresql.image.tag }}
+{{- end -}}
+
+{{/*
+Helper method for constructing a list of OAuth 2.0 scopes
+from the flags and resource scopes under .Values.security.oauth
+*/}}
+{{- define "scopeList" -}}
+  {{- $scopes := $.Values.security.oauth.smart.resourceScopes }}
+  {{- if $.Values.security.oauth.smart.launchPatientScopeEnabled }}
+    {{- $scopes = prepend $scopes "launch/patient" }}
+  {{- end }}
+  {{- if $.Values.security.oauth.smart.fhirUserScopeEnabled }}
+    {{- $scopes = prepend $scopes "fhirUser" }}
+  {{- end }}
+  {{- if $.Values.security.oauth.profileScopeEnabled }}
+    {{- $scopes = prepend $scopes "profile" }}
+  {{- end }}
+  {{- if $.Values.security.oauth.offlineAccessScopeEnabled }}
+    {{- $scopes = prepend $scopes "offline_access" }}
+  {{- end }}
+  {{- if $.Values.security.oauth.offlineAccessScopeEnabled }}
+    {{- $scopes = prepend $scopes "online_access" }}
+  {{- end }}
+  {{- toJson $scopes }}
 {{- end -}}

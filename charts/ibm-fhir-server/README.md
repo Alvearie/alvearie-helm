@@ -1,5 +1,5 @@
 
-![Version: 0.3.5](https://img.shields.io/badge/Version-0.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -211,6 +211,26 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | ingress.rules[0].paths[0] | string | `"/"` |  |
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
+| keycloak.adminPassword | string | `"change-password"` | An initial keycloak admin password for creating the initial Keycloak admin user |
+| keycloak.adminUsername | string | `"admin"` | An initial keycloak admin username for creating the initial Keycloak admin user |
+| keycloak.enabled | bool | `false` |  |
+| keycloak.extraEnv | string | DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath | Extra environment variables for the Keycloak StatefulSet |
+| keycloak.extraVolumeMounts | string | mount the keycloak-admin volume at /secrets/keycloak-admin | Extra volume mounts for the Keycloak StatefulSet |
+| keycloak.extraVolumes | string | a single volume named keycloak-admin with contents from the keycloak-admin-secret | Extra volumes for the Keycloak StatefulSets |
+| keycloak.image.repository | string | `"alvearie/smart-keycloak"` |  |
+| keycloak.image.tag | string | `"0.3.0"` |  |
+| keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
+| keycloak.realms.test.clients.inferno.consentRequired | bool | `true` |  |
+| keycloak.realms.test.clients.inferno.defaultScopes | list | `[]` |  |
+| keycloak.realms.test.clients.inferno.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.realms.test.clients.inferno.publicClient | bool | `true` |  |
+| keycloak.realms.test.clients.inferno.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
+| keycloak.realms.test.clients.infernoBulk.consentRequired | bool | `true` |  |
+| keycloak.realms.test.clients.infernoBulk.defaultScopes | list | `[]` |  |
+| keycloak.realms.test.clients.infernoBulk.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.realms.test.clients.infernoBulk.publicClient | bool | `true` |  |
+| keycloak.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
+| keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `"4096m"` |  |
 | minHeap | string | `"1024m"` |  |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
@@ -249,7 +269,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. if set to `false`, the connection settings under the `db` key are used |
 | postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret must contain the keys `postgresql-password` (the password for `postgresqlUsername` when it is different from `postgres`), `postgresql-postgres-password` (which will override `postgresqlPassword`), `postgresql-replication-password` (which will override `replication.password`), and `postgresql-ldap-password` (used to authenticate on LDAP). The value is evaluated as a template. |
-| postgresql.image.tag | string | `"13.4.0-debian-10-r54"` | the tag for the postgresql image |
+| postgresql.image.tag | string | `"13.4.0"` | the tag for the postgresql image |
 | postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create. see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
 | postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
@@ -268,15 +288,20 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | security.jwtValidation.enabled | bool | `false` |  |
 | security.jwtValidation.groupNameAttribute | string | `"group"` |  |
 | security.jwtValidation.issuer | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test"` |  |
-| security.jwtValidation.jwksUri | string | `"http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs"` |  |
+| security.jwtValidation.jwksUri | string | `"http://{{ template \"keycloak.fullname\" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/certs"` |  |
 | security.jwtValidation.usersGroup | string | `"fhirUser"` |  |
-| security.oauthAuthUrl | string | `nil` |  |
-| security.oauthEnabled | bool | `false` |  |
-| security.oauthRegUrl | string | `nil` |  |
-| security.oauthTokenUrl | string | `nil` |  |
-| security.smartCapabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
-| security.smartEnabled | bool | `false` |  |
-| security.smartScopes | list | openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types. | OAuth 2.0 scopes to advertise from the server |
+| security.oauth.authUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/auth"` |  |
+| security.oauth.enabled | bool | `false` |  |
+| security.oauth.offlineAccessScopeEnabled | bool | `true` |  |
+| security.oauth.onlineAccessScopeEnabled | bool | `true` |  |
+| security.oauth.profileScopeEnabled | bool | `true` |  |
+| security.oauth.regUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/clients-registrations/openid-connect"` |  |
+| security.oauth.smart.capabilities | list | sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient | SMART capabilities to advertise from the server |
+| security.oauth.smart.enabled | bool | `false` |  |
+| security.oauth.smart.fhirUserScopeEnabled | bool | `true` |  |
+| security.oauth.smart.launchPatientScopeEnabled | bool | `true` |  |
+| security.oauth.smart.resourceScopes | list | read access to number of resource types. | SMART resource scopes to advertise from the server |
+| security.oauth.tokenUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/token"` |  |
 | securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |

@@ -1,0 +1,80 @@
+{{- if .Values.keycloak.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "fhir.fullname" . }}-configure-keycloak
+  labels:
+    {{- include "fhir.labels" . | nindent 4 }}
+spec:
+  backoffLimit: 1
+  {{- if semverCompare ">=1.21" .Capabilities.KubeVersion.Version }}
+  ttlSecondsAfterFinished: 100
+  {{- end }}
+  template:
+    metadata:
+      name: "{{ .Release.Name }}-configure-keycloak"
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: keycloak-config
+          configMap:
+            name: {{ template "fhir.fullname" . }}-keycloak-config
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-keycloak-to-be-ready
+          image: registry.access.redhat.com/ubi8/ubi:8.4
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -x;
+              while [ $(curl -sw '%{http_code}' "http://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth/realms/master" -o /dev/null) -ne 200 ]; do
+                sleep 15;
+              done
+      containers:
+        - name: keycloak-config
+          image: alvearie/keycloak-config:0.3.0
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+          volumeMounts:
+            - name: keycloak-config
+              mountPath: /config
+          env:
+            - name: KEYCLOAK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" .Subcharts.keycloak }}-admin-secret
+                  key: username
+            - name: KEYCLOAK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "keycloak.fullname" .Subcharts.keycloak }}-admin-secret
+                  key: password
+            - name: KEYCLOAK_BASE_URL
+              value: http://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth
+            - name: FHIR_BASE_URL
+              value: https://{{ tpl .Values.ingress.hostname $ }}/fhir-server/api/v4
+          args: ["-configFile", "/config/keycloak-config.json"]
+{{- end }}

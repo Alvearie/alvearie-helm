@@ -278,9 +278,9 @@ spec:
               command:
               - bash
               - -c
-              {{- if .Values.security.smartEnabled }}
+              {{- if .Values.security.oauth.smart.enabled }}
               - curl --fail -k -sS 'https://localhost:9443/fhir-server/api/v4/.well-known/smart-configuration'
-              {{- else if .Values.security.oauthEnabled }}
+              {{- else if .Values.security.oauth.enabled }}
               - curl --fail -k -sS 'https://localhost:9443/fhir-server/api/v4/metadata'
               {{- else }}
               - curl --fail -k -sS -u "fhiruser:${FHIR_USER_PASSWORD}" 'https://localhost:9443/fhir-server/api/v4/$healthcheck'

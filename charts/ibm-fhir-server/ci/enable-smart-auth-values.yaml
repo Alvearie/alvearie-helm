@@ -1,0 +1,10 @@
+replicaCount: 1
+security:
+  jwtValidation:
+    enabled: true
+  oauth:
+    enabled: true
+    smart:
+      enabled: true
+keycloak:
+  enabled: true

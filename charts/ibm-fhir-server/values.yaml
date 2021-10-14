@@ -57,7 +57,7 @@ postgresql:
   enabled: true
   image:
     # -- the tag for the postgresql image
-    tag: 13.4.0-debian-10-r54
+    tag: 13.4.0
   # -- name of the database to create.
   # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
   postgresqlDatabase: "fhir"
@@ -104,64 +104,118 @@ db:
   sslConnection: true
   pluginName:
   securityMechanism:
+
+keycloak:
+  enabled: false
+  image:
+    repository: alvearie/smart-keycloak
+    tag: 0.3.0
+  # -- An initial keycloak admin username for creating the initial Keycloak admin user
+  adminUsername: admin
+  # -- An initial keycloak admin password for creating the initial Keycloak admin user
+  adminPassword: change-password
+  # -- Extra volumes for the Keycloak StatefulSets
+  # @default -- a single volume named keycloak-admin with contents from the keycloak-admin-secret
+  extraVolumes: |
+    - name: keycloak-admin
+      secret:
+        secretName: {{ template "keycloak.fullname" $ }}-admin-secret
+  # -- Extra volume mounts for the Keycloak StatefulSet
+  # @default -- mount the keycloak-admin volume at /secrets/keycloak-admin
+  extraVolumeMounts: |
+    - name: keycloak-admin
+      mountPath: /secrets/keycloak-admin
+  # -- Extra environment variables for the Keycloak StatefulSet
+  # @default -- DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath
+  extraEnv: |
+    - name: KEYCLOAK_USER_FILE
+      value: /secrets/keycloak-admin/username
+    - name: KEYCLOAK_PASSWORD_FILE
+      value: /secrets/keycloak-admin/password
+    - name: DB_VENDOR
+      value: postgres
+  postgresql:
+    nameOverride: keycloak-postgres
+  realms:
+    test:
+      clients:
+        inferno:
+          consentRequired: true
+          publicClient: true
+          redirectURIs:
+            - "http://localhost:4567/inferno/*"
+          defaultScopes: []
+          # -- OAuth 2.0 scopes supported by this client
+          # @default -- all scopes defined by the `security.oauth` configuration.
+          optionalScopes:
+        infernoBulk:
+          consentRequired: true
+          publicClient: true
+          redirectURIs:
+            - "http://localhost:4567/inferno/*"
+          defaultScopes: []
+          # -- OAuth 2.0 scopes supported by this client
+          # @default -- all scopes defined by the `security.oauth` configuration.
+          optionalScopes:
+
 security:
-  oauthEnabled: false
-  oauthRegUrl:
-  oauthAuthUrl:
-  oauthTokenUrl:
   jwtValidation:
     enabled: false
     audience: https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4
     issuer: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test
-    jwksUri: http://keycloak-headless:8080/auth/realms/test/protocol/openid-connect/certs
+    jwksUri: http://{{ template "keycloak.fullname" .Subcharts.keycloak }}-http/auth/realms/test/protocol/openid-connect/certs
     groupNameAttribute: group
     usersGroup: fhirUser
-  smartEnabled: false
-  # -- OAuth 2.0 scopes to advertise from the server
-  # @default -- openid, profile, fhirUser, launch/patient, offline_access, and a set of patient/<resource>.read scopes for a number of resource types.
-  smartScopes:
-    [
-      "openid",
-      "profile",
-      "fhirUser",
-      "launch/patient",
-      "offline_access",
-      "patient/*.read",
-      "patient/AllergyIntolerance.read",
-      "patient/CarePlan.read",
-      "patient/CareTeam.read",
-      "patient/Condition.read",
-      "patient/Device.read",
-      "patient/DiagnosticReport.read",
-      "patient/DocumentReference.read",
-      "patient/Encounter.read",
-      "patient/ExplanationOfBenefit.read",
-      "patient/Goal.read",
-      "patient/Immunization.read",
-      "patient/Location.read",
-      "patient/Medication.read",
-      "patient/MedicationRequest.read",
-      "patient/Observation.read",
-      "patient/Organization.read",
-      "patient/Patient.read",
-      "patient/Practitioner.read",
-      "patient/PractitionerRole.read",
-      "patient/Procedure.read",
-      "patient/Provenance.read",
-      "patient/RelatedPerson.read",
-    ]
-  # -- SMART capabilities to advertise from the server
-  # @default -- sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient
-  smartCapabilities:
-    [
-      "sso-openid-connect",
-      "launch-standalone",
-      "client-public",
-      "client-confidential-symmetric",
-      "permission-offline",
-      "context-standalone-patient",
-      "permission-patient",
-    ]
+  oauth:
+    enabled: false
+    regUrl: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/clients-registrations/openid-connect
+    authUrl: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/auth
+    tokenUrl: https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/token
+    profileScopeEnabled: true
+    offlineAccessScopeEnabled: true
+    onlineAccessScopeEnabled: true
+    smart:
+      enabled: false
+      fhirUserScopeEnabled: true
+      launchPatientScopeEnabled: true
+      # -- SMART resource scopes to advertise from the server
+      # @default -- read access to number of resource types.
+      resourceScopes:
+        - "patient/*.read"
+        - "patient/AllergyIntolerance.read"
+        - "patient/CarePlan.read"
+        - "patient/CareTeam.read"
+        - "patient/Condition.read"
+        - "patient/Device.read"
+        - "patient/DiagnosticReport.read"
+        - "patient/DocumentReference.read"
+        - "patient/Encounter.read"
+        - "patient/ExplanationOfBenefit.read"
+        - "patient/Goal.read"
+        - "patient/Immunization.read"
+        - "patient/Location.read"
+        - "patient/Medication.read"
+        - "patient/MedicationRequest.read"
+        - "patient/MedicationDispense.read"
+        - "patient/Observation.read"
+        - "patient/Organization.read"
+        - "patient/Patient.read"
+        - "patient/Practitioner.read"
+        - "patient/PractitionerRole.read"
+        - "patient/Procedure.read"
+        - "patient/Provenance.read"
+        - "patient/RelatedPerson.read"
+      # -- SMART capabilities to advertise from the server
+      # @default -- sso-openid-connect, launch-standalone, client-public, client-confidential-symmetric, permission-offline, context-standalone-patient, and permission-patient
+      capabilities:
+        - "sso-openid-connect"
+        - "launch-standalone"
+        - "client-public"
+        - "client-confidential-symmetric"
+        - "permission-offline"
+        - "context-standalone-patient"
+        - "permission-patient"
+
 schemaMigration:
   enabled: true
   image:
@@ -292,6 +346,9 @@ datasourcesTemplate: "defaultPostgresDatasources"
 
 # -- Template containing the extension-search-parameters.json content
 extensionSearchParametersTemplate: "defaultSearchParameters"
+
+# -- Template with keycloak-config.json input for the Alvearie keycloak-config project
+keycloakConfigTemplate: "defaultKeycloakConfig"
 
 # -- if enabled, the server will listen to non-TLS requests
 exposeHttpEndpoint: false

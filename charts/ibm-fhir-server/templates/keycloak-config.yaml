@@ -1,0 +1,9 @@
+{{- if .Values.keycloak.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fhir.fullname" . }}-keycloak-config
+data:
+  keycloak-config.json: >
+    {{ include .Values.keycloakConfigTemplate $ }}
+{{- end }}
