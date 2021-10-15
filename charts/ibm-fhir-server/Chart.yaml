@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.4.0
+version: 0.4.1
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -27,7 +27,7 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: added
-      description: optional keycloak subchart
-    - kind: changed
-      description: update bitnami postgresql dependency
+    - kind: fixed
+      description: enable use of embedded Derby database
+    - kind: fixed
+      description: create an object storage Secret only when the name of an existing object storage Secret is not specified
