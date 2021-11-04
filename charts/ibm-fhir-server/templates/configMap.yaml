@@ -64,3 +64,18 @@ data:
     </server>
   {{- end }}
   {{- end }}
+  {{- if or .Values.keyStoreSecret .Values.trustStoreSecret}}
+  keystore.xml: |
+    <server>
+    {{- if .Values.keyStoreSecret }}
+        <keyStore id="defaultKeyStore" location="${server.config.dir}/resources/security/${env.FHIR_KEYSTORE_FILENAME}" password="${env.FHIR_KEYSTORE_PASSWORD}"/>
+    {{- else }}
+        <keyStore id="defaultKeyStore" location="${server.config.dir}/resources/security/fhirKeyStore.p12" password="change-password"/>
+    {{- end }}
+    {{- if .Values.trustStoreSecret }}
+        <keyStore id="defaultTrustStore" location="${server.config.dir}/resources/security/${env.FHIR_TRUSTSTORE_FILENAME}" password="${env.FHIR_TRUSTSTORE_PASSWORD}"/>
+    {{- else }}
+        <keyStore id="defaultTrustStore" location="${server.config.dir}/resources/security/fhirTrustStore.p12" password="change-password"/>
+    {{- end }}
+    </server>
+  {{- end }}

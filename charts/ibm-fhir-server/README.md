@@ -1,5 +1,5 @@
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -142,6 +142,49 @@ To have object storage configuration information read from an existing Secret, t
 
 If the `objectStorage.objectStorageSecret` value is set, this helm chart will only look in the specified Secret for the object storage configuration information. The `objectStorage.locationSecretKey`, `objectStorage.endpointUrlSecretKey`, `objectStorage.accessKeySecretKey`, and `objectStorage.secretKeySecretKey` chart values will be ignored.
 
+## Using Secrets for custom keystore and truststore configuration
+
+By default, the FHIR server is installed with a configuration in the `server.xml` file which includes the definition of a keystore (`fhirKeyStore.p12`) and a truststore (`fhirTrustStore.p12`) file. These files are provided only as examples and while they may suffice in a test environment, the deployer should generate new keystore and truststore files for any installations where security is a concern.
+
+Custom keystore and truststore files can be configured in the FHIR server via Secrets. This helm chart specifies the following two chart values to allow the deployer to specify the names of Secrets which contain keystore or truststore data:
+
+- `keyStoreSecret` - this is set to the name of the Secret from which the keystore information will be read
+- `trustStoreSecret` - this is set to the name of the Secret from which the truststore information will be read
+
+The keystore Secret is expected to contain the following data:
+
+| Key | Value |
+|-----|-------|
+|`fhirKeyStore`|The contents of the keystore file|
+|`fhirKeyStoreFilename`|The name of the keystore file|
+|`fhirKeyStorePassword`|The keystore password|
+
+An example Secret might look like this (note that the `fhirKeyStore` value containing the base64-encoded contents of the file has been truncated for display purposes):
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-custom-keystore-secret
+type: Opaque
+data:
+  fhirKeyStore: MIIa0AIBAzCCGpYGCSqGSIb3D...
+  fhirKeyStorePassword: Y2hhbmdlLXBhc3N3b3Jk
+  fhirKeyStoreFilename: ZmhpcktleVN0b3JlTmV3LnAxMg==
+```
+
+If a keystore Secret is specified, the default keystore file will be replaced with the provided keystore file, and the default keystore definition in the `server.xml` file will be updated with the provided keystore filename and password.
+
+Similarly, the truststore Secret is expected to contain the following data:
+
+| Key | Value |
+|-----|-------|
+|`fhirTrustStore`|The contents of the truststore file|
+|`fhirTrustStoreFilename`|The name of the truststore file|
+|`fhirTrustStorePassword`|The truststore password|
+
+If a truststore Secret is specified, the default truststore file will be replaced with the provided truststore file, and the default truststore definition in the `server.xml` file will be updated with the provided truststore filename and password.
+
 # Chart info
 
 ## Values
@@ -211,6 +254,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | ingress.rules[0].paths[0] | string | `"/"` |  |
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
+| keyStoreSecret | string | `nil` | Secret containing the FHIR server keystore file and its password. The secret must contain the keys `fhirKeyStore' (the keystore file contents), 'fhirKeyStorePassword' (the keystore password), and 'fhirKeyStoreFilename' (the keystore file name) |
 | keycloak.adminPassword | string | `"change-password"` | An initial keycloak admin password for creating the initial Keycloak admin user |
 | keycloak.adminUsername | string | `"admin"` | An initial keycloak admin username for creating the initial Keycloak admin user |
 | keycloak.enabled | bool | `false` |  |
@@ -305,6 +349,7 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
+| trustStoreSecret | string | `nil` | Secret containing the FHIR server truststore file and its password. The secret must contain the keys `fhirTrustStore' (the truststore file contents), 'fhirTrustStorePassword' (the truststore password), and 'fhirTrustStoreFilename' (the truststore file name) |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)
