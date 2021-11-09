@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.4.1
+version: 0.4.2
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -27,7 +27,5 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: fixed
-      description: enable use of embedded Derby database
-    - kind: fixed
-      description: create an object storage Secret only when the name of an existing object storage Secret is not specified
+    - kind: added
+      description: enable use of custom keystore and truststore files

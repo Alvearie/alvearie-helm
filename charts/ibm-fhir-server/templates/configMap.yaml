@@ -64,3 +64,26 @@ data:
     </server>
   {{- end }}
   {{- end }}
+  {{- if or .Values.keyStoreSecret .Values.trustStoreSecret}}
+  keystore.xml: |
+    <server>
+    {{- if .Values.keyStoreSecret }}
+    {{- if eq .Values.keyStoreFormat "PKCS12" }}
+        <keyStore id="defaultKeyStore" location="${server.config.dir}/resources/security/fhirKeyStore.p12" password="${env.FHIR_KEYSTORE_PASSWORD}"/>
+    {{- else if eq .Values.keyStoreFormat "JKS" }}
+        <keyStore id="defaultKeyStore" location="${server.config.dir}/resources/security/fhirKeyStore.jks" password="${env.FHIR_KEYSTORE_PASSWORD}"/>
+    {{- end }}
+    {{- else }}
+        <keyStore id="defaultKeyStore" location="${server.config.dir}/resources/security/fhirKeyStore.p12" password="change-password"/>
+    {{- end }}
+    {{- if .Values.trustStoreSecret }}
+    {{- if eq .Values.trustStoreFormat "PKCS12" }}
+        <keyStore id="defaultTrustStore" location="${server.config.dir}/resources/security/fhirTrustStore.p12" password="${env.FHIR_TRUSTSTORE_PASSWORD}"/>
+    {{- else if eq .Values.trustStoreFormat "JKS" }}
+        <keyStore id="defaultTrustStore" location="${server.config.dir}/resources/security/fhirTrustStore.jks" password="${env.FHIR_TRUSTSTORE_PASSWORD}"/>
+    {{- end }}
+    {{- else }}
+        <keyStore id="defaultTrustStore" location="${server.config.dir}/resources/security/fhirTrustStore.p12" password="change-password"/>
+    {{- end }}
+    </server>
+  {{- end }}

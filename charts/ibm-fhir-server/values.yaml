@@ -350,6 +350,21 @@ extensionSearchParametersTemplate: "defaultSearchParameters"
 # -- Template with keycloak-config.json input for the Alvearie keycloak-config project
 keycloakConfigTemplate: "defaultKeycloakConfig"
 
+# -- Secret containing the FHIR server keystore file and its password.
+# The secret must contain the keys ''fhirKeyStore' (the keystore file contents in the format specified
+# in keyStoreFormat) and 'fhirKeyStorePassword' (the keystore password)
+keyStoreSecret:
+# -- For the keystore specified in keyStoreSecret, the keystore format (PKCS12 or JKS).
+# This value will be ignored if the keyStoreSecret value is not set.
+keyStoreFormat: PKCS12
+# -- Secret containing the FHIR server truststore file and its password.
+# The secret must contain the keys 'fhirTrustStore' (the truststore file contents in the format specified
+# in trustStoreFormat) and 'fhirTrustStorePassword' (the truststore password)
+trustStoreSecret:
+# -- For the truststore specified in trustStoreSecret, the truststore format (PKCS12 or JKS).
+# This value will be ignored if the trustStoreSecret value is not set.
+trustStoreFormat: PKCS12
+
 # -- if enabled, the server will listen to non-TLS requests
 exposeHttpEndpoint: false
 

@@ -1,5 +1,5 @@
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -142,6 +142,48 @@ To have object storage configuration information read from an existing Secret, t
 
 If the `objectStorage.objectStorageSecret` value is set, this helm chart will only look in the specified Secret for the object storage configuration information. The `objectStorage.locationSecretKey`, `objectStorage.endpointUrlSecretKey`, `objectStorage.accessKeySecretKey`, and `objectStorage.secretKeySecretKey` chart values will be ignored.
 
+## Using Secrets for custom keystore and truststore configuration
+
+By default, the FHIR server's `server.xml` file includes the definition of a keystore (`fhirKeyStore.p12`) and a truststore (`fhirTrustStore.p12`) file. These files are provided only as examples and, while they may suffice in a test environment, the deployer should generate new keystore and truststore files for any installations where security is a concern.
+
+Custom keystore and truststore files can be configured in the FHIR server via Secrets. This helm chart specifies the following chart values to allow the deployer to specify the names of Secrets which contain keystore or truststore data, and to specify the format of the keystore or truststore data:
+
+- `keyStoreSecret` - this is set to the name of the Secret from which the keystore information will be read
+- `keyStoreFormat` - this is set to the format of the keystore in the keystore Secret - must be either `PKCS12` or `JKS`
+- `trustStoreSecret` - this is set to the name of the Secret from which the truststore information will be read
+- `trustStoreFormat` - this is set to the format of the truststore in the truststore Secret - must be either `PKCS12` or `JKS`
+
+The keystore Secret is expected to contain the following data:
+
+| Key | Value |
+|-----|-------|
+|`fhirKeyStore`|The contents of the keystore file|
+|`fhirKeyStorePassword`|The keystore password|
+
+An example Secret might look like this (note that the `fhirKeyStore` value containing the base64-encoded contents of the file has been truncated for display purposes):
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-custom-keystore-secret
+type: Opaque
+data:
+  fhirKeyStore: MIIa0AIBAzCCGpYGCSqGSIb3D...
+  fhirKeyStorePassword: Y2hhbmdlLXBhc3N3b3Jk
+```
+
+If a keystore Secret is specified, the default keystore file will be replaced with the provided keystore file, named either `fhirKeyStore.p12` or `fhirKeyStore.jks` depending on the value specified in `keyStoreFormat`, and the default keystore definition in the `server.xml` file will be updated with the keystore filename and the provided keystore password.
+
+Similarly, the truststore Secret is expected to contain the following data:
+
+| Key | Value |
+|-----|-------|
+|`fhirTrustStore`|The contents of the truststore file|
+|`fhirTrustStorePassword`|The truststore password|
+
+If a truststore Secret is specified, the default truststore file will be replaced with the provided truststore file, named either `fhirTrustStore.p12` or `fhirTrustStore.jks` depending on the value specified in `trustStoreFormat`, and the default truststore definition in the `server.xml` file will be updated with the truststore filename and the provided truststore password.
+
 # Chart info
 
 ## Values
@@ -211,6 +253,8 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | ingress.rules[0].paths[0] | string | `"/"` |  |
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
+| keyStoreFormat | string | `"PKCS12"` | For the keystore specified in keyStoreSecret, the keystore format (PKCS12 or JKS). This value will be ignored if the keyStoreSecret value is not set. |
+| keyStoreSecret | string | `nil` | Secret containing the FHIR server keystore file and its password. The secret must contain the keys ''fhirKeyStore' (the keystore file contents in the format specified in keyStoreFormat) and 'fhirKeyStorePassword' (the keystore password) |
 | keycloak.adminPassword | string | `"change-password"` | An initial keycloak admin password for creating the initial Keycloak admin user |
 | keycloak.adminUsername | string | `"admin"` | An initial keycloak admin username for creating the initial Keycloak admin user |
 | keycloak.enabled | bool | `false` |  |
@@ -305,6 +349,8 @@ If the `objectStorage.objectStorageSecret` value is set, this helm chart will on
 | securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
+| trustStoreFormat | string | `"PKCS12"` | For the truststore specified in trustStoreSecret, the truststore format (PKCS12 or JKS). This value will be ignored if the trustStoreSecret value is not set. |
+| trustStoreSecret | string | `nil` | Secret containing the FHIR server truststore file and its password. The secret must contain the keys 'fhirTrustStore' (the truststore file contents in the format specified in trustStoreFormat) and 'fhirTrustStorePassword' (the truststore password) |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.5.0](https://github.com/norwoodj/helm-docs/releases/v1.5.0)

@@ -23,6 +23,30 @@ spec:
         - name: fhir-server-config
           configMap:
             name: {{ template "fhir.fullname" . }}-config
+        {{- if .Values.keyStoreSecret }}
+        - name: keystore
+          secret:
+            secretName: {{ .Values.keyStoreSecret }}
+            items:
+            - key: fhirKeyStore
+            {{- if eq .Values.keyStoreFormat "PKCS12" }}
+              path: fhirKeyStore.p12
+            {{- else if eq .Values.keyStoreFormat "JKS" }}
+              path: fhirKeyStore.jks
+            {{- end }}
+        {{- end }}
+        {{- if .Values.trustStoreSecret }}
+        - name: truststore
+          secret:
+            secretName: {{ .Values.trustStoreSecret }}
+            items:
+            - key: fhirTrustStore
+            {{- if eq .Values.trustStoreFormat "PKCS12" }}
+              path: fhirTrustStore.p12
+            {{- else if eq .Values.trustStoreFormat "JKS" }}
+              path: fhirTrustStore.jks
+            {{- end }}
+        {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -98,6 +122,33 @@ spec:
             - name: fhir-server-config
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/jwt-validation.xml
               subPath: jwt-validation.xml
+          {{- end }}
+          {{- if or .Values.keyStoreSecret .Values.trustStoreSecret }}
+            - name: fhir-server-config
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/keystore.xml
+              subPath: keystore.xml
+          {{- if .Values.keyStoreSecret }}
+            - name: keystore
+            {{- if eq .Values.keyStoreFormat "PKCS12" }}
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/resources/security/fhirKeyStore.p12
+              subPath: fhirKeyStore.p12
+            {{- else if eq .Values.keyStoreFormat "JKS" }}
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/resources/security/fhirKeyStore.jks
+              subPath: fhirKeyStore.jks
+            {{- end }}
+              readOnly: true
+          {{- end }}
+          {{- if .Values.trustStoreSecret }}
+            - name: truststore
+            {{- if eq .Values.trustStoreFormat "PKCS12" }}
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/resources/security/fhirTrustStore.p12
+              subPath: fhirTrustStore.p12
+            {{- else if eq .Values.trustStoreFormat "JKS" }}
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/resources/security/fhirTrustStore.jks
+              subPath: fhirTrustStore.jks
+            {{- end }}
+              readOnly: true
+          {{- end }}
           {{- end }}
           env:
             - name: MY_POD_NAME
@@ -276,6 +327,20 @@ spec:
                 secretKeyRef:
                   name: {{ template "fhir.fullname" . }}-user-secret
                   key: fhir.admin.password
+            {{- end }}
+            {{- if .Values.keyStoreSecret }}
+            - name: FHIR_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.keyStoreSecret }}
+                  key: fhirKeyStorePassword
+            {{- end }}
+            {{- if .Values.trustStoreSecret }}
+            - name: FHIR_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.trustStoreSecret }}
+                  key: fhirTrustStorePassword
             {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
