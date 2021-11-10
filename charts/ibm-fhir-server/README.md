@@ -209,6 +209,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | datasourcesTemplate | string | `"defaultPostgresDatasources"` | Template containing the datasources.xml content |
 | db.apiKey | string | `nil` | The database apiKey. If apiKeySecret is set, the apiKey will be set from its contents. |
 | db.apiKeySecretKey | string | `nil` | For the Secret specified in dbSecret, the key of the key/value pair containing the apiKey. This value will be ignored if the dbSecret value is not set. |
+| db.certPath | string | `nil` |  |
 | db.dbSecret | string | `"postgres"` | The name of a Secret from which to retrieve database information. If this value is set, it is expected that passwordSecretKey and/or apiKeySecretKey will also be set. |
 | db.enableTls | bool | `false` |  |
 | db.host | string | `"postgres"` |  |
@@ -235,6 +236,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | extraEnv | string | `""` |  |
 | extraJvmOptions | string | `""` |  |
 | extraLabels | object | `{}` | Extra labels to apply to the created kube resources |
+| extraVolumeMounts | string | `""` | Add additional volume mounts. Evaluated as a template. Must evaluate to a valid yaml list of volume mounts. |
+| extraVolumes | string | `""` | Add additional volumes. Evaluated as a template. Must evaluate to a valid yaml list of volumes. |
 | fhirAdminPassword | string | `"change-password"` | The fhirAdminPassword. If fhirPasswordSecret is set, the fhirAdminPassword will be set from its contents. |
 | fhirAdminPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirAdminPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fhirPasswordSecret | string | `nil` | The name of a Secret from which to retrieve fhirUserPassword and fhirAdminPassword. If this value is set, it is expected that fhirUserPasswordSecretKey and fhirAdminPasswordSecretKey will also be set. |

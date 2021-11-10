@@ -47,6 +47,10 @@ spec:
                 sleep 15;
               done;
       {{- end }}
+      volumes:
+        {{- with .Values.extraVolumes }}
+            {{- tpl . $ | nindent 8 }}
+        {{- end }}
       containers:
         - name: fhir-schematool
           image: {{ .Values.schemaMigration.image.repository }}:{{ .Values.schemaMigration.image.tag }}
@@ -61,6 +65,10 @@ spec:
             runAsGroup: 1001
           resources:
             {{ toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          {{- with .Values.extraVolumeMounts }}
+              {{- tpl . $ | nindent 12 }}
+          {{- end }}
           env:
             - name: FHIR_DB_TYPE
               value: "{{ .Values.db.type }}"
@@ -97,7 +105,7 @@ spec:
               {{- else }}
                   --prop ssl=true \
                   --prop sslmode=verify-full \
-                  --prop sslrootcert=/opt/schematool/workarea/db.cert \
+                  --prop sslrootcert={{ .Values.db.certPath }} \
               {{- end }}
               {{- end }}
                   --schema-name {{ .Values.db.schema }} \
@@ -118,7 +126,7 @@ spec:
               {{- else }}
                   --prop ssl=true \
                   --prop sslmode=verify-full \
-                  --prop sslrootcert=/opt/schematool/workarea/db.cert \
+                  --prop sslrootcert={{ .Values.db.certPath }} \
               {{- end }}
               {{- end }}
                   --schema-name {{ .Values.db.schema }} \
