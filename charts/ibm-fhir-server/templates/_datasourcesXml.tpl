@@ -15,7 +15,7 @@ The datasource.xml file for a Postgres DB.
                 {{- if .Values.db.enableTls }}
                 ssl="true"
                 sslmode="verify-full"
-                sslrootcert="/opt/ol/wlp/usr/servers/defaultServer/resources/security/postgres.cert"
+                sslrootcert="{{ .Values.db.certPath }}"
                 {{- end }}
                 databaseName="${env.FHIR_DB_NAME}"
                 user="${env.FHIR_DB_USER}"
@@ -30,7 +30,7 @@ The datasource.xml file for a Postgres DB.
                 maxIdleTime="2m"
             />
         </dataSource>
-        
+
         {{- if .Values.objectStorage.enabled }}
         <featureManager>
             <feature>batch-1.0</feature>
@@ -84,7 +84,7 @@ The datasource.xml file for a Db2 DB.
                 maxIdleTime="2m"
             />
         </dataSource>
-        
+
         {{- if .Values.objectStorage.enabled }}
         <featureManager>
             <feature>batch-1.0</feature>
@@ -136,7 +136,7 @@ The datasource.xml file for a Db2 DB on Cloud.
                 maxIdleTime="2m"
             />
         </dataSource>
-        
+
         {{- if .Values.objectStorage.enabled }}
         <featureManager>
             <feature>batch-1.0</feature>
@@ -169,7 +169,7 @@ The datasource.xml file for a Derby DB.
         <!-- This datasource aligns with the Apache Derby database that is  -->
         <!-- created by the ibmcom/ibm-fhir-server BOOTSTRAP_DB process.    -->
         <!-- ============================================================== -->
-    
+
         <!-- ============================================================== -->
         <!-- TENANT: default; DSID: default; TYPE: read-write               -->
         <!-- ============================================================== -->
@@ -178,7 +178,7 @@ The datasource.xml file for a Derby DB.
             <properties.derby.embedded databaseName="derby/fhirDB"/>
             <connectionManager maxPoolSize="50" minPoolSize="10"/>
         </dataSource>
-        
+
         {{- if .Values.objectStorage.enabled }}
         <featureManager>
             <feature>batch-1.0</feature>
@@ -193,4 +193,3 @@ The datasource.xml file for a Derby DB.
         {{- end }}
     </server>
 {{- end }}
-

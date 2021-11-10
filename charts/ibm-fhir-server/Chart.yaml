@@ -27,5 +27,9 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
+    - kind: changed
+      description: disable operationOutcomes for the bulkdata feature
     - kind: added
-      description: enable use of custom keystore and truststore files
+      description: support for extraVolumes and extraVolumeMounts
+    - kind: added
+      description: a configurable db.certPath (was previously hard-coded)
