@@ -84,6 +84,7 @@ db:
   host: postgres
   port: 5432
   enableTls: false
+  certPath:
   name: postgres
   user: postgres
   # -- The name of a Secret from which to retrieve database information.
@@ -337,6 +338,12 @@ minHeap: "1024m"
 maxHeap: "4096m"
 extraJvmOptions: ""
 extraEnv: ""
+# -- Add additional volumes. Evaluated as a template.
+# Must evaluate to a valid yaml list of volumes.
+extraVolumes: ""
+# -- Add additional volume mounts. Evaluated as a template.
+# Must evaluate to a valid yaml list of volume mounts.
+extraVolumeMounts: ""
 
 # -- Template containing the fhir-server-config.json content
 fhirServerConfigTemplate: "defaultFhirServerConfig"

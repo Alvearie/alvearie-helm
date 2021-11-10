@@ -47,6 +47,9 @@ spec:
               path: fhirTrustStore.jks
             {{- end }}
         {{- end }}
+        {{- with .Values.extraVolumes }}
+            {{- tpl . $ | nindent 8 }}
+        {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -127,6 +130,7 @@ spec:
             - name: fhir-server-config
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/keystore.xml
               subPath: keystore.xml
+          {{- end }}
           {{- if .Values.keyStoreSecret }}
             - name: keystore
             {{- if eq .Values.keyStoreFormat "PKCS12" }}
@@ -149,6 +153,8 @@ spec:
             {{- end }}
               readOnly: true
           {{- end }}
+          {{- with .Values.extraVolumeMounts }}
+              {{- tpl . $ | nindent 12 }}
           {{- end }}
           env:
             - name: MY_POD_NAME
