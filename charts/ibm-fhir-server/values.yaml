@@ -375,6 +375,7 @@ trustStoreFormat: PKCS12
 
 # -- if enabled, the server will listen to non-TLS requests
 exposeHttpEndpoint: false
+# -- The port on which the server will listen to non-TLS requests. Will be ignored if exposeHttpEndpoint is false.
 exposeHttpPort: 9080
 
 # -- security context for the server container
