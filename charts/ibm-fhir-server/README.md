@@ -232,6 +232,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
 | endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
 | exposeHttpEndpoint | bool | `false` | if enabled, the server will listen to non-TLS requests |
+| exposeHttpPort | int | `9080` | The port on which the server will listen to non-TLS requests. Will be ignored if exposeHttpEndpoint is false. |
 | extensionSearchParametersTemplate | string | `"defaultSearchParameters"` | Template containing the extension-search-parameters.json content |
 | extraEnv | string | `""` |  |
 | extraJvmOptions | string | `""` |  |
@@ -253,7 +254,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | ingress.enabled | bool | `true` |  |
 | ingress.hostname | string | `"{{ .Release.Name }}.example.com"` | The default cluster hostname, used for both ingress.rules.host and ingress.tls.hosts. If you have more than one, you'll need to set overrides for the rules and tls separately. |
 | ingress.rules[0].host | string | `"{{ tpl $.Values.ingress.hostname $ }}"` |  |
-| ingress.rules[0].paths[0] | string | `"/"` |  |
+| ingress.rules[0].paths[0].path | string | `"/"` |  |
+| ingress.rules[0].paths[0].pathType | string | `"Prefix"` |  |
 | ingress.servicePort | string | `"https"` |  |
 | ingress.tls[0].secretName | string | `""` |  |
 | keyStoreFormat | string | `"PKCS12"` | For the keystore specified in keyStoreSecret, the keystore format (PKCS12 or JKS). This value will be ignored if the keyStoreSecret value is not set. |
