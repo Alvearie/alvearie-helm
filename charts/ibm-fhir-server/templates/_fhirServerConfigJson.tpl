@@ -217,6 +217,7 @@ The default fhir-server-config.json.
                             "secretAccessKey": "${COS_SECRET_KEY}"
                         },
                         "bucketName": "{{ .Values.objectStorage.bulkDataBucketName }}",
+                        "disableOperationOutcomes": true,
                         "presigned": true
                     }
                 }
