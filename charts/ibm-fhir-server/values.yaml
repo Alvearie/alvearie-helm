@@ -322,7 +322,8 @@ ingress:
   rules:
     - host: "{{ tpl $.Values.ingress.hostname $ }}"
       paths:
-        - "/"
+        - path: "/"
+          pathType: Prefix
   servicePort: https
   tls:
     - secretName: ""
@@ -374,6 +375,7 @@ trustStoreFormat: PKCS12
 
 # -- if enabled, the server will listen to non-TLS requests
 exposeHttpEndpoint: false
+exposeHttpPort: 9080
 
 # -- security context for the server container
 containerSecurityContext:
