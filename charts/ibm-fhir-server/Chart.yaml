@@ -27,11 +27,5 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: changed
-      description: disable operationOutcomes for the bulkdata feature
-    - kind: added
-      description: support for extraVolumes and extraVolumeMounts
-    - kind: added
-      description: a configurable db.certPath (was previously hard-coded)
     - kind: added
       description: support for custom pathType and custom http port
