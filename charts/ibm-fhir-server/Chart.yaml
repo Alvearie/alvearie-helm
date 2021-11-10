@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.4.3
+version: 0.4.4
 appVersion: 4.9.2
 dependencies:
   - name: postgresql
@@ -33,3 +33,5 @@ annotations:
       description: support for extraVolumes and extraVolumeMounts
     - kind: added
       description: a configurable db.certPath (was previously hard-coded)
+    - kind: added
+      description: support for custom pathType and custom http port
