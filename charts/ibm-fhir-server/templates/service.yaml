@@ -15,5 +15,6 @@ spec:
   {{- if .Values.exposeHttpEndpoint }}
     - name: http
       protocol: TCP
-      port: 9080
+      port: {{ .Values.exposeHttpPort }}
+      targetPort: 9080
   {{- end }}
