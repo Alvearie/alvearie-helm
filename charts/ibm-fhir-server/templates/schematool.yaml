@@ -53,7 +53,7 @@ spec:
         {{- end }}
       containers:
         - name: fhir-schematool
-          image: {{ .Values.schemaMigration.image.repository }}:{{ .Values.schemaMigration.image.tag }}
+          image: {{ .Values.schemaMigration.image.repository }}:{{ .Values.schemaMigration.image.tag | default .Chart.AppVersion }}
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false

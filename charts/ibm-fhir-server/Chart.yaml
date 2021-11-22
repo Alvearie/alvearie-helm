@@ -2,10 +2,10 @@ apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
 version: 0.5.1
-appVersion: 4.9.2
+appVersion: 4.10.0
 dependencies:
   - name: postgresql
-    version: 10.12.3
+    version: 10.13.8
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: keycloak
@@ -29,3 +29,7 @@ annotations:
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
       description: move jvm.options to configDropins to avoid overwriting
+    - kind: changed
+      description: upgrade to ibm-fhir-server 4.10.0
+    - kind: changed
+      description: upgrade postgresql image to 13.5 and subchart to 10.13.8

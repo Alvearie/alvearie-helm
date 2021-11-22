@@ -12,7 +12,8 @@ extraLabels: {}
 replicaCount: 2
 image:
   repository: ibmcom/ibm-fhir-server
-  tag: "4.9.2"
+  # @default -- {{ .Chart.AppVersion }}
+  tag:
   pullPolicy: Always
 imagePullSecrets: []
 # -- The trace specification to use for selectively tracing components of the IBM FHIR Server.
@@ -57,7 +58,7 @@ postgresql:
   enabled: true
   image:
     # -- the tag for the postgresql image
-    tag: 13.4.0
+    tag: 13.5.0
   # -- name of the database to create.
   # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
   postgresqlDatabase: "fhir"
@@ -221,7 +222,8 @@ schemaMigration:
   enabled: true
   image:
     repository: ibmcom/ibm-fhir-schematool
-    tag: "4.9.2"
+    # @default -- {{ .Chart.AppVersion }}
+    tag:
     pullPolicy: Always
     pullSecret: all-icr-io
   # -- container resources for the schema migration job
@@ -334,6 +336,28 @@ resources:
   limits:
     memory: "5Gi"
     ephemeral-storage: "1Gi"
+# -- Pod affinity
+# @default -- Required node anti-affinity and preferred zone anti-affinity
+affinity: |
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            {{- include "fhir.matchLabels" . | nindent 10 }}
+        topologyKey: kubernetes.io/hostname
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              {{- include "fhir.matchLabels" . | nindent 12 }}
+          topologyKey: failure-domain.beta.kubernetes.io/zone
+# -- Topology spread constraints template
+topologySpreadConstraints:
+# -- Node labels for Pod assignment
+nodeSelector: {}
+# -- Node taints to tolerate
+tolerations: []
 
 minHeap: "1024m"
 maxHeap: "4096m"
