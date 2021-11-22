@@ -281,8 +281,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.realms.test.clients.infernoBulk.publicClient | bool | `true` |  |
 | keycloak.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
-| maxHeap | string | `"4096m"` |  |
-| minHeap | string | `"1024m"` |  |
+| maxHeap | string | `"4096m"` | Max heap size |
+| minHeap | string | `"768m"` | Initial heap size |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | nodeSelector | object | `{}` | Node labels for Pod assignment |
 | notifications.kafka.bootstrapServers | string | `nil` |  |
@@ -327,7 +327,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
-| resources.requests.memory | string | `"2Gi"` |  |
+| resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
 | schemaMigration.enabled | bool | `true` |  |
 | schemaMigration.image.pullPolicy | string | `"Always"` |  |

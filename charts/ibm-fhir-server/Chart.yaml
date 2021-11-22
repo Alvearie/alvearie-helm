@@ -32,4 +32,6 @@ annotations:
     - kind: changed
       description: upgrade to ibm-fhir-server 4.10.0
     - kind: changed
+      description: reduce the default initial heap size and memory request
+    - kind: changed
       description: upgrade postgresql image to 13.5 and subchart to 10.13.8

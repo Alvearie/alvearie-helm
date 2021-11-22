@@ -331,7 +331,7 @@ ingress:
     - secretName: ""
 resources:
   requests:
-    memory: "2Gi"
+    memory: "1Gi"
     ephemeral-storage: "1Gi"
   limits:
     memory: "5Gi"
@@ -359,7 +359,9 @@ nodeSelector: {}
 # -- Node taints to tolerate
 tolerations: []
 
-minHeap: "1024m"
+# -- Initial heap size
+minHeap: "768m"
+# -- Max heap size
 maxHeap: "4096m"
 extraJvmOptions: ""
 extraEnv: ""
