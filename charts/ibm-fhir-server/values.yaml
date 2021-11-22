@@ -337,21 +337,16 @@ resources:
     memory: "5Gi"
     ephemeral-storage: "1Gi"
 # -- Pod affinity
-# @default -- Required node anti-affinity and preferred zone anti-affinity
+# @default -- Preferred zone anti-affinity
 affinity: |
   podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchLabels:
-            {{- include "fhir.matchLabels" . | nindent 10 }}
-        topologyKey: kubernetes.io/hostname
     preferredDuringSchedulingIgnoredDuringExecution:
       - weight: 100
         podAffinityTerm:
           labelSelector:
             matchLabels:
               {{- include "fhir.matchLabels" . | nindent 12 }}
-          topologyKey: failure-domain.beta.kubernetes.io/zone
+          topologyKey: topology.kubernetes.io/zone
 # -- Topology spread constraints template
 topologySpreadConstraints:
 # -- Node labels for Pod assignment

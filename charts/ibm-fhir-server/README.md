@@ -190,7 +190,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | string | Required node anti-affinity and preferred zone anti-affinity | Pod affinity |
+| affinity | string | Preferred zone anti-affinity | Pod affinity |
 | audit.enabled | bool | `false` |  |
 | audit.geoCity | string | `nil` | The city where the server is running |
 | audit.geoCountry | string | `nil` | The country where the server is running |

@@ -35,3 +35,5 @@ annotations:
       description: reduce the default initial heap size and memory request
     - kind: changed
       description: upgrade postgresql image to 13.5 and subchart to 10.13.8
+    - kind: added
+      description: helm values for advanced scheduling (e.g. custom affinity rules)
