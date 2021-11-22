@@ -114,7 +114,7 @@ spec:
               mountPath: /opt/ol/wlp/usr/servers/defaultServer/config/default/extension-search-parameters.json
               subPath: extension-search-parameters.json
             - name: fhir-server-config
-              mountPath: /opt/ol/wlp/usr/servers/defaultServer/jvm.options
+              mountPath: /opt/ol/wlp/usr/servers/defaultServer/configDropins/overrides/jvm.options
               subPath: jvm.options
           {{- if .Values.exposeHttpEndpoint }}
             - name: fhir-server-config
