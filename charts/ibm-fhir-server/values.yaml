@@ -11,9 +11,12 @@ extraLabels: {}
 # -- The number of replicas for the externally-facing FHIR server pods
 replicaCount: 2
 image:
+  # -- The repository to pull the IBM FHIR Server image from
   repository: ibmcom/ibm-fhir-server
-  # @default -- {{ .Chart.AppVersion }}
-  tag:
+  # -- IBM FHIR Server container image tag
+  # @default -- this chart's appVersion
+  tag: ""
+  # -- When to pull the image
   pullPolicy: Always
 imagePullSecrets: []
 # -- The trace specification to use for selectively tracing components of the IBM FHIR Server.
@@ -219,11 +222,15 @@ security:
         - "permission-patient"
 
 schemaMigration:
+  # -- Whether to execute a schema creation/migration job as part of the deploy
   enabled: true
   image:
+    # -- The repository to pull the IBM FHIR Schema Tool image from
     repository: ibmcom/ibm-fhir-schematool
-    # @default -- {{ .Chart.AppVersion }}
-    tag:
+    # -- IBM FHIR Schema Tool container image tag
+    # @default -- this chart's appVersion
+    tag: ""
+    # -- When to pull the image
     pullPolicy: Always
     pullSecret: all-icr-io
   # -- container resources for the schema migration job

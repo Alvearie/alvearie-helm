@@ -247,9 +247,9 @@ If a truststore Secret is specified, the default truststore file will be replace
 | fhirUserPassword | string | `"change-password"` | The fhirUserPassword. If fhirPasswordSecret is set, the fhirUserPassword will be set from its contents. |
 | fhirUserPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
-| image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"ibmcom/ibm-fhir-server"` |  |
-| image.tag | string | `nil` |  |
+| image.pullPolicy | string | `"Always"` | When to pull the image |
+| image.repository | string | `"ibmcom/ibm-fhir-server"` | The repository to pull the IBM FHIR Server image from |
+| image.tag | string | this chart's appVersion | IBM FHIR Server container image tag |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
@@ -329,11 +329,11 @@ If a truststore Secret is specified, the default truststore file will be replace
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
-| schemaMigration.enabled | bool | `true` |  |
-| schemaMigration.image.pullPolicy | string | `"Always"` |  |
+| schemaMigration.enabled | bool | `true` | Whether to execute a schema creation/migration job as part of the deploy |
+| schemaMigration.image.pullPolicy | string | `"Always"` | When to pull the image |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
-| schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
-| schemaMigration.image.tag | string | `nil` |  |
+| schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` | The repository to pull the IBM FHIR Schema Tool image from |
+| schemaMigration.image.tag | string | this chart's appVersion | IBM FHIR Schema Tool container image tag |
 | schemaMigration.resources | object | `{}` | container resources for the schema migration job |
 | security.jwtValidation.audience | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4"` |  |
 | security.jwtValidation.enabled | bool | `false` |  |
