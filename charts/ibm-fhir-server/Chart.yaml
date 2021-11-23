@@ -2,7 +2,7 @@ apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
 version: 0.5.1
-appVersion: 4.10.0
+appVersion: 4.10.1
 dependencies:
   - name: postgresql
     version: 10.13.8
@@ -30,7 +30,7 @@ annotations:
     - kind: changed
       description: move jvm.options to configDropins to avoid overwriting
     - kind: changed
-      description: upgrade to ibm-fhir-server 4.10.0
+      description: upgrade to ibm-fhir-server 4.10.1
     - kind: changed
       description: reduce the default initial heap size and memory request
     - kind: changed
