@@ -11,8 +11,12 @@ extraLabels: {}
 # -- The number of replicas for the externally-facing FHIR server pods
 replicaCount: 2
 image:
+  # -- The repository to pull the IBM FHIR Server image from
   repository: ibmcom/ibm-fhir-server
-  tag: "4.9.2"
+  # -- IBM FHIR Server container image tag
+  # @default -- this chart's appVersion
+  tag: ""
+  # -- When to pull the image
   pullPolicy: Always
 imagePullSecrets: []
 # -- The trace specification to use for selectively tracing components of the IBM FHIR Server.
@@ -57,7 +61,7 @@ postgresql:
   enabled: true
   image:
     # -- the tag for the postgresql image
-    tag: 13.4.0
+    tag: 13.5.0
   # -- name of the database to create.
   # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
   postgresqlDatabase: "fhir"
@@ -218,10 +222,15 @@ security:
         - "permission-patient"
 
 schemaMigration:
+  # -- Whether to execute a schema creation/migration job as part of the deploy
   enabled: true
   image:
+    # -- The repository to pull the IBM FHIR Schema Tool image from
     repository: ibmcom/ibm-fhir-schematool
-    tag: "4.9.2"
+    # -- IBM FHIR Schema Tool container image tag
+    # @default -- this chart's appVersion
+    tag: ""
+    # -- When to pull the image
     pullPolicy: Always
     pullSecret: all-icr-io
   # -- container resources for the schema migration job
@@ -329,13 +338,32 @@ ingress:
     - secretName: ""
 resources:
   requests:
-    memory: "2Gi"
+    memory: "1Gi"
     ephemeral-storage: "1Gi"
   limits:
     memory: "5Gi"
     ephemeral-storage: "1Gi"
+# -- Pod affinity
+# @default -- Preferred zone anti-affinity
+affinity: |
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              {{- include "fhir.matchLabels" . | nindent 12 }}
+          topologyKey: topology.kubernetes.io/zone
+# -- Topology spread constraints template
+topologySpreadConstraints:
+# -- Node labels for Pod assignment
+nodeSelector: {}
+# -- Node taints to tolerate
+tolerations: []
 
-minHeap: "1024m"
+# -- Initial heap size
+minHeap: "768m"
+# -- Max heap size
 maxHeap: "4096m"
 extraJvmOptions: ""
 extraEnv: ""

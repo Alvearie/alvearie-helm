@@ -1,5 +1,5 @@
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.9.2](https://img.shields.io/badge/AppVersion-4.9.2-informational?style=flat-square)
+![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.1](https://img.shields.io/badge/AppVersion-4.10.1-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -190,6 +190,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| affinity | string | Preferred zone anti-affinity | Pod affinity |
 | audit.enabled | bool | `false` |  |
 | audit.geoCity | string | `nil` | The city where the server is running |
 | audit.geoCountry | string | `nil` | The country where the server is running |
@@ -246,9 +247,9 @@ If a truststore Secret is specified, the default truststore file will be replace
 | fhirUserPassword | string | `"change-password"` | The fhirUserPassword. If fhirPasswordSecret is set, the fhirUserPassword will be set from its contents. |
 | fhirUserPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
-| image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"ibmcom/ibm-fhir-server"` |  |
-| image.tag | string | `"4.9.2"` |  |
+| image.pullPolicy | string | `"Always"` | When to pull the image |
+| image.repository | string | `"ibmcom/ibm-fhir-server"` | The repository to pull the IBM FHIR Server image from |
+| image.tag | string | this chart's appVersion | IBM FHIR Server container image tag |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
@@ -280,9 +281,10 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.realms.test.clients.infernoBulk.publicClient | bool | `true` |  |
 | keycloak.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
-| maxHeap | string | `"4096m"` |  |
-| minHeap | string | `"1024m"` |  |
+| maxHeap | string | `"4096m"` | Max heap size |
+| minHeap | string | `"768m"` | Initial heap size |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
+| nodeSelector | object | `{}` | Node labels for Pod assignment |
 | notifications.kafka.bootstrapServers | string | `nil` |  |
 | notifications.kafka.enabled | bool | `false` |  |
 | notifications.kafka.saslJaasConfig | string | `nil` |  |
@@ -318,20 +320,20 @@ If a truststore Secret is specified, the default truststore file will be replace
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. if set to `false`, the connection settings under the `db` key are used |
 | postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret must contain the keys `postgresql-password` (the password for `postgresqlUsername` when it is different from `postgres`), `postgresql-postgres-password` (which will override `postgresqlPassword`), `postgresql-replication-password` (which will override `replication.password`), and `postgresql-ldap-password` (used to authenticate on LDAP). The value is evaluated as a template. |
-| postgresql.image.tag | string | `"13.4.0"` | the tag for the postgresql image |
+| postgresql.image.tag | string | `"13.5.0"` | the tag for the postgresql image |
 | postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create. see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
 | postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
 | resources.limits.memory | string | `"5Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
-| resources.requests.memory | string | `"2Gi"` |  |
+| resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
-| schemaMigration.enabled | bool | `true` |  |
-| schemaMigration.image.pullPolicy | string | `"Always"` |  |
+| schemaMigration.enabled | bool | `true` | Whether to execute a schema creation/migration job as part of the deploy |
+| schemaMigration.image.pullPolicy | string | `"Always"` | When to pull the image |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
-| schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` |  |
-| schemaMigration.image.tag | string | `"4.9.2"` |  |
+| schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` | The repository to pull the IBM FHIR Schema Tool image from |
+| schemaMigration.image.tag | string | this chart's appVersion | IBM FHIR Schema Tool container image tag |
 | schemaMigration.resources | object | `{}` | container resources for the schema migration job |
 | security.jwtValidation.audience | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4"` |  |
 | security.jwtValidation.enabled | bool | `false` |  |
@@ -353,6 +355,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | security.oauth.tokenUrl | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/auth/realms/test/protocol/openid-connect/token"` |  |
 | securityContext | object | `{}` | pod security context for the server |
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
+| tolerations | list | `[]` | Node taints to tolerate |
+| topologySpreadConstraints | string | `nil` | Topology spread constraints template |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
 | trustStoreFormat | string | `"PKCS12"` | For the truststore specified in trustStoreSecret, the truststore format (PKCS12 or JKS). This value will be ignored if the trustStoreSecret value is not set. |
 | trustStoreSecret | string | `nil` | Secret containing the FHIR server truststore file and its password. The secret must contain the keys 'fhirTrustStore' (the truststore file contents in the format specified in trustStoreFormat) and 'fhirTrustStorePassword' (the truststore password) |
