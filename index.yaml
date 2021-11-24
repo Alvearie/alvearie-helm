@@ -5,6 +5,49 @@ entries:
       artifacthub.io/changes: |
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: move jvm.options to configDropins to avoid overwriting
+        - kind: changed
+          description: upgrade to ibm-fhir-server 4.10.1
+        - kind: changed
+          description: reduce the default initial heap size and memory request
+        - kind: changed
+          description: upgrade postgresql image to 13.5 and subchart to 10.13.8
+        - kind: added
+          description: helm values for advanced scheduling (e.g. custom affinity rules)
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.10.1
+    created: "2021-11-24T14:43:54.333034643Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.13.8
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://codecentric.github.io/helm-charts
+      version: 15.1.0
+    description: Helm chart for the IBM FHIR Server
+    digest: e2d283cd5fe73c01cdef64342c891614224f21de3d3f786b6183a0e64a261c87
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    - email: mschroed@us.ibm.com
+      name: Mike Schroeder
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.5.1/ibm-fhir-server-0.5.1.tgz
+    version: 0.5.1
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
         - kind: added
           description: support for custom pathType and custom http port
       artifacthub.io/license: Apache-2.0
@@ -670,4 +713,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-11-11T16:29:05.72779442Z"
+generated: "2021-11-24T14:43:54.333406749Z"
