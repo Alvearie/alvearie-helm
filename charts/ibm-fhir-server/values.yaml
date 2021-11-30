@@ -235,6 +235,8 @@ schemaMigration:
     pullSecret: all-icr-io
   # -- container resources for the schema migration job
   resources: {}
+  # -- Whether to add a TTL to the finished job - disable if it interferes with CI tools like ArgoCD
+  enableJobAutoremove: true
 # -- The name of a Secret from which to retrieve fhirUserPassword and fhirAdminPassword.
 # If this value is set, it is expected that fhirUserPasswordSecretKey and fhirAdminPasswordSecretKey will also be set.
 fhirPasswordSecret:
