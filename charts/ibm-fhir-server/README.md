@@ -1,5 +1,5 @@
 
-![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.1](https://img.shields.io/badge/AppVersion-4.10.1-informational?style=flat-square)
+![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -329,6 +329,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
+| schemaMigration.enableJobAutoremove | bool | `true` | Whether to add a TTL to the finished job - disable if it interferes with CI tools like ArgoCD |
 | schemaMigration.enabled | bool | `true` | Whether to execute a schema creation/migration job as part of the deploy |
 | schemaMigration.image.pullPolicy | string | `"Always"` | When to pull the image |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
