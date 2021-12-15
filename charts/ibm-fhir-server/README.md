@@ -329,13 +329,13 @@ If a truststore Secret is specified, the default truststore file will be replace
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
-| schemaMigration.enableJobAutoremove | bool | `true` | Whether to add a TTL to the finished job - disable if it interferes with CI tools like ArgoCD |
 | schemaMigration.enabled | bool | `true` | Whether to execute a schema creation/migration job as part of the deploy |
 | schemaMigration.image.pullPolicy | string | `"Always"` | When to pull the image |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` | The repository to pull the IBM FHIR Schema Tool image from |
 | schemaMigration.image.tag | string | this chart's appVersion | IBM FHIR Schema Tool container image tag |
 | schemaMigration.resources | object | `{}` | container resources for the schema migration job |
+| schemaMigration.ttlSecondsAfterFinished | int | `100` | How many seconds to wait before cleaning up a finished schema migration job. This automatic clean-up can have unintended interactions with CI tools like ArgoCD; setting this value to nil will disable the feature. |
 | security.jwtValidation.audience | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4"` |  |
 | security.jwtValidation.enabled | bool | `false` |  |
 | security.jwtValidation.groupNameAttribute | string | `"group"` |  |
