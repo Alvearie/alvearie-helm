@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/component: schematool
 spec:
   {{- if semverCompare ">=1.21" .Capabilities.KubeVersion.Version }}
-  ttlSecondsAfterFinished: 100
+  ttlSecondsAfterFinished: {{ .Values.schemaMigration.ttlSecondsAfterFinished }}
   {{- end }}
   template:
     metadata:

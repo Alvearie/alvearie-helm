@@ -1,15 +1,15 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.5.1
-appVersion: 4.10.1
+version: 0.5.2
+appVersion: 4.10.2
 dependencies:
   - name: postgresql
-    version: 10.13.8
+    version: 10.13.14
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: keycloak
-    version: 15.1.0
+    version: 16.0.4
     repository: https://codecentric.github.io/helm-charts
     condition: keycloak.enabled
 sources:
@@ -27,13 +27,11 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: changed
-      description: move jvm.options to configDropins to avoid overwriting
-    - kind: changed
-      description: upgrade to ibm-fhir-server 4.10.1
-    - kind: changed
-      description: reduce the default initial heap size and memory request
-    - kind: changed
-      description: upgrade postgresql image to 13.5 and subchart to 10.13.8
     - kind: added
-      description: helm values for advanced scheduling (e.g. custom affinity rules)
+      description: switch for schema migration job auto-removal
+    - kind: changed
+      description: upgrade to ibm-fhir-server 4.10.2
+    - kind: changed
+      description: upgrade bitnami/postgresql subchart version to 10.13.14
+    - kind: changed
+      description: upgrade codecentric/keycloak subchart version to 16.0.4
