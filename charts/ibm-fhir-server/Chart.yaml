@@ -35,3 +35,5 @@ annotations:
       description: the default value for minHeap; instead we will defer to the IBM FHIR Server default
     - kind: removed
       description: the default value for maxHeap; instead we will defer to the JVM default
+    - kind: changed
+      description: update the optional postgresql image's default to version 14.1.0
