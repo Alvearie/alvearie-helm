@@ -237,6 +237,17 @@ Helper method for constructing the scope definition for a SMART resource scope
         "included.custom.audience": "${FHIR_BASE_URL}",
         "access.token.claim": "true"
       }
+    },
+    "Group Membership Mapper": {
+      "protocol": "openid-connect",
+      "protocolmapper": "oidc-group-membership-mapper",
+      "config": {
+        "claim.name": "group",
+        "full.path": "false",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "userinfo.token.claim": "true"
+      }
     }
   }
 }

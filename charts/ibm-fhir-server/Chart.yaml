@@ -20,8 +20,6 @@ type: application
 maintainers:
   - name: Lee Surprenant
     email: lmsurpre@us.ibm.com
-  - name: Mike Schroeder
-    email: mschroed@us.ibm.com
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
@@ -40,7 +38,7 @@ annotations:
     - kind: changed
       description: changed default pullPolicy values to IfNotPresent
     - kind: changed
-      description: updated to smart-keycloak and keycloak-config 0.4.0 (now from quay.io)
+      description: updated to smart-keycloak and keycloak-config 0.4.1 (now from quay.io)
     - kind: changed
       description: updated keycloak-config init container image to ubi 8.5
     - kind: added

@@ -266,10 +266,10 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.config.enabled | bool | `true` |  |
 | keycloak.config.image.pullPolicy | string | `"IfNotPresent"` |  |
 | keycloak.config.image.repository | string | `"quay.io/alvearie/keycloak-config"` |  |
-| keycloak.config.image.tag | string | `"0.4.0"` |  |
+| keycloak.config.image.tag | string | `"0.4.1"` |  |
 | keycloak.config.realms.test.clients.inferno.clientAuthenticatorType | string | `"client-secret"` |  |
 | keycloak.config.realms.test.clients.inferno.consentRequired | bool | `true` |  |
-| keycloak.config.realms.test.clients.inferno.defaultScopes | list | `[]` |  |
+| keycloak.config.realms.test.clients.inferno.defaultScopes[0] | string | `"launch/patient"` |  |
 | keycloak.config.realms.test.clients.inferno.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
 | keycloak.config.realms.test.clients.inferno.publicClient | bool | `true` |  |
 | keycloak.config.realms.test.clients.inferno.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
@@ -281,7 +281,6 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.config.realms.test.clients.infernoBulk.jwksUrl | string | `""` |  |
 | keycloak.config.realms.test.clients.infernoBulk.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
 | keycloak.config.realms.test.clients.infernoBulk.publicClient | bool | `false` |  |
-| keycloak.config.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloak.config.realms.test.clients.infernoBulk.serviceAccountsEnabled | bool | `true` |  |
 | keycloak.config.realms.test.clients.infernoBulk.standardFlowEnabled | bool | `false` |  |
 | keycloak.config.ttlSecondsAfterFinished | int | `100` |  |
@@ -291,7 +290,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.extraVolumes | string | a single volume named keycloak-admin with contents from the keycloak-admin-secret | Extra volumes for the Keycloak StatefulSets |
 | keycloak.image.pullPolicy | string | `"IfNotPresent"` |  |
 | keycloak.image.repository | string | `"quay.io/alvearie/smart-keycloak"` |  |
-| keycloak.image.tag | string | `"0.4.0"` |  |
+| keycloak.image.tag | string | `"0.4.1"` |  |
 | keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |
