@@ -12,11 +12,14 @@ data:
   fhir-server-config.json: >
     {{- include .Values.fhirServerConfigTemplate . }}
   jvm.options: |
+    {{- if .Values.minHeap }}
     # Initial heap size
     -Xms{{ .Values.minHeap }}
-
+    {{- end }}
+    {{- if .Values.maxHeap }}
     # Maximum heap size
     -Xmx{{ .Values.maxHeap }}
+    {{- end }}
 
     {{- with .Values.extraJvmOptions }}
     {{ tpl . $ | nindent 4 }}

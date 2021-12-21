@@ -19,37 +19,8 @@ The default fhir-server-config.json.
             },
             "resources": {
                 "open": {{ not .Values.restrictEndpoints }}
-                {{- range $i, $endpoint := .Values.endpoints }}
-                {{- if $endpoint.resourceType }},
-                "{{ $endpoint.resourceType }}": {
-                    {{- if $endpoint.searchIncludes }}
-                    "searchIncludes": {{ toJson $endpoint.searchIncludes }}
-                    {{- end}}
-                    {{- if $endpoint.searchRevIncludes }}
-                    {{- if $endpoint.searchIncludes }},{{- end }}
-                    "searchRevIncludes": {{ toJson $endpoint.searchRevIncludes }}
-                    {{- end}}
-                    {{- if $endpoint.profiles }}
-                    {{- if or $endpoint.searchIncludes $endpoint.searchRevIncludes }},{{- end }}
-                    "profiles": {
-                        "atLeastOne": {{ toJson $endpoint.profiles }}
-                    }
-                    {{- end}}
-                    {{- if $endpoint.searchParameters }}
-                    {{- if or $endpoint.searchIncludes $endpoint.searchRevIncludes $endpoint.searchProfiles }},{{- end }}
-                    "searchParameters": {
-                        {{- $lastIndex := sub (len $endpoint.searchParameters) 1 }}
-                        {{- range $j, $param := $endpoint.searchParameters }}
-                        "{{ $param.code }}": "{{ $param.url }}"{{ if ne $j $lastIndex }},{{ end }}
-                        {{- end }}
-                    }
-                    {{- end}}
-                    {{- if $endpoint.interactions }}
-                    {{- if or $endpoint.searchIncludes $endpoint.searchRevIncludes $endpoint.searchProfiles $endpoint.searchParameters }},{{- end }}
-                    "interactions": {{ toJson $endpoint.interactions }}
-                    {{- end}}
-                }
-                {{- end }}
+                {{- range $endpoint, $conf := .Values.endpoints }},
+                "{{ $endpoint }}": {{ toPrettyJson $conf | indent 16 }}
                 {{- end }}
             },
             "security": {

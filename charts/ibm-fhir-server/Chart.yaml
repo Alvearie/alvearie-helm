@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.5.2
+version: 0.6.0
 appVersion: 4.10.2
 dependencies:
   - name: postgresql
@@ -20,18 +20,26 @@ type: application
 maintainers:
   - name: Lee Surprenant
     email: lmsurpre@us.ibm.com
-  - name: Mike Schroeder
-    email: mschroed@us.ibm.com
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
+    - kind: changed
+      description: align endpoints config with fhir-server-config.json's fhirServer/resources section
     - kind: added
-      description: switch for schema migration job auto-removal
+      description: transactionTimeout helm value for setting FHIR_TRANSACTION_MANAGER_TIMEOUT
+    - kind: removed
+      description: the default value for minHeap; instead we will defer to the IBM FHIR Server default
+    - kind: removed
+      description: the default value for maxHeap; instead we will defer to the JVM default
     - kind: changed
-      description: upgrade to ibm-fhir-server 4.10.2
+      description: update the optional postgresql image's default to version 14.1.0
     - kind: changed
-      description: upgrade bitnami/postgresql subchart version to 10.13.14
+      description: changed default pullPolicy values to IfNotPresent
     - kind: changed
-      description: upgrade codecentric/keycloak subchart version to 16.0.4
+      description: updated to smart-keycloak and keycloak-config 0.4.1 (now from quay.io)
+    - kind: changed
+      description: updated keycloak-config init container image to ubi 8.5
+    - kind: added
+      description: values for enabling/disabling keycloak-config and controlling which image is used

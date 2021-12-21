@@ -201,6 +201,8 @@ spec:
             - name: BOOTSTRAP_DB
               value: "true"
             {{- else }}
+            - name: FHIR_TRANSACTION_MANAGER_TIMEOUT
+              value: "{{ .Values.transactionTimeout }}"
             - name: FHIR_DB_HOSTNAME
               value: "{{ include "fhir.database.host" $ }}"
             - name: FHIR_DB_PORT

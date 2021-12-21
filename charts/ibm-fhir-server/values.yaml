@@ -17,7 +17,7 @@ image:
   # @default -- this chart's appVersion
   tag: ""
   # -- When to pull the image
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 imagePullSecrets: []
 # -- The trace specification to use for selectively tracing components of the IBM FHIR Server.
 # The log detail level specification is in the following format: `component1=level1:component2=level2`
@@ -28,19 +28,20 @@ restrictEndpoints: false
 # -- Control which interactions are supported for which resource type endpoints
 # @default -- A single entry for resourceType "Resource" that applies to all resource types
 endpoints:
-  # yamllint disable-line rule:comments
-  - # -- A valid FHIR resource type; use "Resource" for whole-system behavior
-    resourceType: Resource
-    # -- (list) Valid _include arguments while searching this resource type; nil means no restrictions
+  Resource:
+    # -- (list) Valid _include arguments while searching this resource type;
+    # nil means no restrictions
     searchIncludes:
-    # -- (list) Valid _revInclude arguments while searching this resource type; nil means no restrictions
+    # -- (list) Valid _revInclude arguments while searching this resource type;
+    # nil means no restrictions
     searchRevIncludes:
-    # -- (list) Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required
     profiles:
+      # -- (list) Instances of this type must claim conformance to at least one of the listed profiles;
+      # nil means no profile conformance required
+      atLeastOne:
     # -- A mapping from enabled search parameter codes to search parameter definitions
     searchParameters:
-      - code: "*"
-        url: "*"
+      "*": "*"
     # -- The set of enabled interactions for this resource type:
     # [create, read, vread, history, search, update, patch, delete]
     # @default -- All interactions.
@@ -61,7 +62,7 @@ postgresql:
   enabled: true
   image:
     # -- the tag for the postgresql image
-    tag: 13.5.0
+    tag: 14.1.0
   # -- name of the database to create.
   # see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run>
   postgresqlDatabase: "fhir"
@@ -113,8 +114,9 @@ db:
 keycloak:
   enabled: false
   image:
-    repository: alvearie/smart-keycloak
-    tag: 0.3.0
+    repository: quay.io/alvearie/smart-keycloak
+    tag: 0.4.1
+    pullPolicy: IfNotPresent
   # -- An initial keycloak admin username for creating the initial Keycloak admin user
   adminUsername: admin
   # -- An initial keycloak admin password for creating the initial Keycloak admin user
@@ -141,27 +143,39 @@ keycloak:
       value: postgres
   postgresql:
     nameOverride: keycloak-postgres
-  realms:
-    test:
-      clients:
-        inferno:
-          consentRequired: true
-          publicClient: true
-          redirectURIs:
-            - "http://localhost:4567/inferno/*"
-          defaultScopes: []
-          # -- OAuth 2.0 scopes supported by this client
-          # @default -- all scopes defined by the `security.oauth` configuration.
-          optionalScopes:
-        infernoBulk:
-          consentRequired: true
-          publicClient: true
-          redirectURIs:
-            - "http://localhost:4567/inferno/*"
-          defaultScopes: []
-          # -- OAuth 2.0 scopes supported by this client
-          # @default -- all scopes defined by the `security.oauth` configuration.
-          optionalScopes:
+  config:
+    enabled: true
+    image:
+      repository: quay.io/alvearie/keycloak-config
+      tag: 0.4.1
+      pullPolicy: IfNotPresent
+    ttlSecondsAfterFinished: 100
+    realms:
+      test:
+        clients:
+          inferno:
+            consentRequired: true
+            publicClient: true
+            standardFlowEnabled: true
+            serviceAccountsEnabled: false
+            clientAuthenticatorType: client-secret
+            redirectURIs:
+              - "http://localhost:4567/inferno/*"
+            defaultScopes: ["launch/patient"]
+            # -- OAuth 2.0 scopes supported by this client
+            # @default -- all scopes defined by the `security.oauth` configuration.
+            optionalScopes:
+          infernoBulk:
+            consentRequired: false
+            publicClient: false
+            standardFlowEnabled: false
+            serviceAccountsEnabled: true
+            clientAuthenticatorType: client-jwt
+            jwksUrl: ""
+            defaultScopes: []
+            # -- OAuth 2.0 scopes supported by this client
+            # @default -- all scopes defined by the `security.oauth` configuration.
+            optionalScopes:
 
 security:
   jwtValidation:
@@ -231,7 +245,7 @@ schemaMigration:
     # @default -- this chart's appVersion
     tag: ""
     # -- When to pull the image
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     pullSecret: all-icr-io
   # -- container resources for the schema migration job
   resources: {}
@@ -345,7 +359,7 @@ resources:
     memory: "1Gi"
     ephemeral-storage: "1Gi"
   limits:
-    memory: "5Gi"
+    memory: "4Gi"
     ephemeral-storage: "1Gi"
 # -- Pod affinity
 # @default -- Preferred zone anti-affinity
@@ -365,10 +379,14 @@ nodeSelector: {}
 # -- Node taints to tolerate
 tolerations: []
 
-# -- Initial heap size
-minHeap: "768m"
-# -- Max heap size
-maxHeap: "4096m"
+transactionTimeout: "120s"
+
+# -- The value passed to the JVM via -Xms to set the initial heap size.
+# @default -- The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2
+minHeap: ""
+# -- The value passed to the JVM via -Xmx to set the max heap size.
+maxHeap: ""
+
 extraJvmOptions: ""
 extraEnv: ""
 # -- Add additional volumes. Evaluated as a template.

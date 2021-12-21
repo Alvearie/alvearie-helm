@@ -1,5 +1,5 @@
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -38,6 +38,7 @@ This design gives the deployer of this helm chart a number of different options 
 1. Use the `defaultFhirServerConfig` named template that is provided, but override values specified in the template to customize the configuration. Chart values are used to customize config properties in the following sections of the configuration:
     - core
     - resources
+    - security
     - notifications
     - audit
     - persistence
@@ -225,13 +226,12 @@ If a truststore Secret is specified, the default truststore file will be replace
 | db.tenantKey | string | `nil` |  |
 | db.type | string | `"postgresql"` |  |
 | db.user | string | `"postgres"` |  |
-| endpoints | list | A single entry for resourceType "Resource" that applies to all resource types | Control which interactions are supported for which resource type endpoints |
-| endpoints[0].interactions | list | All interactions. | The set of enabled interactions for this resource type: [create, read, vread, history, search, update, patch, delete] |
-| endpoints[0].profiles | list | `nil` | Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required |
-| endpoints[0].resourceType | string | `"Resource"` | A valid FHIR resource type; use "Resource" for whole-system behavior |
-| endpoints[0].searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
-| endpoints[0].searchParameters | list | `[{"code":"*","url":"*"}]` | A mapping from enabled search parameter codes to search parameter definitions |
-| endpoints[0].searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
+| endpoints | object | A single entry for resourceType "Resource" that applies to all resource types | Control which interactions are supported for which resource type endpoints |
+| endpoints.Resource.interactions | list | All interactions. | The set of enabled interactions for this resource type: [create, read, vread, history, search, update, patch, delete] |
+| endpoints.Resource.profiles.atLeastOne | list | `nil` | Instances of this type must claim conformance to at least one of the listed profiles; nil means no profile conformance required |
+| endpoints.Resource.searchIncludes | list | `nil` | Valid _include arguments while searching this resource type; nil means no restrictions |
+| endpoints.Resource.searchParameters | object | `{"*":"*"}` | A mapping from enabled search parameter codes to search parameter definitions |
+| endpoints.Resource.searchRevIncludes | list | `nil` | Valid _revInclude arguments while searching this resource type; nil means no restrictions |
 | exposeHttpEndpoint | bool | `false` | if enabled, the server will listen to non-TLS requests |
 | exposeHttpPort | int | `9080` | The port on which the server will listen to non-TLS requests. Will be ignored if exposeHttpEndpoint is false. |
 | extensionSearchParametersTemplate | string | `"defaultSearchParameters"` | Template containing the extension-search-parameters.json content |
@@ -247,7 +247,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | fhirUserPassword | string | `"change-password"` | The fhirUserPassword. If fhirPasswordSecret is set, the fhirUserPassword will be set from its contents. |
 | fhirUserPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
-| image.pullPolicy | string | `"Always"` | When to pull the image |
+| image.pullPolicy | string | `"IfNotPresent"` | When to pull the image |
 | image.repository | string | `"ibmcom/ibm-fhir-server"` | The repository to pull the IBM FHIR Server image from |
 | image.tag | string | this chart's appVersion | IBM FHIR Server container image tag |
 | imagePullSecrets | list | `[]` |  |
@@ -263,26 +263,38 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keyStoreSecret | string | `nil` | Secret containing the FHIR server keystore file and its password. The secret must contain the keys ''fhirKeyStore' (the keystore file contents in the format specified in keyStoreFormat) and 'fhirKeyStorePassword' (the keystore password) |
 | keycloak.adminPassword | string | `"change-password"` | An initial keycloak admin password for creating the initial Keycloak admin user |
 | keycloak.adminUsername | string | `"admin"` | An initial keycloak admin username for creating the initial Keycloak admin user |
+| keycloak.config.enabled | bool | `true` |  |
+| keycloak.config.image.pullPolicy | string | `"IfNotPresent"` |  |
+| keycloak.config.image.repository | string | `"quay.io/alvearie/keycloak-config"` |  |
+| keycloak.config.image.tag | string | `"0.4.1"` |  |
+| keycloak.config.realms.test.clients.inferno.clientAuthenticatorType | string | `"client-secret"` |  |
+| keycloak.config.realms.test.clients.inferno.consentRequired | bool | `true` |  |
+| keycloak.config.realms.test.clients.inferno.defaultScopes[0] | string | `"launch/patient"` |  |
+| keycloak.config.realms.test.clients.inferno.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.config.realms.test.clients.inferno.publicClient | bool | `true` |  |
+| keycloak.config.realms.test.clients.inferno.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
+| keycloak.config.realms.test.clients.inferno.serviceAccountsEnabled | bool | `false` |  |
+| keycloak.config.realms.test.clients.inferno.standardFlowEnabled | bool | `true` |  |
+| keycloak.config.realms.test.clients.infernoBulk.clientAuthenticatorType | string | `"client-jwt"` |  |
+| keycloak.config.realms.test.clients.infernoBulk.consentRequired | bool | `false` |  |
+| keycloak.config.realms.test.clients.infernoBulk.defaultScopes | list | `[]` |  |
+| keycloak.config.realms.test.clients.infernoBulk.jwksUrl | string | `""` |  |
+| keycloak.config.realms.test.clients.infernoBulk.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.config.realms.test.clients.infernoBulk.publicClient | bool | `false` |  |
+| keycloak.config.realms.test.clients.infernoBulk.serviceAccountsEnabled | bool | `true` |  |
+| keycloak.config.realms.test.clients.infernoBulk.standardFlowEnabled | bool | `false` |  |
+| keycloak.config.ttlSecondsAfterFinished | int | `100` |  |
 | keycloak.enabled | bool | `false` |  |
 | keycloak.extraEnv | string | DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath | Extra environment variables for the Keycloak StatefulSet |
 | keycloak.extraVolumeMounts | string | mount the keycloak-admin volume at /secrets/keycloak-admin | Extra volume mounts for the Keycloak StatefulSet |
 | keycloak.extraVolumes | string | a single volume named keycloak-admin with contents from the keycloak-admin-secret | Extra volumes for the Keycloak StatefulSets |
-| keycloak.image.repository | string | `"alvearie/smart-keycloak"` |  |
-| keycloak.image.tag | string | `"0.3.0"` |  |
+| keycloak.image.pullPolicy | string | `"IfNotPresent"` |  |
+| keycloak.image.repository | string | `"quay.io/alvearie/smart-keycloak"` |  |
+| keycloak.image.tag | string | `"0.4.1"` |  |
 | keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
-| keycloak.realms.test.clients.inferno.consentRequired | bool | `true` |  |
-| keycloak.realms.test.clients.inferno.defaultScopes | list | `[]` |  |
-| keycloak.realms.test.clients.inferno.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
-| keycloak.realms.test.clients.inferno.publicClient | bool | `true` |  |
-| keycloak.realms.test.clients.inferno.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
-| keycloak.realms.test.clients.infernoBulk.consentRequired | bool | `true` |  |
-| keycloak.realms.test.clients.infernoBulk.defaultScopes | list | `[]` |  |
-| keycloak.realms.test.clients.infernoBulk.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
-| keycloak.realms.test.clients.infernoBulk.publicClient | bool | `true` |  |
-| keycloak.realms.test.clients.infernoBulk.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
-| maxHeap | string | `"4096m"` | Max heap size |
-| minHeap | string | `"768m"` | Initial heap size |
+| maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |
+| minHeap | string | The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2 | The value passed to the JVM via -Xms to set the initial heap size. |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | nodeSelector | object | `{}` | Node labels for Pod assignment |
 | notifications.kafka.bootstrapServers | string | `nil` |  |
@@ -320,17 +332,17 @@ If a truststore Secret is specified, the default truststore file will be replace
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. if set to `false`, the connection settings under the `db` key are used |
 | postgresql.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL passwords. The secret must contain the keys `postgresql-password` (the password for `postgresqlUsername` when it is different from `postgres`), `postgresql-postgres-password` (which will override `postgresqlPassword`), `postgresql-replication-password` (which will override `replication.password`), and `postgresql-ldap-password` (used to authenticate on LDAP). The value is evaluated as a template. |
-| postgresql.image.tag | string | `"13.5.0"` | the tag for the postgresql image |
+| postgresql.image.tag | string | `"14.1.0"` | the tag for the postgresql image |
 | postgresql.postgresqlDatabase | string | `"fhir"` | name of the database to create. see: <https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#creating-a-database-on-first-run> |
 | postgresql.postgresqlExtendedConf | object | `{"maxPreparedTransactions":24}` | Extended Runtime Config Parameters (appended to main or default configuration) |
 | replicaCount | int | `2` | The number of replicas for the externally-facing FHIR server pods |
 | resources.limits.ephemeral-storage | string | `"1Gi"` |  |
-| resources.limits.memory | string | `"5Gi"` |  |
+| resources.limits.memory | string | `"4Gi"` |  |
 | resources.requests.ephemeral-storage | string | `"1Gi"` |  |
 | resources.requests.memory | string | `"1Gi"` |  |
 | restrictEndpoints | bool | `false` | Set to true to restrict the API to a particular set of resource type endpoints |
 | schemaMigration.enabled | bool | `true` | Whether to execute a schema creation/migration job as part of the deploy |
-| schemaMigration.image.pullPolicy | string | `"Always"` | When to pull the image |
+| schemaMigration.image.pullPolicy | string | `"IfNotPresent"` | When to pull the image |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
 | schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` | The repository to pull the IBM FHIR Schema Tool image from |
 | schemaMigration.image.tag | string | this chart's appVersion | IBM FHIR Schema Tool container image tag |
@@ -359,6 +371,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | tolerations | list | `[]` | Node taints to tolerate |
 | topologySpreadConstraints | string | `nil` | Topology spread constraints template |
 | traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
+| transactionTimeout | string | `"120s"` |  |
 | trustStoreFormat | string | `"PKCS12"` | For the truststore specified in trustStoreSecret, the truststore format (PKCS12 or JKS). This value will be ignored if the trustStoreSecret value is not set. |
 | trustStoreSecret | string | `nil` | Secret containing the FHIR server truststore file and its password. The secret must contain the keys 'fhirTrustStore' (the truststore file contents in the format specified in trustStoreFormat) and 'fhirTrustStorePassword' (the truststore password) |
 
