@@ -37,3 +37,11 @@ annotations:
       description: the default value for maxHeap; instead we will defer to the JVM default
     - kind: changed
       description: update the optional postgresql image's default to version 14.1.0
+    - kind: changed
+      description: changed default pullPolicy values to IfNotPresent
+    - kind: changed
+      description: updated to smart-keycloak and keycloak-config 0.4.0 (now from quay.io)
+    - kind: changed
+      description: updated keycloak-config init container image to ubi 8.5
+    - kind: added
+      description: values for enabling/disabling keycloak-config and controlling which image is used

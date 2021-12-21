@@ -5,12 +5,14 @@ The default keycloak-config.json.
 {{- define "defaultKeycloakConfig" -}}
     {
       "keycloak": {
+        {{- if .Values.keycloak.enabled }}
         "serverUrl": "http://{{ template "keycloak.fullname" $.Subcharts.keycloak }}-http/auth",
+        {{- end }}
         "adminUser": "{{ .Values.keycloak.adminUsername }}",
         "adminPassword": "${KEYCLOAK_PASSWORD}",
         "adminClientId": "admin-cli",
         "realms": {
-          {{- range $realmName, $realmConfig := .Values.keycloak.realms }}
+          {{- range $realmName, $realmConfig := .Values.keycloak.config.realms }}
           "{{ $realmName }}": {
             "enabled": true,
             "clientScopes": {
@@ -106,6 +108,15 @@ The default keycloak-config.json.
                 "consentRequired": {{ $clientConfig.consentRequired }},
                 "publicClient": {{ $clientConfig.publicClient }},
                 "redirectURIs": {{ toJson $clientConfig.redirectURIs }},
+                "standardFlowEnabled": {{ $clientConfig.standardFlowEnabled }},
+                "serviceAccountsEnabled": {{ $clientConfig.serviceAccountsEnabled }},
+                "clientAuthenticatorType": "{{ $clientConfig.clientAuthenticatorType }}",
+                {{- if $clientConfig.jwksUrl }}
+                "attributes": {
+                  "use.jwks.url": "true",
+                  "jwks.url": "{{ $clientConfig.jwksUrl }}"
+                },
+                {{- end }}
                 "defaultClientScopes": {{ toJson $clientConfig.defaultScopes }},
                 "optionalClientScopes":
                   {{- if $clientConfig.optionalScopes }}
