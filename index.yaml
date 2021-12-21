@@ -5,6 +5,55 @@ entries:
       artifacthub.io/changes: |
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: align endpoints config with fhir-server-config.json's fhirServer/resources section
+        - kind: added
+          description: transactionTimeout helm value for setting FHIR_TRANSACTION_MANAGER_TIMEOUT
+        - kind: removed
+          description: the default value for minHeap; instead we will defer to the IBM FHIR Server default
+        - kind: removed
+          description: the default value for maxHeap; instead we will defer to the JVM default
+        - kind: changed
+          description: update the optional postgresql image's default to version 14.1.0
+        - kind: changed
+          description: changed default pullPolicy values to IfNotPresent
+        - kind: changed
+          description: updated to smart-keycloak and keycloak-config 0.4.1 (now from quay.io)
+        - kind: changed
+          description: updated keycloak-config init container image to ubi 8.5
+        - kind: added
+          description: values for enabling/disabling keycloak-config and controlling which image is used
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.10.2
+    created: "2021-12-21T22:09:55.712169884Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.13.14
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://codecentric.github.io/helm-charts
+      version: 16.0.4
+    description: Helm chart for the IBM FHIR Server
+    digest: f9ba57799fc366f4db818625f7599a8c5d12162ec92a7ec22b137703fcc5ccb4
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.6.0/ibm-fhir-server-0.6.0.tgz
+    version: 0.6.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
         - kind: added
           description: switch for schema migration job auto-removal
         - kind: changed
@@ -754,4 +803,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2021-12-20T20:12:07.854833674Z"
+generated: "2021-12-21T22:09:55.712324186Z"
