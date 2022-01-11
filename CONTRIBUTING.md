@@ -1,6 +1,11 @@
 ## Contributing
 To contribute code or documentation, please submit a [pull request](https://github.com/alvearie/alvearie-helm/pulls).
 
+Because we're currently configured to do a release each time we merge to main, each PR will need to include the following changes:
+1. bump the chart version at https://github.com/Alvearie/alvearie-helm/blob/main/charts/ibm-fhir-server/Chart.yaml#L4
+2. replace the changes list in Chart.yaml with whatever changes are included in the PR
+3. run helm-docs to generate an updated README and include that with your PR
+
 A good way to familiarize yourself with the codebase and contribution process is
 to look for and tackle low-hanging fruit in the [issue tracker](https://github.com/alvearie/alvearie-helm/issues).
 Before embarking on a more ambitious contribution, please get in touch.
