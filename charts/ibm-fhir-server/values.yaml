@@ -442,5 +442,5 @@ containerSecurityContext:
 securityContext: {}
 
 membermatch:
-  # -- Enable the $member-match operation
+  # -- Enable the $member-match operation in the fhir-server-config.json. The default image does not include the fhir-operation-member-match, and must be added to a custom image.
   enabled: false
