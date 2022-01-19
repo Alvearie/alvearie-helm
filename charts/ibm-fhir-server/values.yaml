@@ -441,6 +441,6 @@ containerSecurityContext:
 # -- pod security context for the server
 securityContext: {}
 
-# -- Enable the $member-match operation
 membermatch:
+  # -- Enable the $member-match operation
   enabled: false
