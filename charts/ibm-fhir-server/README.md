@@ -1,5 +1,5 @@
 
-![Version: 0.6.3](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
+![Version: 0.6.3](https://img.shields.io/badge/Version-0.6.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -294,6 +294,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |
+| membermatch | object | `{"enabled":false}` | Enable the $member-match operation |
 | minHeap | string | The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2 | The value passed to the JVM via -Xms to set the initial heap size. |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | nodeSelector | object | `{}` | Node labels for Pod assignment |
