@@ -5,6 +5,39 @@ entries:
       artifacthub.io/changes: |
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
+        - kind: added
+          description: support enabling the default member-match
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.10.2
+    created: "2022-01-19T19:20:52.97391686Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.13.15
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://codecentric.github.io/helm-charts
+      version: 16.0.5
+    description: Helm chart for the IBM FHIR Server
+    digest: 9c3ede6608c04d90292c2ab4b7f02ea0c4d51b11698989d9c3ae3ceee18fabc9
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.6.3/ibm-fhir-server-0.6.3.tgz
+    version: 0.6.3
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
           description: update optionalScopes default value to fix README doc
       artifacthub.io/license: Apache-2.0
@@ -871,4 +904,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2022-01-19T14:53:40.837488893Z"
+generated: "2022-01-19T19:20:52.974149459Z"
