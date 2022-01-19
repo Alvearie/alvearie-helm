@@ -201,6 +201,13 @@ The default fhir-server-config.json.
                         "FHIROperationAdmin",
                         "FHIRUsers"
                     ]
+                },
+                "membermatch": {
+                    {{- if not .Values.membermatch.enabled }}
+                    "enabled": false
+                    {{- else }}
+                    "enabled": true
+                    {{- end }}
                 }
             }
         }
