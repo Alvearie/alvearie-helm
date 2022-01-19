@@ -294,7 +294,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |
-| membermatch.enabled | bool | `false` | Enable the $member-match operation |
+| membermatch.enabled | bool | `false` | Enable the $member-match operation in the fhir-server-config.json. The default image does not include the fhir-operation-member-match, and must be added to a custom image. |
 | minHeap | string | The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2 | The value passed to the JVM via -Xms to set the initial heap size. |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | nodeSelector | object | `{}` | Node labels for Pod assignment |
