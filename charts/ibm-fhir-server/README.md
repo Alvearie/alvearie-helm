@@ -1,5 +1,5 @@
 
-![Version: 0.6.1](https://img.shields.io/badge/Version-0.6.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
+![Version: 0.6.2](https://img.shields.io/badge/Version-0.6.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -270,7 +270,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.config.realms.test.clients.inferno.clientAuthenticatorType | string | `"client-secret"` |  |
 | keycloak.config.realms.test.clients.inferno.consentRequired | bool | `true` |  |
 | keycloak.config.realms.test.clients.inferno.defaultScopes[0] | string | `"launch/patient"` |  |
-| keycloak.config.realms.test.clients.inferno.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.config.realms.test.clients.inferno.optionalScopes | list | all scopes defined by the `security.oauth` configuration. | OAuth 2.0 scopes supported by this client |
 | keycloak.config.realms.test.clients.inferno.publicClient | bool | `true` |  |
 | keycloak.config.realms.test.clients.inferno.redirectURIs[0] | string | `"http://localhost:4567/inferno/*"` |  |
 | keycloak.config.realms.test.clients.inferno.serviceAccountsEnabled | bool | `false` |  |
@@ -279,7 +279,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.config.realms.test.clients.infernoBulk.consentRequired | bool | `false` |  |
 | keycloak.config.realms.test.clients.infernoBulk.defaultScopes | list | `[]` |  |
 | keycloak.config.realms.test.clients.infernoBulk.jwksUrl | string | `""` |  |
-| keycloak.config.realms.test.clients.infernoBulk.optionalScopes | string | `nil` | OAuth 2.0 scopes supported by this client |
+| keycloak.config.realms.test.clients.infernoBulk.optionalScopes | list | all scopes defined by the `security.oauth` configuration. | OAuth 2.0 scopes supported by this client |
 | keycloak.config.realms.test.clients.infernoBulk.publicClient | bool | `false` |  |
 | keycloak.config.realms.test.clients.infernoBulk.serviceAccountsEnabled | bool | `true` |  |
 | keycloak.config.realms.test.clients.infernoBulk.standardFlowEnabled | bool | `false` |  |

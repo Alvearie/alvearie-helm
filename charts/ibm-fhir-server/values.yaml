@@ -164,7 +164,7 @@ keycloak:
             defaultScopes: ["launch/patient"]
             # -- OAuth 2.0 scopes supported by this client
             # @default -- all scopes defined by the `security.oauth` configuration.
-            optionalScopes:
+            optionalScopes: []
           infernoBulk:
             consentRequired: false
             publicClient: false
@@ -175,7 +175,7 @@ keycloak:
             defaultScopes: []
             # -- OAuth 2.0 scopes supported by this client
             # @default -- all scopes defined by the `security.oauth` configuration.
-            optionalScopes:
+            optionalScopes: []
 
 security:
   jwtValidation:
