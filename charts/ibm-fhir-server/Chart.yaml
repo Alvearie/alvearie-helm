@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.6.2
+version: 0.6.3
 appVersion: 4.10.2
 dependencies:
   - name: postgresql
@@ -25,5 +25,5 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: changed
-      description: update optionalScopes default value to fix README doc
+    - kind: added
+      description: support enabling the default member-match
