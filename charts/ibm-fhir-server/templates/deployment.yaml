@@ -392,6 +392,7 @@ spec:
               - /opt/ol/wlp/bin/server status
             initialDelaySeconds: 36
             periodSeconds: 60
+            timeoutSeconds: 15
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 32
