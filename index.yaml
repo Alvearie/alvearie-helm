@@ -5,6 +5,43 @@ entries:
       artifacthub.io/changes: |
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: liveness probe timeout from 1s (default) to 3s
+        - kind: changed
+          description: bump keycloak subchart from 16.0.5 to 17.0.3
+        - kind: changed
+          description: bump default bitnami postgresql image from 14.1.0 to 14.2.0
+      artifacthub.io/license: Apache-2.0
+    apiVersion: v2
+    appVersion: 4.10.2
+    created: "2022-03-28T17:30:22.561406799Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.13.15
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://codecentric.github.io/helm-charts
+      version: 17.0.3
+    description: Helm chart for the IBM FHIR Server
+    digest: 25c80ad568f0bd2755fd784e83e3a676a093414118f112465577ce495745a552
+    home: https://ibm.github.io/FHIR/
+    maintainers:
+    - email: lmsurpre@us.ibm.com
+      name: Lee Surprenant
+    name: ibm-fhir-server
+    sources:
+    - https://github.com/Alvearie/alvearie-helm
+    - https://github.com/IBM/FHIR
+    type: application
+    urls:
+    - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.6.4/ibm-fhir-server-0.6.4.tgz
+    version: 0.6.4
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
         - kind: added
           description: support enabling the default member-match
       artifacthub.io/license: Apache-2.0
@@ -904,4 +941,4 @@ entries:
     urls:
     - https://github.com/Alvearie/alvearie-helm/releases/download/ibm-fhir-server-0.0.5/ibm-fhir-server-0.0.5.tgz
     version: 0.0.5
-generated: "2022-01-19T19:20:52.974149459Z"
+generated: "2022-03-28T17:30:22.561893403Z"
