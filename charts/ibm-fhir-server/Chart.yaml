@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.6.3
+version: 0.6.4
 appVersion: 4.10.2
 dependencies:
   - name: postgresql
@@ -9,7 +9,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: keycloak
-    version: 16.0.5
+    version: 17.0.3
     repository: https://codecentric.github.io/helm-charts
     condition: keycloak.enabled
 sources:
@@ -25,5 +25,9 @@ annotations:
   artifacthub.io/changes: |
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
-    - kind: added
-      description: support enabling the default member-match
+    - kind: changed
+      description: liveness probe timeout from 1s (default) to 3s
+    - kind: changed
+      description: bump keycloak subchart from 16.0.5 to 17.0.3
+    - kind: changed
+      description: bump default bitnami postgresql image from 14.1.0 to 14.2.0
