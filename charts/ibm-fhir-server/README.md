@@ -1,5 +1,5 @@
 
-![Version: 0.6.4](https://img.shields.io/badge/Version-0.6.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.10.2](https://img.shields.io/badge/AppVersion-4.10.2-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.11.1](https://img.shields.io/badge/AppVersion-4.11.1-informational?style=flat-square)
 
 # The IBM FHIR Server Helm Chart
 
@@ -266,7 +266,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.config.enabled | bool | `true` |  |
 | keycloak.config.image.pullPolicy | string | `"IfNotPresent"` |  |
 | keycloak.config.image.repository | string | `"quay.io/alvearie/keycloak-config"` |  |
-| keycloak.config.image.tag | string | `"0.4.1"` |  |
+| keycloak.config.image.tag | string | `"0.5.1"` |  |
 | keycloak.config.realms.test.clients.inferno.clientAuthenticatorType | string | `"client-secret"` |  |
 | keycloak.config.realms.test.clients.inferno.consentRequired | bool | `true` |  |
 | keycloak.config.realms.test.clients.inferno.defaultScopes[0] | string | `"launch/patient"` |  |
@@ -290,7 +290,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.extraVolumes | string | a single volume named keycloak-admin with contents from the keycloak-admin-secret | Extra volumes for the Keycloak StatefulSets |
 | keycloak.image.pullPolicy | string | `"IfNotPresent"` |  |
 | keycloak.image.repository | string | `"quay.io/alvearie/smart-keycloak"` |  |
-| keycloak.image.tag | string | `"0.4.1"` |  |
+| keycloak.image.tag | string | `"0.5.1"` |  |
 | keycloak.postgresql.nameOverride | string | `"keycloak-postgres"` |  |
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |

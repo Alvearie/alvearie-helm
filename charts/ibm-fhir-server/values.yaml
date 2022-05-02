@@ -115,7 +115,7 @@ keycloak:
   enabled: false
   image:
     repository: quay.io/alvearie/smart-keycloak
-    tag: 0.4.1
+    tag: 0.5.1
     pullPolicy: IfNotPresent
   # -- An initial keycloak admin username for creating the initial Keycloak admin user
   adminUsername: admin
@@ -147,7 +147,7 @@ keycloak:
     enabled: true
     image:
       repository: quay.io/alvearie/keycloak-config
-      tag: 0.4.1
+      tag: 0.5.1
       pullPolicy: IfNotPresent
     ttlSecondsAfterFinished: 100
     realms:
