@@ -14,9 +14,6 @@ The default fhir-server-config.json.
                 "disabledOperations": "",
                 "defaultPrettyPrint": true
             },
-            "search": {
-                "useStoredCompartmentParam": true
-            },
             "resources": {
                 "open": {{ not .Values.restrictEndpoints }}
                 {{- range $endpoint, $conf := .Values.endpoints }},
