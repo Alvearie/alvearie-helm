@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for the IBM FHIR Server
 name: ibm-fhir-server
-version: 0.7.0
+version: 0.7.1
 appVersion: 4.11.1
 dependencies:
   - name: postgresql
@@ -26,8 +26,4 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: bump default ibm-fhir-server image from 4.10.2 to 4.11.1
-    - kind: changed
-      description: bump keycloak subchart from 17.0.3 to 18.1.1
-    - kind: changed
-      description: bump default smart-keycloak and keycloak-config images from 0.4.1 to 0.5.1
+      description: use db.certPath for the postgres batch dataSource when db.enableTls is true
