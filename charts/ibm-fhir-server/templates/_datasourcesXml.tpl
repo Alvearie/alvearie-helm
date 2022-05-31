@@ -45,7 +45,7 @@ The datasource.xml file for a Postgres DB.
                 {{- if .Values.db.enableTls }}
                 ssl="true"
                 sslmode="verify-full"
-                sslrootcert="/opt/ol/wlp/usr/servers/defaultServer/resources/security/postgres.cert"
+                sslrootcert="{{ .Values.db.certPath }}"
                 {{- end }}
                 databaseName="${env.BATCH_DB_NAME}"
                 user="${env.BATCH_DB_USER}"
