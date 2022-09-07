@@ -87,7 +87,7 @@ The default fhir-server-config.json.
             },
             "audit": {
                 {{- if .Values.audit.enabled }}
-                "serviceClassName" : "com.ibm.fhir.audit.impl.KafkaService",
+                "serviceClassName" : "org.linuxforhealth.fhir.audit.impl.KafkaService",
                 "serviceProperties" : {
                     "load": "config",
                     "mapper": "{{ .Values.audit.type }}",
@@ -108,13 +108,13 @@ The default fhir-server-config.json.
                     "kafkaApiKey": "{{ .Values.audit.kafkaApiKey }}"
                 }
                 {{- else }}
-                "serviceClassName" : "com.ibm.fhir.audit.impl.NopService",
+                "serviceClassName" : "org.linuxforhealth.fhir.audit.impl.NopService",
                 "serviceProperties" : {
                 }
                 {{- end }}
             },
             "persistence": {
-                "factoryClassname": "com.ibm.fhir.persistence.jdbc.FHIRPersistenceJDBCFactory",
+                "factoryClassname": "org.linuxforhealth.fhir.persistence.jdbc.FHIRPersistenceJDBCFactory",
                 "common": {
                     "__comment": "Configuration properties common to all persistence layer implementations",
                     "updateCreateEnabled": true

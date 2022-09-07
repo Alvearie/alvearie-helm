@@ -1,27 +1,27 @@
 
 {{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
 
-# The IBM FHIR Server Helm Chart
+# The LinuxForHealth FHIR Server Helm Chart
 
-The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
+The [LinuxForHealth FHIR Server](https://linuxforhealth.github.io/FHIR) implements version 4 of the HL7 FHIR specification
 with a focus on performance and configurability.
 
-This helm chart will help you install the IBM FHIR Server in a Kubernetes environment and uses
+This helm chart will help you install the LinuxForHealth FHIR Server in a Kubernetes environment and uses
 ConfigMaps and Secrets to support the wide range of configuration options available for the server.
 
 ## Sample usage
 
 ```sh
-helm repo add alvearie https://alvearie.io/alvearie-helm
+helm repo add linuxforhealth https://linuxforhealth.github.io/linuxforhealth-helm
 export POSTGRES_PASSWORD=$(openssl rand -hex 20)
-helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --set postgresql.postgresqlPassword=${POSTGRES_PASSWORD} --set ingress.hostname=example.com --set 'ingress.tls[0].secretName=cluster-tls-secret'
+helm upgrade --install --render-subchart-notes fhir-server linuxforhealth/fhir-server --set postgresql.postgresqlPassword=${POSTGRES_PASSWORD} --set ingress.hostname=example.com --set 'ingress.tls[0].secretName=cluster-tls-secret'
 ```
 
-This will install the latest version if the IBM FHIR Server using an included PostgreSQL database for persistence.
+This will install the latest version if the LinuxForHealth FHIR Server using an included PostgreSQL database for persistence.
 Note that `postgresql.postgresqlPassword` must be set for all upgrades that use the embedded postgresql chart,
 otherwise [the postgresql password will be overwritten and lost](https://artifacthub.io/packages/helm/bitnami/postgresql#troubleshooting).
 
-By default, the IBM FHIR Server will only serve HTTPS traffic.
+By default, the LinuxForHealth FHIR Server will only serve HTTPS traffic.
 With the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx),
 this means that users must set the following ingress annotation:
 ```
@@ -29,7 +29,7 @@ nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 ```
 This can be accomplished via `--set 'ingress.annotations.nginx\.ingress\.kubernetes\.io/backend-protocol=HTTPS'` or
 from your values override file.
-See https://github.com/Alvearie/alvearie-helm/blob/main/charts/ibm-fhir-server/values-nginx.yaml for an example.
+See https://github.com/linuxforhealth/linuxforhealth-helm/blob/main/charts/fhir-server/values-nginx.yaml for an example.
 
 ## Customizing the FHIR server configuration
 This helm chart uses a [named template](https://helm.sh/docs/chart_template_guide/named_templates/) to generate the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The template name is `defaultFhirServerConfig` and it is defined in the `_fhirServerConfigJson.tpl` file. It uses many of this helm chart's values as the values of config properties within the generated `fhir-server-config.json` file.
@@ -85,7 +85,7 @@ We can demonstrate these approaches with the following sample section from the `
     ```
     As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
 
-For a complete list of configuration properties for the IBM FHIR Server, please see the [User's Guide](https://ibm.github.io/FHIR/guides/FHIRServerUsersGuide).
+For a complete list of configuration properties for the LinuxForHealth FHIR Server, please see the [User's Guide](https://linuxforhealth.github.io/FHIR/guides/FHIRServerUsersGuide).
 
 In addition to providing a default FHIR server configuration named template, this helm chart also provides default named templates for custom search parameters and datasources, both of which can be overridden by custom named templates in the same manner as the FHIR server configuration template.
 

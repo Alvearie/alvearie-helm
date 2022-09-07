@@ -1,27 +1,27 @@
 
-![Version: 0.7.2](https://img.shields.io/badge/Version-0.7.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.11.1](https://img.shields.io/badge/AppVersion-4.11.1-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.0](https://img.shields.io/badge/AppVersion-5.0.0-informational?style=flat-square)
 
-# The IBM FHIR Server Helm Chart
+# The LinuxForHealth FHIR Server Helm Chart
 
-The [IBM FHIR Server](https://ibm.github.io/FHIR) implements version 4 of the HL7 FHIR specification
+The [LinuxForHealth FHIR Server](https://linuxforhealth.github.io/FHIR) implements version 4 of the HL7 FHIR specification
 with a focus on performance and configurability.
 
-This helm chart will help you install the IBM FHIR Server in a Kubernetes environment and uses
+This helm chart will help you install the LinuxForHealth FHIR Server in a Kubernetes environment and uses
 ConfigMaps and Secrets to support the wide range of configuration options available for the server.
 
 ## Sample usage
 
 ```sh
-helm repo add alvearie https://alvearie.io/alvearie-helm
+helm repo add linuxforhealth https://linuxforhealth.github.io/linuxforhealth-helm
 export POSTGRES_PASSWORD=$(openssl rand -hex 20)
-helm upgrade --install --render-subchart-notes ibm-fhir-server alvearie/ibm-fhir-server --set postgresql.postgresqlPassword=${POSTGRES_PASSWORD} --set ingress.hostname=example.com --set 'ingress.tls[0].secretName=cluster-tls-secret'
+helm upgrade --install --render-subchart-notes fhir-server linuxforhealth/fhir-server --set postgresql.postgresqlPassword=${POSTGRES_PASSWORD} --set ingress.hostname=example.com --set 'ingress.tls[0].secretName=cluster-tls-secret'
 ```
 
-This will install the latest version if the IBM FHIR Server using an included PostgreSQL database for persistence.
+This will install the latest version if the LinuxForHealth FHIR Server using an included PostgreSQL database for persistence.
 Note that `postgresql.postgresqlPassword` must be set for all upgrades that use the embedded postgresql chart,
 otherwise [the postgresql password will be overwritten and lost](https://artifacthub.io/packages/helm/bitnami/postgresql#troubleshooting).
 
-By default, the IBM FHIR Server will only serve HTTPS traffic.
+By default, the LinuxForHealth FHIR Server will only serve HTTPS traffic.
 With the [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx),
 this means that users must set the following ingress annotation:
 ```
@@ -29,7 +29,7 @@ nginx.ingress.kubernetes.io/backend-protocol: HTTPS
 ```
 This can be accomplished via `--set 'ingress.annotations.nginx\.ingress\.kubernetes\.io/backend-protocol=HTTPS'` or
 from your values override file.
-See https://github.com/Alvearie/alvearie-helm/blob/main/charts/ibm-fhir-server/values-nginx.yaml for an example.
+See https://github.com/linuxforhealth/linuxforhealth-helm/blob/main/charts/fhir-server/values-nginx.yaml for an example.
 
 ## Customizing the FHIR server configuration
 This helm chart uses a [named template](https://helm.sh/docs/chart_template_guide/named_templates/) to generate the `fhir-server-config.json` file which will control the configuration of the deployed FHIR server. The template name is `defaultFhirServerConfig` and it is defined in the `_fhirServerConfigJson.tpl` file. It uses many of this helm chart's values as the values of config properties within the generated `fhir-server-config.json` file.
@@ -85,7 +85,7 @@ We can demonstrate these approaches with the following sample section from the `
     ```
     As above, when deploying the chart, the deployer must override the `fhirServerConfigTemplate` chart value, setting it to the name of their custom named template. This helm chart will then use that template to generate its `fhir-server-config.json` file.
 
-For a complete list of configuration properties for the IBM FHIR Server, please see the [User's Guide](https://ibm.github.io/FHIR/guides/FHIRServerUsersGuide).
+For a complete list of configuration properties for the LinuxForHealth FHIR Server, please see the [User's Guide](https://linuxforhealth.github.io/FHIR/guides/FHIRServerUsersGuide).
 
 In addition to providing a default FHIR server configuration named template, this helm chart also provides default named templates for custom search parameters and datasources, both of which can be overridden by custom named templates in the same manner as the FHIR server configuration template.
 
@@ -248,8 +248,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | fhirUserPasswordSecretKey | string | `nil` | For the Secret specified in fhirPasswordSecret, the key of the key/value pair containing the fhirUserPassword. This value will be ignored if the fhirPasswordSecret value is not set. |
 | fullnameOverride | string | `nil` | Optional override for the fully qualified name of the created kube resources |
 | image.pullPolicy | string | `"IfNotPresent"` | When to pull the image |
-| image.repository | string | `"ibmcom/ibm-fhir-server"` | The repository to pull the IBM FHIR Server image from |
-| image.tag | string | this chart's appVersion | IBM FHIR Server container image tag |
+| image.repository | string | `"ghcr.io/linuxforhealth/fhir-server"` | The repository to pull the LinuxForHealth FHIR Server image from |
+| image.tag | string | this chart's appVersion | LinuxForHealth FHIR Server container image tag |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `true` |  |
@@ -295,7 +295,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloakConfigTemplate | string | `"defaultKeycloakConfig"` | Template with keycloak-config.json input for the Alvearie keycloak-config project |
 | maxHeap | string | `""` | The value passed to the JVM via -Xmx to set the max heap size. |
 | membermatch.enabled | bool | `false` | Enable the $member-match operation in the fhir-server-config.json. The default image does not include the fhir-operation-member-match, and must be added to a custom image. |
-| minHeap | string | The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2 | The value passed to the JVM via -Xms to set the initial heap size. |
+| minHeap | string | The default minHeap in the fhir-server image; 768m in LinuxForHealth FHIR Server 4.10.2 | The value passed to the JVM via -Xms to set the initial heap size. |
 | nameOverride | string | `nil` | Optional override for chart name portion of the created kube resources |
 | nodeSelector | object | `{}` | Node labels for Pod assignment |
 | notifications.kafka.bootstrapServers | string | `nil` |  |
@@ -345,8 +345,8 @@ If a truststore Secret is specified, the default truststore file will be replace
 | schemaMigration.enabled | bool | `true` | Whether to execute a schema creation/migration job as part of the deploy |
 | schemaMigration.image.pullPolicy | string | `"IfNotPresent"` | When to pull the image |
 | schemaMigration.image.pullSecret | string | `"all-icr-io"` |  |
-| schemaMigration.image.repository | string | `"ibmcom/ibm-fhir-schematool"` | The repository to pull the IBM FHIR Schema Tool image from |
-| schemaMigration.image.tag | string | this chart's appVersion | IBM FHIR Schema Tool container image tag |
+| schemaMigration.image.repository | string | `"ghcr.io/linuxforhealth/fhir-schematool"` | The repository to pull the LinuxForHealth FHIR Schema Tool image from |
+| schemaMigration.image.tag | string | this chart's appVersion | LinuxForHealth FHIR Schema Tool container image tag |
 | schemaMigration.resources | object | `{}` | container resources for the schema migration job |
 | schemaMigration.ttlSecondsAfterFinished | int | `100` | How many seconds to wait before cleaning up a finished schema migration job. This automatic clean-up can have unintended interactions with CI tools like ArgoCD; setting this value to nil will disable the feature. |
 | security.jwtValidation.audience | string | `"https://{{ tpl $.Values.ingress.hostname $ }}/fhir-server/api/v4"` |  |
@@ -371,7 +371,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | serverRegistryResourceProviderEnabled | bool | `false` | Indicates whether the server registry resource provider should be used by the FHIR registry component to access definitional resources through the persistence layer |
 | tolerations | list | `[]` | Node taints to tolerate |
 | topologySpreadConstraints | string | `nil` | Topology spread constraints template |
-| traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the IBM FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
+| traceSpec | string | `"*=info"` | The trace specification to use for selectively tracing components of the LinuxForHealth FHIR Server. The log detail level specification is in the following format: `component1=level1:component2=level2` See https://openliberty.io/docs/latest/log-trace-configuration.html for more information. |
 | transactionTimeout | string | `"120s"` |  |
 | trustStoreFormat | string | `"PKCS12"` | For the truststore specified in trustStoreSecret, the truststore format (PKCS12 or JKS). This value will be ignored if the trustStoreSecret value is not set. |
 | trustStoreSecret | string | `nil` | Secret containing the FHIR server truststore file and its password. The secret must contain the keys 'fhirTrustStore' (the truststore file contents in the format specified in trustStoreFormat) and 'fhirTrustStorePassword' (the truststore password) |

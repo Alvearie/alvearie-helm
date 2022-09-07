@@ -1,2 +1,2 @@
-# alvearie-helm
-repository for the helm chart source and package for Alvearie projects
+# linuxforhealth-helm
+repository for the helm chart source and package for LinuxForHealth projects

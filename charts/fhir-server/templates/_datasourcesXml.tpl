@@ -167,7 +167,7 @@ The datasource.xml file for a Derby DB.
     <server>
         <!-- ============================================================== -->
         <!-- This datasource aligns with the Apache Derby database that is  -->
-        <!-- created by the ibmcom/ibm-fhir-server BOOTSTRAP_DB process.    -->
+        <!-- created by the ghcr.io/linuxforhealth/fhir-server BOOTSTRAP_DB process.    -->
         <!-- ============================================================== -->
 
         <!-- ============================================================== -->

@@ -11,15 +11,15 @@ extraLabels: {}
 # -- The number of replicas for the externally-facing FHIR server pods
 replicaCount: 2
 image:
-  # -- The repository to pull the IBM FHIR Server image from
-  repository: ibmcom/ibm-fhir-server
-  # -- IBM FHIR Server container image tag
+  # -- The repository to pull the LinuxForHealth FHIR Server image from
+  repository: ghcr.io/linuxforhealth/fhir-server
+  # -- LinuxForHealth FHIR Server container image tag
   # @default -- this chart's appVersion
   tag: ""
   # -- When to pull the image
   pullPolicy: IfNotPresent
 imagePullSecrets: []
-# -- The trace specification to use for selectively tracing components of the IBM FHIR Server.
+# -- The trace specification to use for selectively tracing components of the LinuxForHealth FHIR Server.
 # The log detail level specification is in the following format: `component1=level1:component2=level2`
 # See https://openliberty.io/docs/latest/log-trace-configuration.html for more information.
 traceSpec: "*=info"
@@ -239,9 +239,9 @@ schemaMigration:
   # -- Whether to execute a schema creation/migration job as part of the deploy
   enabled: true
   image:
-    # -- The repository to pull the IBM FHIR Schema Tool image from
-    repository: ibmcom/ibm-fhir-schematool
-    # -- IBM FHIR Schema Tool container image tag
+    # -- The repository to pull the LinuxForHealth FHIR Schema Tool image from
+    repository: ghcr.io/linuxforhealth/fhir-schematool
+    # -- LinuxForHealth FHIR Schema Tool container image tag
     # @default -- this chart's appVersion
     tag: ""
     # -- When to pull the image
@@ -382,7 +382,7 @@ tolerations: []
 transactionTimeout: "120s"
 
 # -- The value passed to the JVM via -Xms to set the initial heap size.
-# @default -- The default minHeap in the ibm-fhir-server image; 768m in IBM FHIR Server 4.10.2
+# @default -- The default minHeap in the fhir-server image; 768m in LinuxForHealth FHIR Server 4.10.2
 minHeap: ""
 # -- The value passed to the JVM via -Xmx to set the max heap size.
 maxHeap: ""
