@@ -285,7 +285,7 @@ If a truststore Secret is specified, the default truststore file will be replace
 | keycloak.config.realms.test.clients.infernoBulk.standardFlowEnabled | bool | `false` |  |
 | keycloak.config.ttlSecondsAfterFinished | int | `100` |  |
 | keycloak.enabled | bool | `false` |  |
-| keycloak.extraEnv | string | DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath | Extra environment variables for the Keycloak StatefulSet |
+| keycloak.extraEnv | string | KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath | Extra environment variables for the Keycloak StatefulSet |
 | keycloak.extraVolumeMounts | string | mount the keycloak-admin volume at /secrets/keycloak-admin | Extra volume mounts for the Keycloak StatefulSet |
 | keycloak.extraVolumes | string | a single volume named keycloak-admin with contents from the keycloak-admin-secret | Extra volumes for the Keycloak StatefulSets |
 | keycloak.image.pullPolicy | string | `"IfNotPresent"` |  |

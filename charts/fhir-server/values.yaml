@@ -133,14 +133,12 @@ keycloak:
     - name: keycloak-admin
       mountPath: /secrets/keycloak-admin
   # -- Extra environment variables for the Keycloak StatefulSet
-  # @default -- DB_VENDOR set to postgres and KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath
+  # @default -- KEYCLOAK_USER_FILE/KEYCLOAK_PASSWORD_FILE set to the keycloak-admin mountPath
   extraEnv: |
     - name: KEYCLOAK_USER_FILE
       value: /secrets/keycloak-admin/username
     - name: KEYCLOAK_PASSWORD_FILE
       value: /secrets/keycloak-admin/password
-    - name: DB_VENDOR
-      value: postgres
   postgresql:
     nameOverride: keycloak-postgres
   config:
