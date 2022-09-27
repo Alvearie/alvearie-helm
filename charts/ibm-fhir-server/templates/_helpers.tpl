@@ -172,3 +172,12 @@ from the flags and resource scopes under .Values.security.oauth
   {{- end }}
   {{- toJson $scopes }}
 {{- end -}}
+
+{{/*
+Override the keycloak.postgresql.fullname template defined by the codecentric keycloak chart.
+https://github.com/codecentric/helm-charts/issues/648
+*/}}
+{{- define "keycloak.postgresql.fullname" -}}
+{{- $postgresContext := dict "Values" .Values.postgresql "Release" .Release "Chart" (dict "Name" "postgresql") -}}
+{{ include "postgresql.primary.fullname" $postgresContext }}
+{{- end }}
